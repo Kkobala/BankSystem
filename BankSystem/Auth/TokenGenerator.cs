@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -38,4 +39,11 @@ namespace BankSystem.Auth
             return jwtString;
         }
     }
+=======
+﻿namespace BankSystem.Auth
+{
+	public class TokenGenerator
+	{
+	}
+>>>>>>> b0aff5f66fde4e23de354c9b9706504269ea254d
 }

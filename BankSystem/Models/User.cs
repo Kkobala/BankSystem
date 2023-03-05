@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using BankSystem.Db.Entities;
 
 namespace BankSystem.Models
@@ -13,4 +14,11 @@ namespace BankSystem.Models
         public DateTime BirthDate { get; set; }
         public List<AccountEntity>? Accounts { get; set; }
     }
+=======
+﻿namespace BankSystem.Models
+{
+	public class User
+	{
+	}
+>>>>>>> b0aff5f66fde4e23de354c9b9706504269ea254d
 }

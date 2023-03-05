@@ -1,7 +1,13 @@
-﻿using BankSystem.Enums;
+﻿using BankSystem.Db.Entities;
+using BankSystem.Enums;
 
 namespace BankSystem.Models
 {
+    public class AccountMetadata
+    {
+
+    }
+
     public class Account
     {
         public int Id { get; set; }
@@ -10,5 +16,31 @@ namespace BankSystem.Models
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
 
+        public List<Card> Cards { get; set; }
+        public AccountMetadata Metadata { get; set; }
+
+        public void ValidateIban()
+        {
+
+        }
+
+        public void AddAmount(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                throw new Exception();
+            }
+            Amount += amount;
+        }
+
+        public void SubtractAmount(decimal amount)
+        {
+            var subtractedAmount = Amount - amount;
+            if (subtractedAmount < 0)
+            {
+                throw new Exception("Not enough funds");
+            }
+            Amount = subtractedAmount;
+        }
     }
 }

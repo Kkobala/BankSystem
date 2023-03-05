@@ -1,4 +1,5 @@
 ﻿using BankSystem.Enums;
+using Newtonsoft.Json;
 
 namespace BankSystem.Db.Entities
 {
@@ -12,5 +13,13 @@ namespace BankSystem.Db.Entities
         public string? Json { get; set; }
 
         public List<CardEntity>? Cards { get; set; }
+
+        public static AccountEntity FromDomainModel(Account account)
+        {
+            return new AccountEntity
+            {
+                Json = JsonConvert.SerializeObject(account.Metadata)
+            };
+        }
     }
 }

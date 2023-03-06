@@ -28,6 +28,27 @@ namespace BankSystem.Db
             modelBuilder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");
             modelBuilder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
+
+            modelBuilder
+                .Entity<UserEntity>()
+                .HasMany(t => t.Accounts)
+                .WithOne()
+                .HasForeignKey(t => t.UserId);
+
+            modelBuilder
+                .Entity<AccountEntity>()
+                .Property(t => t.Amount)
+                .HasColumnType("decimal");
+
+            modelBuilder
+                .Entity<TransactionEntity>()
+                .Property(t => t.Amount)
+                .HasColumnType("decimal");
+
+            modelBuilder
+                .Entity<TransactionEntity>()
+                .Property(t => t.Fee)
+                .HasColumnType("decimal");
         }
     }
 }

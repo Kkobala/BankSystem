@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +48,7 @@ namespace BankSystem.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegisteredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PIN = table.Column<int>(type: "int", nullable: false),
+                    PersonalNumber = table.Column<int>(type: "int", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -99,19 +99,19 @@ namespace BankSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     IBAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
-                    Json = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserEntityId = table.Column<int>(type: "int", nullable: true)
+                    Json = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Accounts_Users_UserEntityId",
-                        column: x => x.UserEntityId,
+                        name: "FK_Accounts_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -200,6 +200,30 @@ namespace BankSystem.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Cards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CardNumber = table.Column<int>(type: "int", nullable: false),
+                    OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OwnerLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CardExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CVV = table.Column<int>(type: "int", nullable: false),
+                    PIN = table.Column<int>(type: "int", nullable: false),
+                    AccountEntityId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cards_Accounts_AccountEntityId",
+                        column: x => x.AccountEntityId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Transactions",
                 columns: table => new
                 {
@@ -208,7 +232,9 @@ namespace BankSystem.Migrations
                     ToAccountId = table.Column<int>(type: "int", nullable: true),
                     FromAccountId = table.Column<int>(type: "int", nullable: true),
                     Currency = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
+                    TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Fee = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -226,50 +252,15 @@ namespace BankSystem.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Cards",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CardId = table.Column<int>(type: "int", nullable: false),
-                    OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OwnerLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CardExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CVV = table.Column<int>(type: "int", nullable: false),
-                    PIN = table.Column<int>(type: "int", nullable: false),
-                    AccountEntityId = table.Column<int>(type: "int", nullable: true),
-                    TransactionEntityId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cards", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Cards_Accounts_AccountEntityId",
-                        column: x => x.AccountEntityId,
-                        principalTable: "Accounts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Cards_Transactions_TransactionEntityId",
-                        column: x => x.TransactionEntityId,
-                        principalTable: "Transactions",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_Accounts_UserEntityId",
+                name: "IX_Accounts_UserId",
                 table: "Accounts",
-                column: "UserEntityId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cards_AccountEntityId",
                 table: "Cards",
                 column: "AccountEntityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Cards_TransactionEntityId",
-                table: "Cards",
-                column: "TransactionEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaims_RoleId",
@@ -334,6 +325,9 @@ namespace BankSystem.Migrations
                 name: "RoleClaims");
 
             migrationBuilder.DropTable(
+                name: "Transactions");
+
+            migrationBuilder.DropTable(
                 name: "UserClaims");
 
             migrationBuilder.DropTable(
@@ -346,13 +340,10 @@ namespace BankSystem.Migrations
                 name: "UserTokens");
 
             migrationBuilder.DropTable(
-                name: "Transactions");
+                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "Users");

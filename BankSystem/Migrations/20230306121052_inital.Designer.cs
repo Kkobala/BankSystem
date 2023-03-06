@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230305133247_initial")]
-    partial class initial
+    [Migration("20230306121052_inital")]
+    partial class inital
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,7 @@ namespace BankSystem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal");
 
                     b.Property<int>("Currency")
                         .HasColumnType("int");
@@ -47,15 +47,12 @@ namespace BankSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserEntityId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserEntityId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Accounts");
                 });
@@ -77,7 +74,7 @@ namespace BankSystem.Migrations
                     b.Property<DateTime>("CardExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CardId")
+                    b.Property<int>("CardNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("OwnerLastName")
@@ -89,14 +86,9 @@ namespace BankSystem.Migrations
                     b.Property<int>("PIN")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TransactionEntityId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AccountEntityId");
-
-                    b.HasIndex("TransactionEntityId");
 
                     b.ToTable("Cards");
                 });
@@ -156,16 +148,22 @@ namespace BankSystem.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal");
 
                     b.Property<int>("Currency")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Fee")
+                        .HasColumnType("decimal");
 
                     b.Property<int?>("FromAccountId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ToAccountId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("TransactionDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -227,11 +225,11 @@ namespace BankSystem.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("PIN")
-                        .HasColumnType("int");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PersonalNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -372,7 +370,9 @@ namespace BankSystem.Migrations
                 {
                     b.HasOne("BankSystem.Db.Entities.UserEntity", null)
                         .WithMany("Accounts")
-                        .HasForeignKey("UserEntityId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("BankSystem.Db.Entities.CardEntity", b =>
@@ -380,10 +380,6 @@ namespace BankSystem.Migrations
                     b.HasOne("BankSystem.Db.Entities.AccountEntity", null)
                         .WithMany("Cards")
                         .HasForeignKey("AccountEntityId");
-
-                    b.HasOne("BankSystem.Db.Entities.TransactionEntity", null)
-                        .WithMany("Cards")
-                        .HasForeignKey("TransactionEntityId");
                 });
 
             modelBuilder.Entity("BankSystem.Db.Entities.TransactionEntity", b =>
@@ -453,11 +449,6 @@ namespace BankSystem.Migrations
                 });
 
             modelBuilder.Entity("BankSystem.Db.Entities.AccountEntity", b =>
-                {
-                    b.Navigation("Cards");
-                });
-
-            modelBuilder.Entity("BankSystem.Db.Entities.TransactionEntity", b =>
                 {
                     b.Navigation("Cards");
                 });

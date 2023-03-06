@@ -9,7 +9,8 @@ namespace BankSystem.Db.Entities
         public AccountEntity? FromAccount { get; set; }
         public Currency Currency { get; set; }
         public decimal Amount { get; set; }
-        public List<CardEntity>? Cards { get; set; }
+        public DateTime TransactionDate { get; set; }
+        public decimal Fee { get; set; }
         public TransactionType Type { get; set; }
     }
 }

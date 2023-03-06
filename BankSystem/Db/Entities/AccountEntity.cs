@@ -12,7 +12,6 @@ namespace BankSystem.Db.Entities
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
         public string Json { get; set; }
-
         public List<CardEntity> Cards { get; set; }
 
         public Account ToDomainModel()
@@ -24,7 +23,7 @@ namespace BankSystem.Db.Entities
                 cards.Add(new Card
                 {
                     Id = cardEntity.Id,
-                    CardId = cardEntity.CardId,
+                    CardNumber = cardEntity.CardNumber,
                     OwnerName = cardEntity.OwnerName,
                     OwnerLastName = cardEntity.OwnerLastName,
                     CardExpirationDate = cardEntity.CardExpirationDate,

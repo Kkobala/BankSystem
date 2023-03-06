@@ -1,5 +1,4 @@
-﻿using BankSystem.Db.Entities;
-using BankSystem.Enums;
+﻿using BankSystem.Enums;
 
 namespace BankSystem.Models
 {

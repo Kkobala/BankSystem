@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-﻿using BankSystem.Db.Entities;
+using BankSystem.Db.Entities;
 
 namespace BankSystem.Models
 {
@@ -12,13 +11,6 @@ namespace BankSystem.Models
         public int PIN { get; set; }
         public string? Email { get; set; }
         public DateTime BirthDate { get; set; }
-        public List<AccountEntity>? Accounts { get; set; }
+        public List<Account> Accounts { get; set; }
     }
-=======
-﻿namespace BankSystem.Models
-{
-	public class User
-	{
-	}
->>>>>>> b0aff5f66fde4e23de354c9b9706504269ea254d
 }

@@ -30,8 +30,8 @@ namespace BankSystem.Controllers
         {
             var entity = new UserEntity();
             entity.UserName = request.Email;
-            entity.Email = request.Email;
-            var result = await _userManager.CreateAsync(entity, request.Password);
+            entity.Email = request.Email!;
+            var result = await _userManager.CreateAsync(entity, request.Password!);
 
             if (!result.Succeeded)
             {
@@ -45,12 +45,12 @@ namespace BankSystem.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email!);
             if (user == null)
             {
                 return NotFound("User not found");
             }
-            var isCorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password);
+            var isCorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password!);
 
             if (!isCorrectPassword)
             {
@@ -63,7 +63,7 @@ namespace BankSystem.Controllers
         [HttpPost("request-password-reset")]
         public async Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email!);
             if (user == null)
             {
                 return NotFound("User not found");
@@ -96,7 +96,7 @@ namespace BankSystem.Controllers
             {
                 return NotFound("User not found");
             }
-            var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.Password);
+            var resetResult = await _userManager.ResetPasswordAsync(user, request.Token!, request.Password!);
 
             if (!resetResult.Succeeded)
             {

@@ -4,6 +4,7 @@ using BankSystem.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230309104508_mig")]
+    partial class mig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,8 +25,6 @@ namespace BankSystem.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-<<<<<<< HEAD
-=======
             modelBuilder.Entity("AccountEntityCardEntity", b =>
                 {
                     b.Property<int>("AccountsId")
@@ -39,7 +40,6 @@ namespace BankSystem.Migrations
                     b.ToTable("AccountEntityCardEntity");
                 });
 
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
             modelBuilder.Entity("BankSystem.Db.Entities.AccountEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -55,16 +55,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("IBAN")
-<<<<<<< HEAD
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Json")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("TransactionEntityId")
-                        .HasColumnType("int");
-
-=======
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -72,17 +62,11 @@ namespace BankSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD
-                    b.HasIndex("TransactionEntityId");
-
-=======
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                     b.HasIndex("UserId");
 
                     b.ToTable("Accounts");
@@ -95,13 +79,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-<<<<<<< HEAD
-                    b.Property<int?>("AccountEntityId")
-=======
-                    b.Property<int>("AccountId")
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
-                        .HasColumnType("int");
 
                     b.Property<int>("CVV")
                         .HasColumnType("int");
@@ -123,11 +100,6 @@ namespace BankSystem.Migrations
 
                     b.HasKey("Id");
 
-<<<<<<< HEAD
-                    b.HasIndex("AccountEntityId");
-
-=======
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                     b.ToTable("Cards");
                 });
 
@@ -174,11 +146,7 @@ namespace BankSystem.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-<<<<<<< HEAD
-                    b.ToTable("AspNetRoles", (string)null);
-=======
                     b.ToTable("Roles", (string)null);
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
 
                     b.HasData(
                         new
@@ -242,24 +210,15 @@ namespace BankSystem.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
-=======
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-<<<<<<< HEAD
                         .IsRequired()
-=======
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -291,14 +250,8 @@ namespace BankSystem.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
                     b.Property<int>("PersonalNumber")
                         .HasColumnType("int");
-=======
-                    b.Property<string>("PersonalNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -329,11 +282,7 @@ namespace BankSystem.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-<<<<<<< HEAD
-                    b.ToTable("AspNetUsers", (string)null);
-=======
                     b.ToTable("Users", (string)null);
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -357,11 +306,7 @@ namespace BankSystem.Migrations
 
                     b.HasIndex("RoleId");
 
-<<<<<<< HEAD
-                    b.ToTable("AspNetRoleClaims", (string)null);
-=======
                     b.ToTable("RoleClaims", (string)null);
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
@@ -385,11 +330,7 @@ namespace BankSystem.Migrations
 
                     b.HasIndex("UserId");
 
-<<<<<<< HEAD
-                    b.ToTable("AspNetUserClaims", (string)null);
-=======
                     b.ToTable("UserClaims", (string)null);
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
@@ -410,11 +351,7 @@ namespace BankSystem.Migrations
 
                     b.HasIndex("UserId");
 
-<<<<<<< HEAD
-                    b.ToTable("AspNetUserLogins", (string)null);
-=======
                     b.ToTable("UserLogins", (string)null);
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
@@ -429,11 +366,7 @@ namespace BankSystem.Migrations
 
                     b.HasIndex("RoleId");
 
-<<<<<<< HEAD
-                    b.ToTable("AspNetUserRoles", (string)null);
-=======
                     b.ToTable("UserRoles", (string)null);
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -452,9 +385,6 @@ namespace BankSystem.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-<<<<<<< HEAD
-                    b.ToTable("AspNetUserTokens", (string)null);
-=======
                     b.ToTable("UserTokens", (string)null);
                 });
 
@@ -471,18 +401,10 @@ namespace BankSystem.Migrations
                         .HasForeignKey("CardsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                 });
 
             modelBuilder.Entity("BankSystem.Db.Entities.AccountEntity", b =>
                 {
-<<<<<<< HEAD
-                    b.HasOne("BankSystem.Db.Entities.TransactionEntity", null)
-                        .WithMany("Accounts")
-                        .HasForeignKey("TransactionEntityId");
-
-=======
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
                     b.HasOne("BankSystem.Db.Entities.UserEntity", null)
                         .WithMany("Accounts")
                         .HasForeignKey("UserId")
@@ -490,16 +412,6 @@ namespace BankSystem.Migrations
                         .IsRequired();
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("BankSystem.Db.Entities.CardEntity", b =>
-                {
-                    b.HasOne("BankSystem.Db.Entities.AccountEntity", null)
-                        .WithMany("Cards")
-                        .HasForeignKey("AccountEntityId");
-                });
-
-=======
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
             modelBuilder.Entity("BankSystem.Db.Entities.TransactionEntity", b =>
                 {
                     b.HasOne("BankSystem.Db.Entities.AccountEntity", "FromAccount")
@@ -566,19 +478,6 @@ namespace BankSystem.Migrations
                         .IsRequired();
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("BankSystem.Db.Entities.AccountEntity", b =>
-                {
-                    b.Navigation("Cards");
-                });
-
-            modelBuilder.Entity("BankSystem.Db.Entities.TransactionEntity", b =>
-                {
-                    b.Navigation("Accounts");
-                });
-
-=======
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
             modelBuilder.Entity("BankSystem.Db.Entities.UserEntity", b =>
                 {
                     b.Navigation("Accounts");

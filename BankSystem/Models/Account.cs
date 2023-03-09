@@ -10,8 +10,13 @@ namespace BankSystem.Models
 		public decimal Amount { get; set; }
 		public Currency Currency { get; set; }
 
+<<<<<<< HEAD
 		public List<Card> Cards { get; set; }
 
 
 	}
+=======
+        public List<Card> Cards { get; set; }
+    }
+>>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
 }

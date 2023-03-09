@@ -5,6 +5,7 @@ namespace BankSystem.Db.Entities
 {
     public class UserEntity : IdentityUser<int>
     {
+<<<<<<< HEAD
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string LastName { get; set; }
@@ -14,4 +15,14 @@ namespace BankSystem.Db.Entities
 		public DateTime BirthDate { get; set; }
 		public List<AccountEntity> Accounts { get; set; }
 	}
+=======
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public DateTime RegisteredAt { get; set; }
+        public string PersonalNumber { get; set; }
+        public string BirthDate { get; set; }
+        public List<AccountEntity> Accounts { get; set; }
+    }
+>>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
 }

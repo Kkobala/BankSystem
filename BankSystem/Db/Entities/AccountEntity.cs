@@ -46,8 +46,39 @@ namespace BankSystem.Db.Entities
         {
             return new AccountEntity
             {
+<<<<<<< HEAD
+                Json = JsonConvert.SerializeObject(account.Id)
+=======
                 Json = JsonConvert.SerializeObject(account.Currency)
+>>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
             };
         }
-    }
+		public Account ToDomainModel()
+		{
+			var cards = new List<Card>();
+
+			foreach (var cardEntity in Cards)
+			{
+				cards.Add(new Card
+				{
+					Id = cardEntity.Id,
+					CardNumber = cardEntity.CardNumber,
+					OwnerName = cardEntity.OwnerName,
+					OwnerLastName = cardEntity.OwnerLastName,
+					CardExpirationDate = cardEntity.CardExpirationDate,
+					CVV = cardEntity.CVV,
+					PIN = cardEntity.PIN
+				});
+			}
+
+			return new Account
+			{
+				Id = Id,
+				UserId = UserId,
+				Amount = Amount,
+				Currency = Currency,
+				Cards = cards
+			};
+		}
+	}
 }

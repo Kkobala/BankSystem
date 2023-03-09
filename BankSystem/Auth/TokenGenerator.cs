@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿using Microsoft.Extensions.Options;
+=======
 using Microsoft.Extensions.Options;
+>>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,6 +10,38 @@ using System.Text;
 
 namespace BankSystem.Auth
 {
+<<<<<<< HEAD
+	public class TokenGenerator
+	{
+		private readonly JwtSettings _settings;
+		public TokenGenerator(IOptions<JwtSettings> settings)
+		{
+			_settings = settings.Value;
+		}
+		public string Generate(string email)
+		{
+			var claims = new List<Claim>
+			{
+	new Claim(JwtRegisteredClaimNames.Sub, email),
+	new Claim(ClaimTypes.Role, "api-user"),
+};
+
+			var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecrectKey));
+			var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+			var token = new JwtSecurityToken(
+				issuer: _settings.Issuer,
+				audience: _settings.Audience,
+				claims: claims,
+				expires: DateTime.Now.AddMinutes(1),
+				signingCredentials: credentials);
+
+			var tokenGenerator = new JwtSecurityTokenHandler();
+			var jwtString = tokenGenerator.WriteToken(token);
+			return jwtString;
+		}
+	}
+=======
     public class TokenGenerator
     {
         private readonly JwtSettings _settings;
@@ -39,4 +75,5 @@ namespace BankSystem.Auth
             return jwtString;
         }
     }
+>>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
 }

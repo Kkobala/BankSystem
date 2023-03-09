@@ -38,7 +38,6 @@ namespace BankSystem.Db.Entities
                 UserId = UserId,
                 Amount = Amount,
                 Currency = Currency,
-                Metadata = JsonConvert.DeserializeObject<AccountMetadata>(Json),
                 Cards = cards
             };
         }
@@ -47,7 +46,7 @@ namespace BankSystem.Db.Entities
         {
             return new AccountEntity
             {
-                Json = JsonConvert.SerializeObject(account.Metadata)
+                Json = JsonConvert.SerializeObject(account.Currency)
             };
         }
     }

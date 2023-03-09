@@ -38,31 +38,29 @@ namespace BankSystem.Auth
             };
 
             builder.Services
-             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-             .AddJwtBearer(options =>
-             {
-                 options.TokenValidationParameters = tokenValidationParameters;
-             });
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options => { options.TokenValidationParameters = tokenValidationParameters; });
 
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiUser",
                     policy => policy.RequireClaim(ClaimTypes.Role, "api-user"));
 
-                options.AddPolicy("ApiAdmin",
-                    policy => policy.RequireClaim(ClaimTypes.Role, "api-admin"));
+                options.AddPolicy("Operator",
+                    policy => policy.RequireClaim(ClaimTypes.Role, "operator"));
             });
 
-            builder.Services.AddIdentity<UserEntity, RoleEntity>(o =>
-            {
-                o.Password.RequireDigit = true;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = true;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 8;
-            })
+            builder.Services
+                .AddIdentity<UserEntity, RoleEntity>(o =>
+                {
+                    o.Password.RequireDigit = true;
+                    o.Password.RequireLowercase = false;
+                    o.Password.RequireUppercase = false;
+                    o.Password.RequireNonAlphanumeric = false;
+                    o.Password.RequiredLength = 8;
+                })
                 .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders();
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace BankSystem.Models.AuthRequests
 {
-    public class LoginRequest
+    public class LoginOperatorRequest
     {
-        public string Email { get; set; }
+        public string Name { get; set; }
         public string Password { get; set; }
     }
 }

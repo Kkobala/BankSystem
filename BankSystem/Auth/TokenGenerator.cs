@@ -21,6 +21,7 @@ namespace BankSystem.Auth
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId),
                 new Claim(ClaimTypes.Role, "api-user"),
+                new Claim(ClaimTypes.Role, "api-operator")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.SecretKey!));

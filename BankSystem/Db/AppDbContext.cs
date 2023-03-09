@@ -49,6 +49,12 @@ namespace BankSystem.Db
                 .Entity<TransactionEntity>()
                 .Property(t => t.Fee)
                 .HasColumnType("decimal");
+
+            modelBuilder.Entity<RoleEntity>().HasData(new[]
+            {
+                new RoleEntity { Id = 1, Name = "user" },
+                new RoleEntity { Id = 2, Name = "operator" }
+            });
         }
     }
 }

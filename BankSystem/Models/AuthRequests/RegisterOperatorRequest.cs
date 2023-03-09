@@ -1,8 +1,7 @@
-﻿namespace BankSystem.Models.Requests
+﻿namespace BankSystem.Models.AuthRequests
 {
     public class RegisterOperatorRequest
     {
-        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

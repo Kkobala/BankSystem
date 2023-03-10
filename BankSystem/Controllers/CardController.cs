@@ -1,5 +1,6 @@
 ﻿using BankSystem.Models.Requests;
 using BankSystem.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace BankSystem.Controllers
             _cardRepository = cardRepository;
         }
 
+        [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
         [HttpPost("add-card")]
         public async Task<IActionResult> AddCard(AddCardRequest request)
         {
@@ -25,10 +27,10 @@ namespace BankSystem.Controllers
             return Ok();
         }
 
-        [HttpPost("get-user-cards")]
-        public async Task<IActionResult> GetUserCards(int userId)
+        [HttpGet("get-user-cards")]
+        public async Task<IActionResult> GetUserCards(int accountId)
         {
-            var userCard = await _cardRepository.GetUserCardsAsync(userId);
+            var userCard = await _cardRepository.GetUserCardsAsync(accountId);
 
             return Ok(userCard);
         }

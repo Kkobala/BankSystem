@@ -1,5 +1,6 @@
 ﻿using BankSystem.Db;
 using BankSystem.Db.Entities;
+using BankSystem.Models;
 using BankSystem.Models.Requests;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,10 +17,15 @@ namespace BankSystem.Repositories
 
         public async Task AddCardAsync(AddCardRequest request)
         {
+            var account = await _db.Accounts
+                .FirstOrDefaultAsync(a => a.Id == request.AccountId)
+                ?? throw new Exception("Can not find account");
+
             var card = new CardEntity()
             {
                 AccountId = request.AccountId,
                 CardNumber = request.CardNumber,
+                Account = account,
                 PIN = request.PIN,
                 CVV = request.CVV,
                 CardExpirationDate = request.CardExpirationDate,
@@ -27,6 +33,7 @@ namespace BankSystem.Repositories
                 OwnerLastName = request.OwnerLastName
             };
 
+            await _db.Accounts.AddAsync(account);
             await _db.Cards.AddAsync(card);
             await _db.SaveChangesAsync();
         }
@@ -51,26 +58,25 @@ namespace BankSystem.Repositories
 
         public async Task<List<CardEntity>> GetUserCardsAsync(int userId)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            var account = await _db.Cards
+                .Where(u => u.AccountId == userId)
+                .ToListAsync();
 
-            List<CardEntity> userCards = new List<CardEntity>();
-
-            foreach (var card in userCards)
+            Parallel.ForEach(account, acc =>
             {
-                if (card.CardExpirationDate < DateTime.Now)
+                if (acc.CardExpirationDate < DateTime.Now)
                 {
                     throw new Exception("Your card will expired");
                 }
-                else
-                if (card.CardExpirationDate < DateTime.Now.AddMonths(3))
+                else if (acc.CardExpirationDate < DateTime.Now.AddMonths(3))
                 {
                     throw new Exception("Your card will expire in 3 months");
                 }
-            }
+            });
 
             await _db.SaveChangesAsync();
 
-            return userCards;
+            return account.ToList();
         }
     }
 }

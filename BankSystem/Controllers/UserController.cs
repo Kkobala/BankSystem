@@ -33,6 +33,7 @@ namespace BankSystem.Controllers
             entity.PersonalNumber = request.PersonalNumber;
             entity.Email = request.Email;
             var result = await _userManager.CreateAsync(entity, request.Password!);
+            await _userManager.AddToRoleAsync(entity, "operator");
 
             if (!result.Succeeded)
             {
@@ -60,7 +61,9 @@ namespace BankSystem.Controllers
                 return BadRequest("Invalid email or password");
             }
 
-            return Ok(_tokenGenerator.Generate(user.Id.ToString()));
+            var roles = await _userManager.GetRolesAsync(user);
+
+            return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
     }
 }

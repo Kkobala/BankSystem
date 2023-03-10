@@ -1,5 +1,5 @@
-﻿using BankSystem.Enums;
-using BankSystem.Models;
+﻿using BankSystem.Models;
+using BankSystem.Models.Enums;
 using Newtonsoft.Json;
 
 namespace BankSystem.Db.Entities
@@ -13,6 +13,11 @@ namespace BankSystem.Db.Entities
         public Currency Currency { get; set; }
         public string? Json { get; set; }
         public List<CardEntity> Cards { get; set; }
+
+        public AccountEntity()
+        {
+            Cards = new List<CardEntity>();
+        }
 
         public Account ToDomainModel()
         {

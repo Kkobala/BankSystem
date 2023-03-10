@@ -1,4 +1,4 @@
-﻿namespace BankSystem.Enums
+﻿namespace BankSystem.Models.Enums
 {
     public enum Currency
     {

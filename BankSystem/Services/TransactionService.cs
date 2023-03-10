@@ -1,6 +1,6 @@
 ﻿using BankSystem.Db;
-using BankSystem.Enums;
 using BankSystem.Models;
+using BankSystem.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Transactions;
 

@@ -1,4 +1,4 @@
-﻿using BankSystem.Enums;
+﻿using BankSystem.Models.Enums;
 
 namespace BankSystem.Db.Entities
 {

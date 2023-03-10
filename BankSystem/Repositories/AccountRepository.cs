@@ -28,7 +28,7 @@ namespace BankSystem.Repositories
 
         public async Task<Account?> GetAccountAsync(int userId)
         {
-            var entity = await _db.Accounts.FirstOrDefaultAsync(a => a.UserId == userId);
+            var entity = await _db.Accounts.Include(a => a.Cards).FirstOrDefaultAsync(a => a.UserId == userId);
 
             if (entity == null)
             {

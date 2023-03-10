@@ -1,5 +1,5 @@
 using BankSystem.Db.Entities;
-using BankSystem.Enums;
+using BankSystem.Models.Enums;
 
 namespace BankSystem.Models
 {
@@ -12,5 +12,10 @@ namespace BankSystem.Models
         public decimal Amount { get; set; }
         public List<Card> Cards { get; set; }
         public TransactionType Type { get; set; }
+
+        public Transaction()
+        {
+            Cards = new List<Card>();
+        }
     }
 }

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230309104210_initial")]
-    partial class initial
+    [Migration("20230310163058_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,7 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("IBAN")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Json")
@@ -68,7 +69,7 @@ namespace BankSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AccountEntityId")
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<int>("CVV")
@@ -91,7 +92,7 @@ namespace BankSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccountEntityId");
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Cards");
                 });
@@ -396,9 +397,13 @@ namespace BankSystem.Migrations
 
             modelBuilder.Entity("BankSystem.Db.Entities.CardEntity", b =>
                 {
-                    b.HasOne("BankSystem.Db.Entities.AccountEntity", null)
+                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "Account")
                         .WithMany("Cards")
-                        .HasForeignKey("AccountEntityId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("BankSystem.Db.Entities.TransactionEntity", b =>

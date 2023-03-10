@@ -11,6 +11,5 @@ namespace BankSystem.Models.Requests
         public int CVV { get; set; }
         public int PIN { get; set; }
         public DateTime CardExpirationDate { get; set; }
-        public List<AccountEntity> Accounts { get; set; }
     }
 }

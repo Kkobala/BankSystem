@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-=======
+    <PackageReference Include="IBAN4Net" Version="2.0.6" />
+
     <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
@@ -24,11 +23,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-<<<<<<< HEAD
+
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-=======
+
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 

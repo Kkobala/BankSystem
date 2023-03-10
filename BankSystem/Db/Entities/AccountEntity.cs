@@ -1,5 +1,5 @@
-﻿using BankSystem.Enums;
-using BankSystem.Models;
+﻿using BankSystem.Models;
+using BankSystem.Models.Enums;
 using Newtonsoft.Json;
 
 namespace BankSystem.Db.Entities
@@ -11,8 +11,13 @@ namespace BankSystem.Db.Entities
         public string IBAN { get; set; }
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
-        public string Json { get; set; }
+        public string? Json { get; set; }
         public List<CardEntity> Cards { get; set; }
+
+        public AccountEntity()
+        {
+            Cards = new List<CardEntity>();
+        }
 
         public Account ToDomainModel()
         {
@@ -41,44 +46,5 @@ namespace BankSystem.Db.Entities
                 Cards = cards
             };
         }
-
-        public static AccountEntity FromDomainModel(Account account)
-        {
-            return new AccountEntity
-            {
-<<<<<<< HEAD
-                Json = JsonConvert.SerializeObject(account.Id)
-=======
-                Json = JsonConvert.SerializeObject(account.Currency)
->>>>>>> 121230ad213c895182d809f1560e6197e43bb22b
-            };
-        }
-		public Account ToDomainModel()
-		{
-			var cards = new List<Card>();
-
-			foreach (var cardEntity in Cards)
-			{
-				cards.Add(new Card
-				{
-					Id = cardEntity.Id,
-					CardNumber = cardEntity.CardNumber,
-					OwnerName = cardEntity.OwnerName,
-					OwnerLastName = cardEntity.OwnerLastName,
-					CardExpirationDate = cardEntity.CardExpirationDate,
-					CVV = cardEntity.CVV,
-					PIN = cardEntity.PIN
-				});
-			}
-
-			return new Account
-			{
-				Id = Id,
-				UserId = UserId,
-				Amount = Amount,
-				Currency = Currency,
-				Cards = cards
-			};
-		}
-	}
+    }
 }

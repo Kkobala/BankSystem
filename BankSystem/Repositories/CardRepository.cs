@@ -24,8 +24,7 @@ namespace BankSystem.Repositories
                 CVV = request.CVV,
                 CardExpirationDate = request.CardExpirationDate,
                 OwnerName = request.OwnerName,
-                OwnerLastName = request.OwnerLastName,
-                Accounts = request.Accounts
+                OwnerLastName = request.OwnerLastName
             };
 
             await _db.Cards.AddAsync(card);

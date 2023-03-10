@@ -1,6 +1,7 @@
 using BankSystem.Auth;
 using BankSystem.Db;
 using BankSystem.Repositories;
+using BankSystem.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,9 @@ AuthConfigurator.Configure(builder);
 builder.Services.AddDbContextPool<AppDbContext>(c =>
     c.UseSqlServer(builder.Configuration["DefaultConnection"]));
 builder.Services.AddTransient<ICardRepository, CardRepository>();
+builder.Services.AddTransient<IAccountRepository, AccountRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<TransactionService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

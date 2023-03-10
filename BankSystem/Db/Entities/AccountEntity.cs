@@ -11,7 +11,7 @@ namespace BankSystem.Db.Entities
         public string IBAN { get; set; }
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
-        public string Json { get; set; }
+        public string? Json { get; set; }
         public List<CardEntity> Cards { get; set; }
 
         public Account ToDomainModel()
@@ -42,12 +42,12 @@ namespace BankSystem.Db.Entities
             };
         }
 
-        public static AccountEntity FromDomainModel(Account account)
-        {
-            return new AccountEntity
-            {
-                Json = JsonConvert.SerializeObject(account.Currency)
-            };
-        }
+        //public static AccountEntity FromDomainModel(Account account)
+        //{
+        //    return new AccountEntity
+        //    {
+        //        Json = JsonConvert.SerializeObject(account.Currency)
+        //    };
+        //}
     }
 }

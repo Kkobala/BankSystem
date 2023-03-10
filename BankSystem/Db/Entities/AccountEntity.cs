@@ -46,13 +46,5 @@ namespace BankSystem.Db.Entities
                 Cards = cards
             };
         }
-
-        //public static AccountEntity FromDomainModel(Account account)
-        //{
-        //    return new AccountEntity
-        //    {
-        //        Json = JsonConvert.SerializeObject(account.Currency)
-        //    };
-        //}
     }
 }

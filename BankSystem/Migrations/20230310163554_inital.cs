@@ -5,7 +5,7 @@
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class initialmigration : Migration
+    public partial class inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

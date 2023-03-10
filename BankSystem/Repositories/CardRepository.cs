@@ -1,6 +1,5 @@
 ﻿using BankSystem.Db;
 using BankSystem.Db.Entities;
-using BankSystem.Models;
 using BankSystem.Models.Requests;
 using Microsoft.EntityFrameworkCore;
 

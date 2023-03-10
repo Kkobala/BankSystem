@@ -1,9 +1,9 @@
 ﻿namespace BankSystem.Models.Enums
 {
-    public enum TransactionType
-    {
-        ATM,
-        Inner,
-        Outer
-    }
+	public enum TransactionType
+	{
+		ATM,
+		Inner,
+		Outter
+	}
 }

@@ -20,11 +20,11 @@ namespace BankSystem.Db
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder
-                .Entity<UserEntity>()
-                .HasMany(t => t.Accounts)
-                .WithOne()
-                .HasForeignKey(t => t.UserId);
+            //modelBuilder
+            //    .Entity<UserEntity>()
+            //    .HasMany(t => t.Accounts)
+            //    .WithOne()
+            //    .HasForeignKey(t => t.UserId);
 
             modelBuilder
                 .Entity<AccountEntity>()

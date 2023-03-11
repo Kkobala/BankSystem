@@ -13,5 +13,10 @@ namespace BankSystem.Db.Entities
         public decimal Fee { get; set; }
         public DateTime TransactionDate { get; set; }
         public TransactionType Type { get; set; }
+
+        public TransactionEntity()
+        {
+            Accounts = new List<AccountEntity>();
+        }
     }
 }

@@ -1,9 +1,12 @@
-﻿namespace BankSystem.Models.Requests
+﻿using BankSystem.Models.Enums;
+
+namespace BankSystem.Models.Requests
 {
 	public class TransferInnerRequest
 	{
-		public int AccountId { get; set; }
-		public int TargetAccountId { get; set; }
+		public int ToAccountId { get; set; }
+        public int FromAccountId { get; set; }
+        public Currency Currency { get; set; }
 		public decimal Amount { get; set; }
 	}
 }

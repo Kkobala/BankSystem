@@ -34,7 +34,7 @@ namespace BankSystem.Auth
                 issuer: _settings.Issuer,
                 audience: _settings.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
+                expires: DateTime.Now.AddMinutes(1000),
                 signingCredentials: credentials);
 
             var tokenGenerator = new JwtSecurityTokenHandler();

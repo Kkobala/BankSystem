@@ -13,7 +13,6 @@ namespace BankSystem.Db
         }
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
-        public DbSet<OperatorEntity> Operators { get; set; }
         public DbSet<CardEntity> Cards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

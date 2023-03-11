@@ -1,6 +1,7 @@
 ﻿using BankSystem.Models;
 using BankSystem.Models.Enums;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankSystem.Db.Entities
 {
@@ -13,10 +14,13 @@ namespace BankSystem.Db.Entities
         public Currency Currency { get; set; }
         public string? Json { get; set; }
         public List<CardEntity> Cards { get; set; }
+        [NotMapped]
+        public List<TransactionEntity> Transactions { get; internal set; }
 
         public AccountEntity()
         {
             Cards = new List<CardEntity>();
+            Transactions = new List<TransactionEntity>();
         }
 
         public Account ToDomainModel()

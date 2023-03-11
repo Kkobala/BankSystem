@@ -11,5 +11,9 @@ namespace BankSystem.Models
 		public Currency Currency { get; set; }
 
 		public List<Card> Cards { get; set; }
-	}
+        public Account()
+        {
+            Cards = new List<Card>();
+        }
+    }
 }

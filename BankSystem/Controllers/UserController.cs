@@ -1,6 +1,7 @@
 ﻿using BankSystem.Auth;
 using BankSystem.Db.Entities;
 using BankSystem.Models.AuthRequests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,34 +13,40 @@ namespace BankSystem.Controllers
     {
         private readonly TokenGenerator _tokenGenerator;
         private readonly UserManager<UserEntity> _userManager;
+        private readonly RoleManager<RoleEntity> _roleManager;
 
         public UserController(
             UserManager<UserEntity> userManager,
-            TokenGenerator tokenGenerator)
+            TokenGenerator tokenGenerator,
+            RoleManager<RoleEntity> roleManager)
         {
             _tokenGenerator = tokenGenerator;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
-
 
         [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request)
         {
-            var entity = new UserEntity();
-            entity.UserName = request.Email;
-            entity.Name = request.Name;
-            entity.LastName = request.LastName;
-            entity.BirthDate = request.BirthDate;
-            entity.PersonalNumber = request.PersonalNumber;
-            entity.Email = request.Email;
+            var entity = new UserEntity
+            {
+                UserName = request.Email,
+                Name = request.Name,
+                LastName = request.LastName,
+                BirthDate = request.BirthDate,
+                PersonalNumber = request.PersonalNumber,
+                Email = request.Email,
+                RoleId = (await _roleManager.FindByNameAsync("operator")).Id
+            };
+
             var result = await _userManager.CreateAsync(entity, request.Password!);
-            await _userManager.AddToRoleAsync(entity, "operator");
+            //await _userManager.AddToRoleAsync(entity, "operator");
 
             if (!result.Succeeded)
             {
                 var firstError = result.Errors.First();
                 return BadRequest(firstError.Description);
-            }
+            } 
 
             return Ok();
         }
@@ -47,7 +54,7 @@ namespace BankSystem.Controllers
         [HttpPost("login-user")]
         public async Task<IActionResult> LoginUser([FromBody] LoginRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByNameAsync(request.Email);
 
             if (user == null)
             {

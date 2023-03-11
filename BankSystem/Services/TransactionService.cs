@@ -1,93 +1,94 @@
-﻿using BankSystem.Db;
+﻿using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
-using Microsoft.EntityFrameworkCore;
-using System.Transactions;
+using BankSystem.Repositories;
 
 namespace BankSystem.Services
 {
     public class TransactionService
     {
-        private const decimal withdrawVar = 1.5M;
-        private readonly AppDbContext _db;
+        private readonly ITransactionRepository _transactionRepository;
 
-        public TransactionService(AppDbContext db)
+        public TransactionService(ITransactionRepository transactionRepository)
         {
-            _db = db;
+            _transactionRepository = transactionRepository;
         }
 
-        public async Task InnerTransaction(int amount, Currency currency, string IBAN)
+        public async Task<int> InnerTransactionAsync(int fromAccountId, int toAccountId, decimal amount)
         {
-            var account = await _db.Accounts.FirstOrDefaultAsync(a => a.IBAN == IBAN);
+            var fromAccount = await _transactionRepository.GetAccountById(fromAccountId);
+            var toAccount = await _transactionRepository.GetAccountById(toAccountId);
 
-            if (account == null)
+            if (fromAccount == null || toAccount == null)
             {
-                throw new ArgumentException("No account found with the provided IBAN.");
+                throw new Exception("One or more account(s) not found");
             }
 
-            if (account.Amount < amount || account.Currency != currency)
+            if (fromAccount.Amount < amount)
             {
-                throw new InvalidOperationException("The account does not have sufficient funds in the specified currency.");
+                throw new Exception("Insufficient funds");
             }
 
-            account.Amount -= amount;
+            var fee = amount * 0.00m; // assuming fee is 1% of the amount
 
-            var matchingAccount = await _db.Accounts.FirstOrDefaultAsync(a => a.Currency == currency && a.IBAN != IBAN);
-
-            if (matchingAccount == null)
+            var transaction = new TransactionEntity
             {
-                throw new InvalidOperationException("No account found with the specified currency.");
-            }
+                FromAccount = fromAccount,
+                ToAccount = toAccount,
+                Amount = amount,
+                Currency = fromAccount.Currency,
+                Fee = fee,
+                TransactionDate = DateTime.UtcNow,
+                Type = TransactionType.Inner
+            };
 
-            matchingAccount.Amount += amount;
+            fromAccount.Amount -= amount + fee;
+            toAccount.Amount += amount;
+
+            await _transactionRepository.CreateTransactionAsync(transaction);
+
+            return transaction.Id;
         }
 
-        public async Task OuterTransaction(int amount, Currency currency, string fromIBAN, string toIBAN)
+        public async Task<int> OutTransactionAsync(int fromAccountId, int toAccountId, decimal amount, Currency currency)
         {
-            using (var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            var fromAccount = await _transactionRepository.GetAccountById(fromAccountId);
+            var toAccount = await _transactionRepository.GetAccountById(toAccountId);
+
+            if (fromAccount == null || toAccount == null)
             {
-                try
-                {
-                    var fromAccount = await _db.Accounts.FirstOrDefaultAsync(a => a.IBAN == fromIBAN);
-
-                    if (fromAccount == null)
-                    {
-                        throw new ArgumentException("No account found with the provided 'from' IBAN.");
-                    }
-
-                    if (fromAccount.Amount < amount || fromAccount.Currency != currency)
-                    {
-                        throw new InvalidOperationException("The account does not have sufficient funds in the specified currency.");
-                    }
-
-                    fromAccount.Amount -= amount;
-
-                    var toAccount = await _db.Accounts.FirstOrDefaultAsync(a => a.IBAN == toIBAN);
-
-                    if (toAccount == null)
-                    {
-                        throw new ArgumentException("No account found with the provided 'to' IBAN.");
-                    }
-
-                    var isSameBank = fromAccount.UserId == toAccount.UserId;
-
-                    decimal exchangeRate = isSameBank ? 1 : 1.5M;
-
-                    decimal transferAmount = amount * exchangeRate;
-
-                    if (toAccount.Currency != currency)
-                    {
-                        throw new InvalidOperationException("The 'to' account does not have the same currency as the transfer.");
-                    }
-
-                    toAccount.Amount += transferAmount;
-
-                    transactionScope.Complete();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(ex.Message);
-                }
+                throw new Exception("One or more account(s) not found");
             }
+
+            if (fromAccount.Amount < amount)
+            {
+                throw new Exception("Insufficient funds");
+            }
+
+            var fee = (amount * 0.01m) + 0.5m; // assuming fee is 1% of the amount
+
+            var transaction = new TransactionEntity
+            {
+                FromAccount = fromAccount,
+                ToAccount = toAccount,
+                Amount = amount,
+                Currency = currency,
+                Fee = fee,
+                TransactionDate = DateTime.UtcNow,
+                Type = TransactionType.Outter
+            };
+
+            fromAccount.Amount -= amount + fee;
+
+            // add transaction to the list of transactions of the 'toAccount'
+            if (toAccount.Transactions == null)
+            {
+                toAccount.Transactions = new List<TransactionEntity>();
+            }
+
+            toAccount.Transactions.Add(transaction);
+            await _transactionRepository.CreateTransactionAsync(transaction);
+
+            return transaction.Id;
         }
     }
 }

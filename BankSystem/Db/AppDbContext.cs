@@ -26,12 +26,6 @@ namespace BankSystem.Db
             modelBuilder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
 
-            //modelBuilder
-            //    .Entity<UserEntity>()
-            //    .HasMany(t => t.Accounts)
-            //    .WithOne()
-            //    .HasForeignKey(t => t.UserId);
-
             modelBuilder
                 .Entity<AccountEntity>()
                 .Property(t => t.Amount)

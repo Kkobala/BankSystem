@@ -3,6 +3,6 @@
     public class ChangePINRequest
     {
         public int Id { get; set; }
-        public int PIN { get; set; }
+        public int NewPIN { get; set; }
     }
 }

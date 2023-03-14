@@ -18,7 +18,7 @@ namespace BankSystem.Controllers
         public UserController(
             UserManager<UserEntity> userManager,
             TokenGenerator tokenGenerator,
-                  AppDbContext db)
+            AppDbContext db)
         {
             _tokenGenerator = tokenGenerator;
             _userManager = userManager;

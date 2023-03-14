@@ -25,7 +25,7 @@ namespace BankSystem.Controllers
         {
             try
             {
-                await _transactionService.InnerTransactionAsync(innerTransferRequest.FromAccountId, innerTransferRequest.ToAccountId, innerTransferRequest.Amount);
+                await _transactionService.InnerTransactionAsync(innerTransferRequest.FromIBAN!, innerTransferRequest.ToIBAN!, innerTransferRequest.Amount);
                 return Ok("Transfer successful");
             }
             catch (ArgumentException ex)
@@ -43,7 +43,7 @@ namespace BankSystem.Controllers
         {
             try
             {
-                await _transactionService.OutTransactionAsync(outTransferRequest.FromAccountId, outTransferRequest.ToAccountId, outTransferRequest.Amount, outTransferRequest.Currency);
+                await _transactionService.OutTransactionAsync(outTransferRequest.FromIBAN!, outTransferRequest.ToIBAN!, outTransferRequest.Amount, outTransferRequest.Currency);
                 return Ok("Transfer successful");
             }
             catch (ArgumentException ex)

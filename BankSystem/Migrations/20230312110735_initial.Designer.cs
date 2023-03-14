@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230311172612_migrate")]
-    partial class migrate
+    [Migration("20230312110735_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,22 +99,6 @@ namespace BankSystem.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Cards");
-                });
-
-            modelBuilder.Entity("BankSystem.Db.Entities.OperatorEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Operators");
                 });
 
             modelBuilder.Entity("BankSystem.Db.Entities.RoleEntity", b =>
@@ -260,9 +244,6 @@ namespace BankSystem.Migrations
 
                     b.Property<DateTime>("RegisteredAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

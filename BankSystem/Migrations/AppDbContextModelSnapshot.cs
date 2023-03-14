@@ -98,22 +98,6 @@ namespace BankSystem.Migrations
                     b.ToTable("Cards");
                 });
 
-            modelBuilder.Entity("BankSystem.Db.Entities.OperatorEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Operators");
-                });
-
             modelBuilder.Entity("BankSystem.Db.Entities.RoleEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -257,9 +241,6 @@ namespace BankSystem.Migrations
 
                     b.Property<DateTime>("RegisteredAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");

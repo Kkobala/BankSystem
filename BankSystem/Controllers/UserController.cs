@@ -13,18 +13,15 @@ namespace BankSystem.Controllers
     {
         private readonly TokenGenerator _tokenGenerator;
         private readonly UserManager<UserEntity> _userManager;
-        private readonly RoleManager<RoleEntity> _roleManager;
         private readonly AppDbContext _db;
 
         public UserController(
             UserManager<UserEntity> userManager,
             TokenGenerator tokenGenerator,
-            RoleManager<RoleEntity> roleManager,
             AppDbContext db)
         {
             _tokenGenerator = tokenGenerator;
             _userManager = userManager;
-            _roleManager = roleManager;
             _db = db;
         }
 

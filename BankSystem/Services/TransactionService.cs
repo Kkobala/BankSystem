@@ -13,17 +13,17 @@ namespace BankSystem.Services
             _transactionRepository = transactionRepository;
         }
 
-        public async Task<int> InnerTransactionAsync(int fromAccountId, int toAccountId, decimal amount)
+        public async Task<int> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
         {
-            var fromAccount = await _transactionRepository.GetAccountById(fromAccountId);
-            var toAccount = await _transactionRepository.GetAccountById(toAccountId);
+            var fromiban = await _transactionRepository.GetAccountByIBAN(fromIBAN);
+            var toiban = await _transactionRepository.GetAccountByIBAN(toIBAN);
 
-            if (fromAccount == null || toAccount == null)
+            if (fromiban == null || toiban == null)
             {
                 throw new Exception("One or more account(s) not found");
             }
 
-            if (fromAccount.Amount < amount)
+            if (fromiban.Amount < amount)
             {
                 throw new Exception("Insufficient funds");
             }
@@ -32,34 +32,34 @@ namespace BankSystem.Services
 
             var transaction = new TransactionEntity
             {
-                FromAccount = fromAccount,
-                ToAccount = toAccount,
+                FromIBAN = fromiban,
+                ToIBAN = toiban,
                 Amount = amount,
-                Currency = fromAccount.Currency,
+                Currency = fromiban.Currency,
                 Fee = fee,
                 TransactionDate = DateTime.UtcNow,
                 Type = TransactionType.Inner
             };
 
-            fromAccount.Amount -= amount + fee;
-            toAccount.Amount += amount;
+            fromiban.Amount -= amount + fee;
+            toiban.Amount += amount;
 
             await _transactionRepository.CreateTransactionAsync(transaction);
 
             return transaction.Id;
         }
 
-        public async Task<int> OutTransactionAsync(int fromAccountId, int toAccountId, decimal amount, Currency currency)
+        public async Task<int> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency currency)
         {
-            var fromAccount = await _transactionRepository.GetAccountById(fromAccountId);
-            var toAccount = await _transactionRepository.GetAccountById(toAccountId);
+            var fromiban = await _transactionRepository.GetAccountByIBAN(fromIBAN);
+            var toiban = await _transactionRepository.GetAccountByIBAN(toIBAN);
 
-            if (fromAccount == null || toAccount == null)
+            if (fromiban == null || toiban == null)
             {
                 throw new Exception("One or more account(s) not found");
             }
 
-            if (fromAccount.Amount < amount)
+            if (fromiban.Amount < amount)
             {
                 throw new Exception("Insufficient funds");
             }
@@ -68,8 +68,8 @@ namespace BankSystem.Services
 
             var transaction = new TransactionEntity
             {
-                FromAccount = fromAccount,
-                ToAccount = toAccount,
+                FromIBAN = fromiban,
+                ToIBAN = toiban,
                 Amount = amount,
                 Currency = currency,
                 Fee = fee,
@@ -77,15 +77,16 @@ namespace BankSystem.Services
                 Type = TransactionType.Outter
             };
 
-            fromAccount.Amount -= amount + fee;
+            fromiban.Amount -= amount + fee;
 
             // add transaction to the list of transactions of the 'toAccount'
-            if (toAccount.Transactions == null)
+            if (toiban.Transactions == null)
             {
-                toAccount.Transactions = new List<TransactionEntity>();
+                toiban.Transactions = new List<TransactionEntity>();
             }
 
-            toAccount.Transactions.Add(transaction);
+            toiban.Transactions.Add(transaction);
+
             await _transactionRepository.CreateTransactionAsync(transaction);
 
             return transaction.Id;

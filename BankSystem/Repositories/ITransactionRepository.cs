@@ -6,6 +6,9 @@ namespace BankSystem.Repositories
     {
         Task<int> CreateTransactionAsync(TransactionEntity transaction);
         Task<List<TransactionEntity>> GetTransactionsAsync();
-        Task<AccountEntity> GetAccountById(int id);
+        Task<AccountEntity> GetAccountByIBAN(string iban);
+        Task<AccountEntity?> GetAccountById(int id);
+
+        Task<int> CreateWithdrawAsync(TransactionEntity transaction);
     }
 }

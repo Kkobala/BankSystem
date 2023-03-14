@@ -6,28 +6,47 @@ namespace BankSystem.Repositories
 {
     public class TransactionRepository : ITransactionRepository
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _db;
 
-        public TransactionRepository(AppDbContext dbContext)
+        public TransactionRepository(AppDbContext db)
         {
-            _dbContext = dbContext;
+            _db = db;
         }
 
         public async Task<int> CreateTransactionAsync(TransactionEntity transaction)
         {
-            _dbContext.Transactions.Add(transaction);
-            await _dbContext.SaveChangesAsync();
+            _db.Transactions.Add(transaction);
+            await _db.SaveChangesAsync();
             return transaction.Id;
         }
 
         public async Task<List<TransactionEntity>> GetTransactionsAsync()
         {
-            return await _dbContext.Transactions.ToListAsync();
+            return await _db.Transactions.ToListAsync();
         }
 
-        public async Task<AccountEntity> GetAccountById(int id)
+        public async Task<AccountEntity> GetAccountByIBAN(string iban)
         {
-            return await _dbContext.Accounts.FindAsync(id);
+            var account = await _db.Accounts.FirstOrDefaultAsync(x => x.IBAN == iban);
+
+            if (account == null)
+            {
+                throw new Exception($"Account with IBAN {iban} not found");
+            }
+
+            return account;
+        }
+
+        public async Task<AccountEntity?> GetAccountById(int id)
+        {
+            return await _db.Accounts.FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<int> CreateWithdrawAsync(TransactionEntity transaction)
+        {
+            _db.Transactions.Add(transaction);
+            await _db.SaveChangesAsync();
+            return transaction.Id;
         }
     }
 }

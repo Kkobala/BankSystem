@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230312110735_initial")]
-    partial class initial
+    [Migration("20230315085422_Addedamountconverter")]
+    partial class Addedamountconverter
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,14 +76,17 @@ namespace BankSystem.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal");
+
                     b.Property<int>("CVV")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CardExpirationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CardNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("CardNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerLastName")
                         .HasColumnType("nvarchar(max)");
@@ -151,6 +154,9 @@ namespace BankSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal");
 
@@ -160,10 +166,10 @@ namespace BankSystem.Migrations
                     b.Property<decimal>("Fee")
                         .HasColumnType("decimal");
 
-                    b.Property<int?>("FromAccountId")
+                    b.Property<int?>("FromIBANId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ToAccountId")
+                    b.Property<int?>("ToIBANId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TransactionDate")
@@ -174,9 +180,9 @@ namespace BankSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FromAccountId");
+                    b.HasIndex("FromIBANId");
 
-                    b.HasIndex("ToAccountId");
+                    b.HasIndex("ToIBANId");
 
                     b.ToTable("Transactions");
                 });
@@ -193,7 +199,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("BirthDate")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -208,7 +213,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -218,7 +222,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -233,7 +236,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonalNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -266,6 +268,22 @@ namespace BankSystem.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b1ceda64-35af-4d9c-8e11-9cae1e318e5c",
+                            Email = "operator@bank.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEIpJEDXRtSVvQ8tmIueqip/uYHY27Wu/cUonVAHUE9K8DECQMy7BSG9sI542E+pTZg==",
+                            PhoneNumberConfirmed = false,
+                            RegisteredAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TwoFactorEnabled = false,
+                            UserName = "operator@bank.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -350,6 +368,13 @@ namespace BankSystem.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -395,17 +420,17 @@ namespace BankSystem.Migrations
 
             modelBuilder.Entity("BankSystem.Db.Entities.TransactionEntity", b =>
                 {
-                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "FromAccount")
+                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "FromIBAN")
                         .WithMany()
-                        .HasForeignKey("FromAccountId");
+                        .HasForeignKey("FromIBANId");
 
-                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "ToAccount")
+                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "ToIBAN")
                         .WithMany()
-                        .HasForeignKey("ToAccountId");
+                        .HasForeignKey("ToIBANId");
 
-                    b.Navigation("FromAccount");
+                    b.Navigation("FromIBAN");
 
-                    b.Navigation("ToAccount");
+                    b.Navigation("ToIBAN");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

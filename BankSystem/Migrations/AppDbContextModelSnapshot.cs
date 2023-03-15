@@ -73,6 +73,9 @@ namespace BankSystem.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal");
+
                     b.Property<int>("CVV")
                         .HasColumnType("int");
 
@@ -193,7 +196,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("BirthDate")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -208,7 +210,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -218,7 +219,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -233,7 +233,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonalNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -266,6 +265,22 @@ namespace BankSystem.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b1ceda64-35af-4d9c-8e11-9cae1e318e5c",
+                            Email = "operator@bank.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PasswordHash = "AQAAAAIAAYagAAAAEIpJEDXRtSVvQ8tmIueqip/uYHY27Wu/cUonVAHUE9K8DECQMy7BSG9sI542E+pTZg==",
+                            PhoneNumberConfirmed = false,
+                            RegisteredAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TwoFactorEnabled = false,
+                            UserName = "operator@bank.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -350,6 +365,13 @@ namespace BankSystem.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = 1,
+                            RoleId = 2
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>

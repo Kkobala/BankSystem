@@ -5,6 +5,6 @@ namespace BankSystem.Repositories
 {
 	public interface IATMRepository
 	{
-		Task<CardEntity> GetCardByCardNumberAsync(int cardNumber);
+		Task<CardEntity> GetCardByCardNumberAsync(string cardNumber);
 	}
 }

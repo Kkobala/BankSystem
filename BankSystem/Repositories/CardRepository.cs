@@ -25,6 +25,7 @@ namespace BankSystem.Repositories
             {
                 AccountId = request.AccountId,
                 CardNumber = request.CardNumber,
+                Balance = request.Balance,
                 Account = account,
                 PIN = request.PIN,
                 CVV = request.CVV,
@@ -55,55 +56,6 @@ namespace BankSystem.Repositories
 
             return card;
         }
-
-        //public async Task<TransactionEntity> CashOutAsync(int accountId, decimal amount, Currency currency, decimal exchangeRate)
-        //{
-        //    var account = await _db.Accounts.FindAsync(accountId);
-
-        //    //var transaction = new TransactionEntity
-        //    //{
-        //    //    AccountId = account.Id,
-        //    //    Amount = amount,
-        //    //    Currency = currency,
-        //    //    Fee = 0,
-        //    //    TransactionDate = DateTime.UtcNow,
-        //    //    Type = TransactionType.ATM
-        //    //};
-
-        //    //var fee = CalculateFee(amount, currency);
-
-        //    //transaction.Fee = fee;
-        //    //transaction.Amount -= fee;
-        //    //transaction.Amount /= exchangeRate;
-
-        //    //account.Amount -= amount;
-
-        //    await _db.Transactions.AddAsync(transaction);
-        //    await _db.SaveChangesAsync();
-
-        //    return transaction;
-        //}
-
-        ////private decimal CalculateFee(decimal amount, Currency currency)
-        ////{
-        ////    decimal fee = 0;
-
-        ////    if (currency == Currency.GEL)
-        ////    {
-        ////        fee = amount * 0.00m;
-        ////    }
-        ////    else if (currency == Currency.EUR)
-        ////    {
-        ////        fee = amount * 0.01m;
-        ////    }
-        ////    else if (currency == Currency.USD)
-        ////    {
-        ////        fee = amount * 0.02m;
-        ////    }
-
-        ////    return fee;
-        ////}
-
 
         public async Task<List<CardEntity>> GetUserCardsAsync(int accountId)
         {

@@ -13,7 +13,7 @@ namespace BankSystem.Repositories
 			_db = db;
 		}
 
-		public async Task<CardEntity> GetCardByCardNumberAsync(int cardNumber)
+		public async Task<CardEntity> GetCardByCardNumberAsync(string cardNumber)
 		{
 			return await _db.Cards.FirstOrDefaultAsync(c => c.CardNumber == cardNumber);
 		}

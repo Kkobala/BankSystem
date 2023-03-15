@@ -11,6 +11,7 @@ namespace BankSystem.Db
         {
 
         }
+
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<CardEntity> Cards { get; set; }
@@ -32,6 +33,11 @@ namespace BankSystem.Db
                 .HasColumnType("decimal");
 
             modelBuilder
+                .Entity<CardEntity>()
+                .Property(t => t.Balance)
+                .HasColumnType("decimal");
+
+            modelBuilder
                 .Entity<TransactionEntity>()
                 .Property(t => t.Amount)
                 .HasColumnType("decimal");
@@ -43,8 +49,26 @@ namespace BankSystem.Db
 
             modelBuilder.Entity<RoleEntity>().HasData(new[]
             {
-            new RoleEntity { Id = 1, Name = "user" },
-            new RoleEntity { Id = 2, Name = "operator" }
+                new RoleEntity { Id = 1, Name = "user" },
+                new RoleEntity { Id = 2, Name = "operator" }
+            });
+
+            var userName = "operator@bank.com";
+            var password = "abc123";
+            var operatorUser = new UserEntity
+            {
+                Id = 1,
+                Email = userName,
+                UserName = userName
+            };
+
+            var hasher = new PasswordHasher<UserEntity>();
+            operatorUser.PasswordHash = hasher.HashPassword(operatorUser, password);
+            modelBuilder.Entity<UserEntity>().HasData(operatorUser);
+
+            modelBuilder.Entity<IdentityUserRole<int>>().HasData(new[]
+            {
+                new IdentityUserRole<int> { UserId = 1, RoleId = 2 }
             });
         }
     }

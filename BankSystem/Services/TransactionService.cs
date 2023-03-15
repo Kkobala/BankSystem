@@ -1,4 +1,5 @@
 ﻿using BankSystem.Db.Entities;
+using BankSystem.Models;
 using BankSystem.Models.Enums;
 using BankSystem.Repositories;
 
@@ -7,13 +8,16 @@ namespace BankSystem.Services
     public class TransactionService
     {
         private readonly ITransactionRepository _transactionRepository;
+        private readonly ConverterService _converterService;
 
-        public TransactionService(ITransactionRepository transactionRepository)
+        public TransactionService(ITransactionRepository transactionRepository,
+            ConverterService converterService)
         {
             _transactionRepository = transactionRepository;
+            _converterService = converterService;
         }
 
-        public async Task<int> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
+        public async Task<int> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency toCurrency)
         {
             var fromiban = await _transactionRepository.GetAccountByIBAN(fromIBAN);
             var toiban = await _transactionRepository.GetAccountByIBAN(toIBAN);
@@ -23,26 +27,28 @@ namespace BankSystem.Services
                 throw new Exception("One or more account(s) not found");
             }
 
-            if (fromiban.Amount < amount)
+            decimal convertedAmount = _converterService.ConvertAmount(amount, fromiban.Currency, toCurrency);
+
+            if (fromiban.Amount < convertedAmount)
             {
                 throw new Exception("Insufficient funds");
             }
 
-            var fee = amount * 0.00m; // assuming fee is 1% of the amount
+            var fee = convertedAmount * 0.00m;
 
             var transaction = new TransactionEntity
             {
                 FromIBAN = fromiban,
                 ToIBAN = toiban,
-                Amount = amount,
-                Currency = fromiban.Currency,
+                Amount = convertedAmount,
+                Currency = toCurrency,
                 Fee = fee,
                 TransactionDate = DateTime.UtcNow,
                 Type = TransactionType.Inner
             };
 
-            fromiban.Amount -= amount + fee;
-            toiban.Amount += amount;
+            fromiban.Amount -= convertedAmount + fee;
+            toiban.Amount += convertedAmount;
 
             await _transactionRepository.CreateTransactionAsync(transaction);
 
@@ -64,26 +70,29 @@ namespace BankSystem.Services
                 throw new Exception("Insufficient funds");
             }
 
-            var fee = (amount * 0.01m) + 0.5m; // assuming fee is 1% of the amount
+            decimal convertedAmount = _converterService.ConvertAmount(amount, currency, fromiban.Currency);
+
+            var fee = (convertedAmount * 0.01m) + 0.5m;
 
             var transaction = new TransactionEntity
             {
                 FromIBAN = fromiban,
                 ToIBAN = toiban,
-                Amount = amount,
-                Currency = currency,
+                Amount = convertedAmount,
+                Currency = fromiban.Currency,
                 Fee = fee,
                 TransactionDate = DateTime.UtcNow,
                 Type = TransactionType.Outter
             };
 
-            fromiban.Amount -= amount + fee;
+            fromiban.Amount -= convertedAmount + fee;
 
-            // add transaction to the list of transactions of the 'toAccount'
             if (toiban.Transactions == null)
             {
                 toiban.Transactions = new List<TransactionEntity>();
             }
+
+            toiban.Amount += convertedAmount;
 
             toiban.Transactions.Add(transaction);
 

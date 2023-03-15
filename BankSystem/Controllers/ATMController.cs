@@ -10,55 +10,32 @@ namespace BankSystem.Controllers
 	[ApiController]
 	public class ATMController : ControllerBase
 	{
-		private readonly ILogger<ATMController> _logger;
 		private readonly IATMService _atmService;
 
-		public ATMController(ILogger<ATMController> logger, IATMService atmService)
+		public ATMController(IATMService atmService)
 		{
-			_logger = logger;
 			_atmService = atmService;
 		}
-		[HttpPost]
-		[Route("auth")]
-		public async Task<IActionResult> Authorize(int cardNumber,int pincode)
+		
+
+		[HttpPost("authorize")]
+		public async Task<IActionResult> AuthorizeCard(string cardNumber, int pinCode)
 		{
-			try
+			var (success, message) = await _atmService.AuthorizeCardAsync(cardNumber,pinCode);
+
+			if (!success)
 			{
-				var authorizedCard = await _atmService.AuthorizeCardAsync(cardNumber,pincode);
-				return Ok(authorizedCard);
+				return BadRequest(message);
 			}
-			catch (UnauthorizedAccessException ex)
-			{
-				_logger.LogWarning($"Failed to authorize card. Reason: {ex.Message}");
-				return Unauthorized();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Error occurred while authorizing card. Reason: {ex.Message}");
-				return StatusCode(500);
-			}
+
+			return Ok(message);
 		}
 
-		[HttpGet]
-		[Route("{cardNumber}/balance")]
-		public async Task<IActionResult> GetBalance(int cardNumber)
+		[HttpGet("get-balance/{cardNumber}")]
+		public async Task<IActionResult> GetBalanceAsync(string cardNumber)
 		{
-			try
-			{
-				var balance = await _atmService.GetBalanceAsync(cardNumber);
-				return Ok(balance);
-			}
-			catch (UnauthorizedAccessException ex)
-			{
-				_logger.LogWarning($"Failed to retrieve balance. Reason: {ex.Message}");
-				return Unauthorized();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Error occurred while retrieving balance. Reason: {ex.Message}");
-				return StatusCode(500);
-			}
+			var balance = await _atmService.GetBalanceAsync(cardNumber);
+			return Ok(new { Balance = balance });
 		}
-
 	}
 }

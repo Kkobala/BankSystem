@@ -9,8 +9,8 @@ namespace BankSystem.Services
 {
 	public interface IATMService
 	{
-		Task<(bool,string)> AuthorizeCardAsync(int cardNumber, int pinCode);
-		Task<decimal> GetBalanceAsync(int cardNumber);
+		Task<(bool,string)> AuthorizeCardAsync(string cardNumber, int pinCode);
+		Task<decimal> GetBalanceAsync(string cardNumber);
 	}
 	public class ATMService : IATMService
 	{
@@ -21,7 +21,7 @@ namespace BankSystem.Services
 		}
 
 
-		public async Task<(bool, string)> AuthorizeCardAsync(int cardNumber, int pin)
+		public async Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pin)
 		{
 			var card = await _repository.GetCardByCardNumberAsync(cardNumber);
 			if (card == null)
@@ -42,7 +42,7 @@ namespace BankSystem.Services
 			return (true, "Card authorized successfully.");
 		}
 
-		public async Task<decimal> GetBalanceAsync(int cardNumber)
+		public async Task<decimal> GetBalanceAsync(string cardNumber)
 		{
 			var card = await _repository.GetCardByCardNumberAsync(cardNumber);
 			return card.Balance;

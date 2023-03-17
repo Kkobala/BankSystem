@@ -13,14 +13,14 @@ namespace BankSystem.Controllers
     public class CardController : ControllerBase
     {
         private readonly ICardRepository _cardRepository;
-        private readonly WithdrawService _withdrawService;
+        private readonly ATMService _atmService;
 
         public CardController(
             ICardRepository cardRepository,
-            WithdrawService withdrawService)
+            ATMService atmService)
         {
             _cardRepository = cardRepository;
-            _withdrawService = withdrawService;
+            _atmService = atmService;
 
         }
 
@@ -52,18 +52,7 @@ namespace BankSystem.Controllers
         [HttpPost("withdraw")]
         public async Task<IActionResult> Withdraw([FromBody]WithdrawRequest request)
         {
-            //try
-            //{
-            //    var transaction = await _withdrawService.Withdraw(request.AccountId, request.Amount, request.Currency, request.ExchangeRate);
-
-            //    return Ok(transaction);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.Message);
-            //}
-
-            var transaction = await _withdrawService.Withdraw(request.AccountId, request.Amount, request.Currency, request.ExchangeRate);
+            var transaction = await _atmService.Withdraw(request.AccountId, request.Amount, request.FromCurrency, request.ToCurrency);
 
             return Ok(transaction);
         }

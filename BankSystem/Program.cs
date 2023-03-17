@@ -24,7 +24,7 @@ builder.Services.AddTransient<IATMRepository, ATMRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IATMService, ATMService>();
 builder.Services.AddScoped<TransactionService>();
-builder.Services.AddScoped<WithdrawService>();
+builder.Services.AddScoped<ConverterService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -73,6 +73,8 @@ namespace BankSystem.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
+            var isOperator = await _userManager.IsInRoleAsync(user, "operator");
+
             return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
         [HttpPost("operator-login")]

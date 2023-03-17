@@ -1,7 +1,4 @@
-﻿using BankSystem.Models.Requests;
-using BankSystem.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using BankSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankSystem.Controllers

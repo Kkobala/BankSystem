@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankSystem.Controllers
 {
+<<<<<<< HEAD
     [Route("api/[controller]")]
     [ApiController]
     public class ATMController : ControllerBase
@@ -58,4 +59,38 @@ namespace BankSystem.Controllers
             }
         }
     }
+=======
+	[Route("api/[controller]")]
+	[ApiController]
+	public class ATMController : ControllerBase
+	{
+		private readonly IATMService _atmService;
+
+		public ATMController(IATMService atmService)
+		{
+			_atmService = atmService;
+		}
+		
+
+		[HttpPost("authorize")]
+		public async Task<IActionResult> AuthorizeCard(string cardNumber, int pinCode)
+		{
+			var (success, message) = await _atmService.AuthorizeCardAsync(cardNumber,pinCode);
+
+			if (!success)
+			{
+				return BadRequest(message);
+			}
+
+			return Ok(message);
+		}
+
+		[HttpGet("get-balance/{cardNumber}")]
+		public async Task<IActionResult> GetBalanceAsync(string cardNumber)
+		{
+			var balance = await _atmService.GetBalanceAsync(cardNumber);
+			return Ok(new { Balance = balance });
+		}
+	}
+>>>>>>> 78bf37a7022baf072a99af5192c7b4dfb5867feb
 }

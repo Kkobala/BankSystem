@@ -1,7 +1,9 @@
 using BankSystem.Auth;
 using BankSystem.Db;
+using BankSystem.Db.Entities;
 using BankSystem.Repositories;
 using BankSystem.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -11,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContextPool<AppDbContext>(c =>
 	c.UseSqlServer(builder.Configuration["DefaultConnection"]));
+
 
 AuthConfigurator.Configure(builder);
 
@@ -58,6 +61,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

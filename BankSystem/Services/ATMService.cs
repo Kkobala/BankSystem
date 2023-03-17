@@ -4,12 +4,27 @@ using BankSystem.Repositories;
 
 namespace BankSystem.Services
 {
+<<<<<<< HEAD
     public interface IATMService
     {
         Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pinCode);
         Task<decimal> GetBalanceAsync(string cardNumber);
         Task<int> Withdraw(int accountId, decimal amount, Currency fromCurrency, Currency toCurrency);
     }
+=======
+	public interface IATMService
+	{
+		Task<(bool,string)> AuthorizeCardAsync(string cardNumber, int pinCode);
+		Task<decimal> GetBalanceAsync(string cardNumber);
+	}
+	public class ATMService : IATMService
+	{
+		private readonly IATMRepository _repository;
+		public ATMService(IATMRepository repository)
+		{
+			_repository = repository;
+		}
+>>>>>>> 78bf37a7022baf072a99af5192c7b4dfb5867feb
 
     public class ATMService : IATMService
     {
@@ -17,6 +32,7 @@ namespace BankSystem.Services
         private readonly ITransactionRepository _transactionRepository;
         private readonly ConverterService _converterService;
 
+<<<<<<< HEAD
         public ATMService(IATMRepository repository,
             ITransactionRepository transactionRepository,
             ConverterService converterService)
@@ -25,6 +41,15 @@ namespace BankSystem.Services
             _transactionRepository = transactionRepository;
             _converterService = converterService;
         }
+=======
+		public async Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pin)
+		{
+			var card = await _repository.GetCardByCardNumberAsync(cardNumber);
+			if (card == null)
+			{
+				return (false, "Invalid card number.");
+			}
+>>>>>>> 78bf37a7022baf072a99af5192c7b4dfb5867feb
 
         public async Task<int> Withdraw(int accountId, decimal amount, Currency fromCurrency, Currency toCurrency)
         {
@@ -40,7 +65,15 @@ namespace BankSystem.Services
                 throw new Exception("Insufficient balance.");
             }
 
+<<<<<<< HEAD
             var fee = CalculateFee(amount, fromCurrency);
+=======
+		public async Task<decimal> GetBalanceAsync(string cardNumber)
+		{
+			var card = await _repository.GetCardByCardNumberAsync(cardNumber);
+			return card.Balance;
+		}
+>>>>>>> 78bf37a7022baf072a99af5192c7b4dfb5867feb
 
             var transaction = new TransactionEntity
             {

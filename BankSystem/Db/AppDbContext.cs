@@ -70,6 +70,24 @@ namespace BankSystem.Db
             {
                 new IdentityUserRole<int> { UserId = 1, RoleId = 2 }
             });
-        }
+
+			var userName = "operator@bank.com";
+			var password = "abc123";
+			var operatorUser = new UserEntity
+			{
+				Id = 1,
+				Email = userName,
+				UserName = userName
+			};
+
+			var hasher = new PasswordHasher<UserEntity>();
+			operatorUser.PasswordHash = hasher.HashPassword(operatorUser, password);
+			modelBuilder.Entity<UserEntity>().HasData(operatorUser);
+
+			modelBuilder.Entity<IdentityUserRole<int>>().HasData(new[]
+			{
+			new IdentityUserRole<int> { UserId = 1, RoleId = 2 }
+		    });
+		}
     }
 }

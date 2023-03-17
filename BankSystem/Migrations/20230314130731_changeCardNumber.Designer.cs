@@ -4,6 +4,7 @@ using BankSystem.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230314130731_changeCardNumber")]
+    partial class changeCardNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,11 +77,7 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Balance")
-<<<<<<< HEAD
-                        .HasColumnType("decimal");
-=======
                         .HasColumnType("decimal(18,2)");
->>>>>>> 78bf37a7022baf072a99af5192c7b4dfb5867feb
 
                     b.Property<int>("CVV")
                         .HasColumnType("int");
@@ -200,6 +199,7 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("BirthDate")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -214,6 +214,7 @@ namespace BankSystem.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -223,6 +224,7 @@ namespace BankSystem.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -237,6 +239,7 @@ namespace BankSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonalNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
@@ -269,30 +272,6 @@ namespace BankSystem.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessFailedCount = 0,
-<<<<<<< HEAD
-                            ConcurrencyStamp = "b1ceda64-35af-4d9c-8e11-9cae1e318e5c",
-                            Email = "operator@bank.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEIpJEDXRtSVvQ8tmIueqip/uYHY27Wu/cUonVAHUE9K8DECQMy7BSG9sI542E+pTZg==",
-=======
-                            ConcurrencyStamp = "d716b411-4482-4cbe-a574-fade0cb0beb9",
-                            Email = "operator@bank.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEPlHyYo/RvtQea9g3Z3FlwnwGB+0MSrDZAJCAjyOoxtWtciyGk5HbBXVJD8cgbESOg==",
->>>>>>> 78bf37a7022baf072a99af5192c7b4dfb5867feb
-                            PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TwoFactorEnabled = false,
-                            UserName = "operator@bank.com"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -377,13 +356,6 @@ namespace BankSystem.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            RoleId = 2
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>

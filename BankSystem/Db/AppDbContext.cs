@@ -70,6 +70,6 @@ namespace BankSystem.Db
             {
                 new IdentityUserRole<int> { UserId = 1, RoleId = 2 }
             });
-        }
+		}
     }
 }

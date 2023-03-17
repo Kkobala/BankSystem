@@ -1,6 +1,7 @@
 ﻿using BankSystem.Auth;
 using BankSystem.Db;
 using BankSystem.Db.Entities;
+using BankSystem.Models;
 using BankSystem.Models.AuthRequests;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,7 @@ namespace BankSystem.Controllers
                 return BadRequest(firstError.Description);
             }
 
-            await _userManager.AddToRoleAsync(entity, "operator");
+            await _userManager.AddToRoleAsync(entity, "Operator");
 
             await _db.SaveChangesAsync();
 
@@ -76,5 +77,30 @@ namespace BankSystem.Controllers
 
             return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
+        [HttpPost("operator-login")]
+        public async Task<IActionResult> LoginOperator([FromBody] LoginRequest request)
+        {
+            var Operator = await _userManager.FindByEmailAsync(request.Email);
+            if (Operator == null)
+            {
+                return NotFound("Operator not found jima");
+            }
+
+            var isCoorrectPassword = await _userManager.CheckPasswordAsync(Operator, request.Password);
+            if (!isCoorrectPassword) 
+            {
+                return BadRequest("Invalid Password or Email jimson");
+            }
+
+			var isOperator = await _userManager.IsInRoleAsync(Operator, "operator");
+            if (!isOperator) 
+            {
+                return BadRequest("There is no such role brodie");
+            }
+			var roles = await _userManager.GetRolesAsync(Operator);
+
+			return Ok(_tokenGenerator.Generate(Operator.Id.ToString(),roles));
+
+		}
     }
 }

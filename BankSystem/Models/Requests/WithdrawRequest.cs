@@ -8,6 +8,5 @@ namespace BankSystem.Models.Requests
         public decimal Amount { get; set; }
         public Currency FromCurrency { get; set; }
         public Currency ToCurrency { get; set; }
-        //public decimal ExchangeRate { get; set; }
     }
 }

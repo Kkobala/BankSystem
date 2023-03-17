@@ -112,6 +112,3 @@ namespace BankSystem.Services
         }
     }
 }
-
-
-

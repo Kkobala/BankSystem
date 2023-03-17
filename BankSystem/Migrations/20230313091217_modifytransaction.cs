@@ -18,12 +18,8 @@ namespace BankSystem.Migrations
                 name: "FK_Transactions_Accounts_ToAccountId",
                 table: "Transactions");
 
-            migrationBuilder.DropTable(
-                name: "Operators");
 
-            migrationBuilder.DropColumn(
-                name: "RoleId",
-                table: "Users");
+          
 
             migrationBuilder.RenameColumn(
                 name: "ToAccountId",

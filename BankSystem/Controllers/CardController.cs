@@ -21,7 +21,7 @@ namespace BankSystem.Controllers
 
         [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
         [HttpPost("add-card")]
-        public async Task<IActionResult> AddCard([FromQuery] AddCardRequest request)
+        public async Task<IActionResult> AddCard([FromQuery]AddCardRequest request)
         {
             await _cardRepository.AddCardAsync(request);
 
@@ -34,6 +34,22 @@ namespace BankSystem.Controllers
             var userCard = await _cardRepository.GetUserCardsAsync(accountId);
 
             return Ok(userCard);
+        }
+
+        [HttpPost("change-pin")]
+        public async Task<IActionResult> ChangePIN(ChangePINRequest request)
+        {
+            var changepin = await _cardRepository.ChangePINAsync(request);
+
+            return Ok(changepin);
+        }
+
+        [HttpPost("withdraw")]
+        public async Task<IActionResult> Withdraw([FromQuery]WithdrawRequest request)
+        {
+            var transaction = await _atmService.Withdraw(request.AccountId, request.Amount, request.FromCurrency, request.ToCurrency);
+
+            return Ok(transaction);
         }
     }
 }

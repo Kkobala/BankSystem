@@ -1,5 +1,7 @@
 ﻿using BankSystem.Db;
 using BankSystem.Models.Enums;
+using BankSystem.Repositories;
+using BankSystem.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +12,20 @@ namespace BankSystem.Controllers
 	[ApiController]
 	public class ReportsController : ControllerBase
 	{
-		private readonly AppDbContext _db;
-		public ReportsController(AppDbContext db)
-		{
-			_db = db;
-		}
+        private readonly AppDbContext _db;
+        private readonly ITransactionRepository _transactionRepository;
+        private readonly ConverterService _converterService;
 
-		[HttpGet("user-stats-year")]
+        public ReportsController(AppDbContext db,
+            ITransactionRepository transactionRepository,
+            ConverterService converterService)
+        {
+            _db = db;
+            _transactionRepository = transactionRepository;
+            _converterService = converterService;
+        }
+
+        [HttpGet("user-stats-year")]
 		public async Task<IActionResult> GetStatsThisYear()
 		{
 			var currentDate = DateTime.Now;
@@ -33,7 +42,39 @@ namespace BankSystem.Controllers
 			return Ok(usersLastYear);
 		}
 
-		[HttpGet("transaction-statistics-average-revenue")]
+        [HttpGet("last-registered-users-in-30-Days")]
+        public async Task<IActionResult> LastRegisteredUsersIn30Days()
+        {
+            var users = await _db.Users
+                       .Where(x => x.RegisteredAt >= DateTime.Now.AddDays(-30))
+                       .CountAsync();
+
+            return Ok(users);
+        }
+
+        [HttpGet("count-transactions-in-last-onemonth-or-sixmonth-or-oneyear")]
+        public async Task<IActionResult> CountLastTransactions()
+        {
+            var transactions = await _db.Transactions
+                       .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
+                       x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
+                       .CountAsync();
+
+            return Ok(transactions);
+        }
+
+        [HttpGet("count-revenue-from-transactions-in-last-onemonth-or-sixmonth-or-oneyear")]
+        public async Task<IActionResult> GetRevenueAsync(Currency currency)
+        {
+            var transactions = await _transactionRepository.GetAllTransactionsAsync();
+            decimal totalRevenue = transactions.Sum(x => x.Amount);
+
+            decimal revenue = _converterService.ConvertAmount(totalRevenue, transactions.First().Currency, currency);
+
+            return Ok(revenue);
+        }
+
+        [HttpGet("transaction-statistics-average-revenue")]
 		public async Task<IActionResult> GetAverageRevenue()
 		{
 			var last30DaysDate = DateTime.Now.AddDays(-30);
@@ -77,6 +118,17 @@ namespace BankSystem.Controllers
 			return Ok(result);
 		}
 
-	}
+        [HttpGet("Total-amount-of-money-withdraw-from-the-ATM")]
+        public async Task<IActionResult> GetTotalamountofmoneywithdrawnfromtheATM()
+        {
+            var transaction = await _db.Transactions
+                .Where(x => x.Type == TransactionType.ATM)
+                .ToListAsync();
+
+            var sum = transaction.Sum(x => x.Amount);
+
+            return Ok(sum);
+        }
+    }
 }
 

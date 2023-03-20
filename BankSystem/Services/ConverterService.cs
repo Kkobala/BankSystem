@@ -1,7 +1,5 @@
-﻿using BankSystem.Db.Entities;
-using BankSystem.Models;
+﻿using BankSystem.Models;
 using BankSystem.Models.Enums;
-using BankSystem.Repositories;
 
 namespace BankSystem.Services
 {
@@ -31,6 +29,7 @@ namespace BankSystem.Services
                     exchangeRate = toCurrency switch
                     {
                         Currency.GEL => (decimal)ExchangeRates.USD_TO_GEL,
+                        Currency.EUR => (decimal)ExchangeRates.USD_TO_EUR,
                         _ => throw new NotImplementedException($"Conversion from {fromCurrency} to {toCurrency} is not supported.")
                     };
                     break;

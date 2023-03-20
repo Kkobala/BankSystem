@@ -1,9 +1,7 @@
-﻿using BankSystem.Models.Enums;
-using BankSystem.Models.Requests;
+﻿using BankSystem.Models.Requests;
 using BankSystem.Repositories;
 using BankSystem.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankSystem.Controllers
@@ -13,14 +11,11 @@ namespace BankSystem.Controllers
     public class CardController : ControllerBase
     {
         private readonly ICardRepository _cardRepository;
-        private readonly ATMService _atmService;
 
         public CardController(
-            ICardRepository cardRepository,
-            ATMService atmService)
+            ICardRepository cardRepository)
         {
             _cardRepository = cardRepository;
-            _atmService = atmService;
 
         }
 

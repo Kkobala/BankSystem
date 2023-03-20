@@ -77,6 +77,7 @@ namespace BankSystem.Controllers
 
             return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
+
         [HttpPost("operator-login")]
         public async Task<IActionResult> LoginOperator([FromBody] LoginRequest request)
         {

@@ -6,7 +6,7 @@ namespace BankSystem.Db.Entities
     {
         public string? Name { get; set; }
         public string? LastName { get; set; }
-        public DateTime RegisteredAt { get; set; }
+        public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
         public string? PersonalNumber { get; set; }
         public string? BirthDate { get; set; }
         public List<AccountEntity> Accounts { get; set; }

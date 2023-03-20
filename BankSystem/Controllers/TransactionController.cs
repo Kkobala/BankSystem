@@ -21,7 +21,7 @@ namespace BankSystem.Controllers
         }
 
         [HttpPost("inner-transfer")]
-        public async Task<IActionResult> InnerTransfer([FromBody] TransferInnerRequest innerTransferRequest)
+        public async Task<IActionResult> InnerTransfer([FromQuery] TransferInnerRequest innerTransferRequest)
         {
             await _transactionService.InnerTransactionAsync(innerTransferRequest.FromIBAN!, innerTransferRequest.ToIBAN!, innerTransferRequest.Amount, innerTransferRequest.Currency);
 

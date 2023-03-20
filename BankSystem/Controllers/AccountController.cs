@@ -18,13 +18,12 @@ namespace BankSystem.Controllers
         }
 
         [HttpPost("create-account")]
-        public async Task<IActionResult> CreateAsync(CreateAccountRequest request)
+        public async Task<IActionResult> CreateAsync([FromQuery]CreateAccountRequest request)
         {
             var accountId = await _accountRepository.CreateAsync(request);
 
             return Ok(accountId);
         }
-	
 
         [HttpGet("get-account")]
         public async Task<IActionResult> GetAccountAsync(int Id)

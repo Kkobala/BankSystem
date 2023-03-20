@@ -27,7 +27,7 @@ namespace BankSystem.Controllers
         }
 
         [HttpPost("register-user")]
-        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserRequest request)
+        public async Task<IActionResult> RegisterUser([FromQuery] RegisterUserRequest request)
         {
             var entity = new UserEntity
             {
@@ -55,7 +55,7 @@ namespace BankSystem.Controllers
         }
 
         [HttpPost("login-user")]
-        public async Task<IActionResult> LoginUser([FromBody] LoginRequest request)
+        public async Task<IActionResult> LoginUser([FromQuery] LoginRequest request)
         {
             var user = await _userManager.FindByNameAsync(request.Email);
 
@@ -77,8 +77,9 @@ namespace BankSystem.Controllers
 
             return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
+
         [HttpPost("operator-login")]
-        public async Task<IActionResult> LoginOperator([FromBody] LoginRequest request)
+        public async Task<IActionResult> LoginOperator([FromQuery] LoginRequest request)
         {
             var Operator = await _userManager.FindByEmailAsync(request.Email);
             if (Operator == null)
@@ -100,7 +101,6 @@ namespace BankSystem.Controllers
 			var roles = await _userManager.GetRolesAsync(Operator);
 
 			return Ok(_tokenGenerator.Generate(Operator.Id.ToString(),roles));
-
 		}
     }
 }

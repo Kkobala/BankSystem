@@ -2,7 +2,7 @@
 
 namespace BankSystem.Models.Enums
 {
-    [Newtonsoft.Json.JsonConverter(typeof(JsonStringEnumConverter))]
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum Currency
     {
         GEL = 0,

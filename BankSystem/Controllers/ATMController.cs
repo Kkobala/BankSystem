@@ -1,4 +1,6 @@
-﻿using BankSystem.Services;
+﻿using BankSystem.Models.Requests;
+using BankSystem.Repositories;
+using BankSystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankSystem.Controllers
@@ -8,10 +10,13 @@ namespace BankSystem.Controllers
 	public class ATMController : ControllerBase
 	{
 		private readonly IATMService _atmService;
+        private readonly ICardRepository _cardRepository;
 
-		public ATMController(IATMService atmService)
+        public ATMController(IATMService atmService,
+			ICardRepository cardRepository)
 		{
 			_atmService = atmService;
+			_cardRepository = cardRepository;
 		}
 		
 
@@ -34,5 +39,21 @@ namespace BankSystem.Controllers
 			var balance = await _atmService.GetBalanceAsync(cardNumber);
 			return Ok(new { Balance = balance });
 		}
-	}
+
+		[HttpPost("withdraw")]
+		public async Task<IActionResult> Withdraw([FromQuery] WithdrawRequest request)
+		{
+			var transaction = await _atmService.Withdraw(request.AccountId, request.CardId, request.Amount, request.FromCurrency, request.ToCurrency);
+
+			return Ok(transaction);
+        }
+
+        [HttpPost("change-pin")]
+        public async Task<IActionResult> ChangePIN([FromQuery] ChangePINRequest request)
+        {
+            var changepin = await _cardRepository.ChangePINAsync(request);
+
+            return Ok(changepin);
+        }
+    }
 }

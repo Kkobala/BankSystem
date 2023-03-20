@@ -6,5 +6,6 @@
         public const double USD_TO_GEL = 2.77;
         public const double GEL_TO_EUR = 0.3636;
         public const double EUR_TO_GEL = 2.75;
+        public const double USD_TO_EUR = 1.007172;
     }
 }

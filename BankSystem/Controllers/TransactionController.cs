@@ -21,7 +21,7 @@ namespace BankSystem.Controllers
         }
 
         [HttpPost("inner-transfer")]
-        public async Task<IActionResult> InnerTransfer([FromBody] TransferInnerRequest innerTransferRequest)
+        public async Task<IActionResult> InnerTransfer([FromQuery] TransferInnerRequest innerTransferRequest)
         {
             await _transactionService.InnerTransactionAsync(innerTransferRequest.FromIBAN!, innerTransferRequest.ToIBAN!, innerTransferRequest.Amount, innerTransferRequest.Currency);
 
@@ -29,7 +29,7 @@ namespace BankSystem.Controllers
         }
 
         [HttpPost("out-transfer")]
-        public async Task<IActionResult> OutTransfer([FromBody] TransferOutterRequest outTransferRequest)
+        public async Task<IActionResult> OutTransfer([FromQuery] TransferOutterRequest outTransferRequest)
         {
             await _transactionService.OutTransactionAsync(outTransferRequest.FromIBAN!, outTransferRequest.ToIBAN!, outTransferRequest.Amount, outTransferRequest.Currency);
 

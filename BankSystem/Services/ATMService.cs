@@ -1,4 +1,5 @@
 ﻿using BankSystem.Db.Entities;
+using BankSystem.Models;
 using BankSystem.Models.Enums;
 using BankSystem.Repositories;
 
@@ -8,7 +9,7 @@ namespace BankSystem.Services
     {
         Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pinCode);
         Task<decimal> GetBalanceAsync(string cardNumber);
-        Task<int> Withdraw(int accountId, decimal amount, Currency fromCurrency, Currency toCurrency);
+        Task<int> Withdraw(int accountId, int cardId, decimal amount, Currency fromCurrency, Currency toCurrency);
     }
 
     public class ATMService : IATMService
@@ -26,7 +27,7 @@ namespace BankSystem.Services
             _converterService = converterService;
         }
 
-        public async Task<int> Withdraw(int accountId, decimal amount, Currency fromCurrency, Currency toCurrency)
+        public async Task<int> Withdraw(int accountId, int cardId, decimal amount, Currency fromCurrency, Currency toCurrency)
         {
             var account = await _transactionRepository.GetAccountById(accountId);
 
@@ -36,6 +37,18 @@ namespace BankSystem.Services
             }
 
             if (account.Amount < amount)
+            {
+                throw new Exception("Insufficient balance.");
+            }
+
+            var card = await _transactionRepository.GetCardById(cardId);
+
+            if (card == null)
+            {
+                throw new Exception("Card not found.");
+            }
+
+            if (card.Balance < amount)
             {
                 throw new Exception("Insufficient balance.");
             }
@@ -61,8 +74,11 @@ namespace BankSystem.Services
 
             transaction.Amount = convertedAmount;
 
-            account.Amount -= amount;
+            account.Amount -= convertedAmount;
+            card.Balance -= convertedAmount;
 
+            await _transactionRepository.UpdateAccountAsync(account);
+            await _transactionRepository.UpdateCardAsync(card);
             await _transactionRepository.CreateWithdrawAsync(transaction);
 
             return transaction.Id;

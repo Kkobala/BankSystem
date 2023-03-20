@@ -26,7 +26,7 @@ namespace BankSystem.Controllers
 
         [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
         [HttpPost("add-card")]
-        public async Task<IActionResult> AddCard(AddCardRequest request)
+        public async Task<IActionResult> AddCard([FromQuery]AddCardRequest request)
         {
             await _cardRepository.AddCardAsync(request);
 
@@ -50,7 +50,7 @@ namespace BankSystem.Controllers
         }
 
         [HttpPost("withdraw")]
-        public async Task<IActionResult> Withdraw([FromBody]WithdrawRequest request)
+        public async Task<IActionResult> Withdraw([FromQuery]WithdrawRequest request)
         {
             var transaction = await _atmService.Withdraw(request.AccountId, request.Amount, request.FromCurrency, request.ToCurrency);
 

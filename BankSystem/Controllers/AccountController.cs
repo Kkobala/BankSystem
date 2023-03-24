@@ -26,9 +26,9 @@ namespace BankSystem.Controllers
         }
 
         [HttpGet("get-account")]
-        public async Task<IActionResult> GetAccountAsync(int Id)
+        public async Task<IActionResult> GetAccountAsync(int userId)
         {
-            var account = await _accountRepository.GetAccountAsync(Id);
+            var account = await _accountRepository.GetAccountAsync(userId);
             return Ok(account);
         }
     }

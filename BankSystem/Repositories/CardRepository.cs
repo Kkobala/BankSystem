@@ -2,6 +2,7 @@
 using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
 using BankSystem.Models.Requests;
+using BankSystem.Validations;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankSystem.Repositories
@@ -9,10 +10,14 @@ namespace BankSystem.Repositories
     public class CardRepository : ICardRepository
     {
         private readonly AppDbContext _db;
+        private readonly BankSystemValidations _validation;
 
-        public CardRepository(AppDbContext db)
+        public CardRepository(
+            AppDbContext db,
+            BankSystemValidations validations)
         {
             _db = db;
+            _validation = validations;
         }
 
         public async Task AddCardAsync(AddCardRequest request)
@@ -34,8 +39,13 @@ namespace BankSystem.Repositories
                 OwnerLastName = request.OwnerLastName
             };
 
-            //await _db.Accounts.AddAsync(account);
+            _validation.CheckCardNumberFormat(request.CardNumber);
+            _validation.PinValidation(request.PIN);
+            _validation.CvvValidation(request.CVV);
+
+            await _db.Accounts.AddAsync(account);
             await _db.Cards.AddAsync(card);
+
             await _db.SaveChangesAsync();
         }
 

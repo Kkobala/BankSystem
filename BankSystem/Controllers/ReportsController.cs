@@ -33,7 +33,6 @@ namespace BankSystem.Controllers
 			return Ok(usersThisYear);
 		}
 
-
 		[HttpGet("user-stats-last-year")]
 		public async Task<IActionResult> GetStatsLastYear()
 		{
@@ -69,7 +68,7 @@ namespace BankSystem.Controllers
             var transactions = await _transactionRepository.GetAllTransactionsAsync();
             decimal totalRevenue = transactions.Sum(x => x.Amount);
 
-            decimal revenue = _converterService.ConvertAmount(totalRevenue, transactions.First().Currency, currency);
+            decimal revenue = await _converterService.ConvertAmountAsync(totalRevenue, transactions.First().Currency, currency);
 
             return Ok(revenue);
         }
@@ -79,17 +78,26 @@ namespace BankSystem.Controllers
 		{
 			var last30DaysDate = DateTime.Now.AddDays(-30);
 
-			var averageRevenueGEL = await _db.Transactions
-				.Where(x => x.Type == TransactionType.Inner && x.Currency == Currency.GEL)
-				.AverageAsync(t => t.Amount);
+            var averageRevenueGEL = await _db.Transactions
+                .Where(x => x.Currency == Currency.GEL)
+                .Select(x => x.Amount)
+                .DefaultIfEmpty()
+                .AverageAsync();
 
-			var averageRevenueUSD = await _db.Transactions
-				.AverageAsync(t => t.Amount / 2.77m);
 
-			var averageRevenueEUR = await _db.Transactions
-				.AverageAsync(t => t.Amount / 2.75m);
+            var averageRevenueUSD = await _db.Transactions
+                .Where(x => x.Currency == Currency.USD)
+                .Select(x => x.Amount)
+                .DefaultIfEmpty()
+                .AverageAsync();
 
-			var result = new
+            var averageRevenueEUR = await _db.Transactions
+                .Where(x => x.Currency == Currency.EUR)
+                .Select(x => x.Amount)
+                .DefaultIfEmpty()
+                .AverageAsync();
+
+            var result = new
 			{
 				AverageRevenueGEL = averageRevenueGEL,
 				AverageRevenueUSD = averageRevenueUSD,

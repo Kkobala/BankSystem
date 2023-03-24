@@ -3,15 +3,21 @@ using BankSystem.Db;
 using BankSystem.Models.Requests;
 using BankSystem.Models;
 using Microsoft.EntityFrameworkCore;
+using BankSystem.Validations;
 
 namespace BankSystem.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
         private readonly AppDbContext _db;
-        public AccountRepository(AppDbContext db)
+        private readonly BankSystemValidations _validations;
+
+        public AccountRepository(
+            AppDbContext db,
+            BankSystemValidations validations)
         {
             _db = db;
+            _validations = validations;
         }
 
         public async Task<int> CreateAsync(CreateAccountRequest request)
@@ -21,8 +27,12 @@ namespace BankSystem.Repositories
             entity.IBAN = request.IBAN;
             entity.Amount = request.Amount;
             entity.Currency = request.Currency;
+
+            _validations.CheckIbanFormat(request.IBAN);
+
             await _db.Accounts.AddAsync(entity);
             await _db.SaveChangesAsync();
+
             return entity.Id;
         }
 

@@ -35,21 +35,5 @@ namespace BankSystem.Controllers
 
             return Ok(userCard);
         }
-
-        [HttpPost("change-pin")]
-        public async Task<IActionResult> ChangePIN(ChangePINRequest request)
-        {
-            var changepin = await _cardRepository.ChangePINAsync(request);
-
-            return Ok(changepin);
-        }
-
-        [HttpPost("withdraw")]
-        public async Task<IActionResult> Withdraw([FromQuery]WithdrawRequest request)
-        {
-            var transaction = await _atmService.Withdraw(request.AccountId, request.Amount, request.FromCurrency, request.ToCurrency);
-
-            return Ok(transaction);
-        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using BankSystem.Db.Entities;
+using BankSystem.Db.Mappings;
+using BankSystem.Models.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +17,15 @@ namespace BankSystem.Db
         public DbSet<AccountEntity> Accounts { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<CardEntity> Cards { get; set; }
+        public DbSet<ExchangeRateEntity> Rates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new AccountMap());
+            modelBuilder.ApplyConfiguration(new TransactionMap());
+            modelBuilder.ApplyConfiguration(new CardMap());
+
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<UserEntity>().ToTable("Users");
             modelBuilder.Entity<RoleEntity>().ToTable("Roles");
@@ -47,11 +55,28 @@ namespace BankSystem.Db
                 .Property(t => t.Fee)
                 .HasColumnType("decimal");
 
+            modelBuilder
+                .Entity<ExchangeRateEntity>()
+                .Property(t => t.Rate)
+                .HasColumnType("money");
+
             modelBuilder.Entity<RoleEntity>().HasData(new[]
             {
                 new RoleEntity { Id = 1, Name = "user" },
                 new RoleEntity { Id = 2, Name = "operator" }
             });
+
+            modelBuilder.Entity<ExchangeRateEntity>().HasData(
+                new ExchangeRateEntity { Id = 1, CurrencyFrom = Currency.GEL, CurrencyTo = Currency.USD, Rate = 0.361m },
+                new ExchangeRateEntity { Id = 2, CurrencyFrom = Currency.USD, CurrencyTo = Currency.GEL, Rate = 2.77m },
+                new ExchangeRateEntity { Id = 3,  CurrencyFrom = Currency.GEL, CurrencyTo = Currency.EUR, Rate = 0.3636m },
+                new ExchangeRateEntity { Id = 4,  CurrencyFrom = Currency.EUR, CurrencyTo = Currency.GEL, Rate = 2.87m },
+                new ExchangeRateEntity { Id = 5,  CurrencyFrom = Currency.USD, CurrencyTo = Currency.EUR, Rate = 0.98m },
+                new ExchangeRateEntity { Id = 6,  CurrencyFrom = Currency.GEL, CurrencyTo = Currency.GEL, Rate = 1 },
+                new ExchangeRateEntity { Id = 7,  CurrencyFrom = Currency.USD, CurrencyTo = Currency.USD, Rate = 1 },
+                new ExchangeRateEntity { Id = 8,  CurrencyFrom = Currency.EUR, CurrencyTo = Currency.EUR, Rate = 1 },
+                new ExchangeRateEntity { Id = 9,  CurrencyFrom = Currency.EUR, CurrencyTo = Currency.USD, Rate = 1.0071m }
+            );
 
             var userName = "operator@bank.com";
             var password = "abc123";
@@ -59,7 +84,8 @@ namespace BankSystem.Db
             {
                 Id = 1,
                 Email = userName,
-                UserName = userName
+                UserName = userName,
+                PersonalNumber = "12345685916" 
             };
 
             var hasher = new PasswordHasher<UserEntity>();
@@ -70,6 +96,6 @@ namespace BankSystem.Db
             {
                 new IdentityUserRole<int> { UserId = 1, RoleId = 2 }
             });
-		}
+        }
     }
 }

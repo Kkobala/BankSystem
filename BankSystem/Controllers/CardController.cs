@@ -44,12 +44,12 @@ namespace BankSystem.Controllers
             return Ok(changepin);
         }
 
-        [HttpPost("withdraw")]
-        public async Task<IActionResult> Withdraw([FromQuery]WithdrawRequest request)
-        {
-            var transaction = await _atmService.Withdraw(request.AccountId, request.Amount, request.FromCurrency, request.ToCurrency);
+        //[HttpPost("withdraw")]
+        //public async Task<IActionResult> Withdraw([FromQuery]WithdrawRequest request)
+        //{
+        //    var transaction = await _atmService.Withdraw(request.AccountId, request.Amount, request.FromCurrency, request.ToCurrency);
 
-            return Ok(transaction);
-        }
+        //    return Ok(transaction);
+        //}
     }
 }

@@ -74,7 +74,7 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal");
 
                     b.Property<int>("CVV")
                         .HasColumnType("int");
@@ -134,12 +134,14 @@ namespace BankSystem.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "user"
+                            Name = "user",
+                            NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "operator"
+                            Name = "operator",
+                            NormalizedName = "OPERATOR"
                         });
                 });
 
@@ -271,13 +273,15 @@ namespace BankSystem.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d716b411-4482-4cbe-a574-fade0cb0beb9",
+                            ConcurrencyStamp = "b3dd8479-ebfc-49bc-8bd1-40eb795c4862",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEPlHyYo/RvtQea9g3Z3FlwnwGB+0MSrDZAJCAjyOoxtWtciyGk5HbBXVJD8cgbESOg==",
+                            NormalizedEmail = "OPERATOR@BANK.COM",
+                            NormalizedUserName = "OPERATOR@BANK.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJWs6FPdq/p2C2bu9FxUtwQVwtpsQtA3C4G5WvD09VePAqUTgR6L4/iuEcPaZqRILA==",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RegisteredAt = new DateTime(2023, 3, 24, 7, 42, 13, 330, DateTimeKind.Utc).AddTicks(7673),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });

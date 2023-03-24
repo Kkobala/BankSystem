@@ -1,6 +1,7 @@
 using BankSystem.Auth;
 using BankSystem.Db;
 using BankSystem.Db.Entities;
+using BankSystem.Middlewares;
 using BankSystem.Repositories;
 using BankSystem.Services;
 using Microsoft.AspNetCore.Identity;
@@ -75,6 +76,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<ErrorHandlerMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseHttpsRedirection();

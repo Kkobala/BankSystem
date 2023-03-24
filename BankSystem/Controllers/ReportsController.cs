@@ -78,24 +78,23 @@ namespace BankSystem.Controllers
 		{
 			var last30DaysDate = DateTime.Now.AddDays(-30);
 
-            var averageRevenueGEL = await _db.Transactions
-                .Where(x => x.Currency == Currency.GEL)
-                .Select(x => x.Amount)
-                .DefaultIfEmpty()
-                .AverageAsync();
+			var averageRevenueGEL = await _db.Transactions
+				.Where(x => x.Currency == Currency.GEL)
+				.Select(x => x.Amount)
+				.DefaultIfEmpty()
+				.AverageAsync();
 
+			var averageRevenueUSD = await _db.Transactions
+				.Where(x =>x.Currency== Currency.USD)
+				.Select(x=>x.Amount)
+				.DefaultIfEmpty()
+				.AverageAsync();
 
-            var averageRevenueUSD = await _db.Transactions
-                .Where(x => x.Currency == Currency.USD)
-                .Select(x => x.Amount)
-                .DefaultIfEmpty()
-                .AverageAsync();
-
-            var averageRevenueEUR = await _db.Transactions
-                .Where(x => x.Currency == Currency.EUR)
-                .Select(x => x.Amount)
-                .DefaultIfEmpty()
-                .AverageAsync();
+			var averageRevenueEUR = await _db.Transactions
+				.Where(x=>x.Currency== Currency.EUR)
+				.Select(x=>x.Amount)
+				.DefaultIfEmpty()
+				.AverageAsync();
 
             var result = new
 			{
@@ -139,4 +138,3 @@ namespace BankSystem.Controllers
         }
     }
 }
-

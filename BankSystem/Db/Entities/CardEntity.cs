@@ -13,6 +13,6 @@ namespace BankSystem.Db.Entities
         public DateTime CardExpirationDate { get; set; }
         public int CVV { get; set; }
         public int PIN { get; set; }
-        public AccountEntity Account { get; set; }
+        public AccountEntity? Account { get; set; }
     }
 }

@@ -62,8 +62,8 @@ namespace BankSystem.Db
 
             modelBuilder.Entity<RoleEntity>().HasData(new[]
             {
-                new RoleEntity { Id = 1, Name = "user" },
-                new RoleEntity { Id = 2, Name = "operator" }
+                new RoleEntity { Id = 1, Name = "user", NormalizedName = "USER" },
+                new RoleEntity { Id = 2, Name = "operator", NormalizedName = "OPERATOR" }
             });
 
             modelBuilder.Entity<ExchangeRateEntity>().HasData(
@@ -85,7 +85,8 @@ namespace BankSystem.Db
                 Id = 1,
                 Email = userName,
                 UserName = userName,
-                PersonalNumber = "12345685916" 
+                NormalizedEmail = userName.ToUpper(),
+                NormalizedUserName= userName.ToUpper()
             };
 
             var hasher = new PasswordHasher<UserEntity>();

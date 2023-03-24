@@ -1,4 +1,5 @@
 ﻿using BankSystem.Db.Entities;
+using BankSystem.Models.Enums;
 
 namespace BankSystem.Repositories
 {
@@ -13,5 +14,7 @@ namespace BankSystem.Repositories
         Task UpdateAccountAsync(AccountEntity account);
         Task UpdateCardAsync(CardEntity card);
         Task<CardEntity?> GetCardById(int id);
+        Task<ExchangeRateEntity> GetExchangeRateAsync(Currency fromCurrency, Currency toCurrency);
+        Task<List<TransactionEntity>> GetTransactionsByAccountId(int accoundId);
     }
 }

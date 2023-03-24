@@ -1,52 +1,22 @@
-﻿using BankSystem.Models;
-using BankSystem.Models.Enums;
+﻿using BankSystem.Models.Enums;
+using BankSystem.Repositories;
 
 namespace BankSystem.Services
 {
     public class ConverterService
     {
-        public decimal ConvertAmount(decimal amount, Currency fromCurrency, Currency toCurrency)
+        private readonly ITransactionRepository _transactionRepository;
+
+        public ConverterService(ITransactionRepository repository)
         {
-            if (fromCurrency == toCurrency)
-            {
-                return amount;
-            }
+            _transactionRepository = repository;
+        }
 
-            decimal exchangeRate = 0;
+        public async Task<decimal> ConvertAmountAsync(decimal amount, Currency fromCurrency, Currency toCurrency)
+        {
+            var exchangeRate = await _transactionRepository.GetExchangeRateAsync(fromCurrency, toCurrency);
 
-            switch (fromCurrency)
-            {
-                case Currency.GEL:
-                    exchangeRate = toCurrency switch
-                    {
-                        Currency.USD => (decimal)ExchangeRates.GEL_TO_USD,
-                        Currency.EUR => (decimal)ExchangeRates.GEL_TO_EUR,
-                        _ => throw new NotImplementedException($"Conversion from {fromCurrency} to {toCurrency} is not supported.")
-                    };
-                    break;
-
-                case Currency.USD:
-                    exchangeRate = toCurrency switch
-                    {
-                        Currency.GEL => (decimal)ExchangeRates.USD_TO_GEL,
-                        Currency.EUR => (decimal)ExchangeRates.USD_TO_EUR,
-                        _ => throw new NotImplementedException($"Conversion from {fromCurrency} to {toCurrency} is not supported.")
-                    };
-                    break;
-
-                case Currency.EUR:
-                    exchangeRate = toCurrency switch
-                    {
-                        Currency.GEL => (decimal)ExchangeRates.EUR_TO_GEL,
-                        _ => throw new NotImplementedException($"Conversion from {fromCurrency} to {toCurrency} is not supported.")
-                    };
-                    break;
-
-                default:
-                    throw new NotImplementedException($"Conversion from {fromCurrency} to {toCurrency} is not supported.");
-            }
-
-            decimal convertedAmount = amount * exchangeRate;
+            var convertedAmount = amount * exchangeRate.Rate;
 
             return convertedAmount;
         }

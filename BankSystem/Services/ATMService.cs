@@ -29,6 +29,17 @@ namespace BankSystem.Services
 
         public async Task<int> Withdraw(int accountId, int cardId, decimal amount, Currency fromCurrency, Currency toCurrency)
         {
+            var transactions = await _transactionRepository.GetTransactionsByAccountId(accountId);
+
+            var last24HoursTransactions = transactions.Where(t => t.TransactionDate >= DateTime.UtcNow.AddDays(-1));
+
+            var totalWithdrawalsLast24Hours = last24HoursTransactions.Where(t => t.Type == TransactionType.ATM).Sum(t => t.Amount);
+
+            if (totalWithdrawalsLast24Hours + amount > 10000)
+            {
+                throw new Exception("Withdrawal limit exceeded.");
+            }
+
             var account = await _transactionRepository.GetAccountById(accountId);
 
             if (account == null)
@@ -68,9 +79,7 @@ namespace BankSystem.Services
             transaction.Fee = fee;
             transaction.Amount -= fee;
 
-            var usdAmount = _converterService.ConvertAmount(amount, fromCurrency, Currency.USD);
-
-            var convertedAmount = _converterService.ConvertAmount(usdAmount, Currency.USD, toCurrency);
+            var convertedAmount = await _converterService.ConvertAmountAsync(amount, fromCurrency, toCurrency);
 
             transaction.Amount = convertedAmount;
 

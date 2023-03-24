@@ -1,5 +1,6 @@
-﻿using BankSystem.Db.Entities;
-using BankSystem.Db;
+﻿using BankSystem.Db;
+using BankSystem.Db.Entities;
+using BankSystem.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankSystem.Repositories
@@ -25,6 +26,18 @@ namespace BankSystem.Repositories
             return await _db.Transactions.ToListAsync();
         }
 
+        public async Task<List<TransactionEntity>> GetTransactionsByAccountId(int accoundId)
+        {
+            var transaction = await _db.Transactions.Where(x => x.AccountId == accoundId).ToListAsync();
+
+            if (transaction == null)
+            {
+                throw new ArgumentException($"Transaction with Accound ID {accoundId} Not Found");
+            }
+
+            return transaction;
+        }
+
         public async Task<AccountEntity> GetAccountByIBAN(string iban)
         {
             var account = await _db.Accounts.FirstOrDefaultAsync(x => x.IBAN == iban);
@@ -39,12 +52,26 @@ namespace BankSystem.Repositories
 
         public async Task<AccountEntity?> GetAccountById(int id)
         {
-            return await _db.Accounts.FirstOrDefaultAsync(a => a.Id == id);
+            var account = await _db.Accounts.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (account == null)
+            {
+                throw new Exception($"Account with ID {id} not found");
+            }
+
+            return account;
         }
 
         public async Task<CardEntity?> GetCardById(int id)
         {
-            return await _db.Cards.FirstOrDefaultAsync(a => a.Id == id);
+            var card = await _db.Cards.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (card == null)
+            {
+                throw new Exception($"Card with ID {id} not found");
+            }
+
+            return card;
         }
 
         public async Task<int> CreateWithdrawAsync(TransactionEntity transaction)
@@ -65,6 +92,18 @@ namespace BankSystem.Repositories
                 .ToListAsync();
 
             return transactions;
+        }
+
+        public async Task<ExchangeRateEntity> GetExchangeRateAsync(Currency fromCurrency, Currency toCurrency)
+        {
+            var exchangeRateEntity = await _db.Rates.FirstOrDefaultAsync(e => e.CurrencyFrom == fromCurrency && e.CurrencyTo == toCurrency);
+
+            if (exchangeRateEntity == null)
+            {
+                throw new ArgumentException($"No exchange rate found for {fromCurrency} to {toCurrency}.");
+            }
+
+            return exchangeRateEntity;
         }
 
         public async Task UpdateCardAsync(CardEntity card)

@@ -3,6 +3,7 @@ using BankSystem.Db;
 using BankSystem.Db.Entities;
 using BankSystem.Models;
 using BankSystem.Models.AuthRequests;
+using BankSystem.Validations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,15 +16,18 @@ namespace BankSystem.Controllers
         private readonly TokenGenerator _tokenGenerator;
         private readonly UserManager<UserEntity> _userManager;
         private readonly AppDbContext _db;
+        private readonly BankSystemValidations _validation;
 
         public UserController(
             UserManager<UserEntity> userManager,
             TokenGenerator tokenGenerator,
-            AppDbContext db)
+            AppDbContext db,
+            BankSystemValidations validations)
         {
             _tokenGenerator = tokenGenerator;
             _userManager = userManager;
             _db = db;
+            _validation = validations;
         }
 
         [HttpPost("register-user")]
@@ -48,6 +52,9 @@ namespace BankSystem.Controllers
             }
 
             await _userManager.AddToRoleAsync(entity, "Operator");
+
+            _validation.CheckPrivateNumberFormat(request.PersonalNumber);
+            _validation.CheckNameOrSurname(request.Name);
 
             await _db.SaveChangesAsync();
 
@@ -82,18 +89,21 @@ namespace BankSystem.Controllers
         public async Task<IActionResult> LoginOperator([FromQuery] LoginRequest request)
         {
             var Operator = await _userManager.FindByEmailAsync(request.Email);
+
             if (Operator == null)
             {
                 return NotFound("Operator not found jima");
             }
 
             var isCoorrectPassword = await _userManager.CheckPasswordAsync(Operator, request.Password);
+
             if (!isCoorrectPassword) 
             {
                 return BadRequest("Invalid Password or Email jimson");
             }
 
 			var isOperator = await _userManager.IsInRoleAsync(Operator, "operator");
+
             if (!isOperator) 
             {
                 return BadRequest("There is no such role brodie");

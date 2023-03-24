@@ -33,7 +33,6 @@ namespace BankSystem.Controllers
 			return Ok(usersThisYear);
 		}
 
-
 		[HttpGet("user-stats-last-year")]
 		public async Task<IActionResult> GetStatsLastYear()
 		{
@@ -69,7 +68,7 @@ namespace BankSystem.Controllers
             var transactions = await _transactionRepository.GetAllTransactionsAsync();
             decimal totalRevenue = transactions.Sum(x => x.Amount);
 
-            decimal revenue = _converterService.ConvertAmount(totalRevenue, transactions.First().Currency, currency);
+            decimal revenue = await _converterService.ConvertAmountAsync(totalRevenue, transactions.First().Currency, currency);
 
             return Ok(revenue);
         }
@@ -97,7 +96,7 @@ namespace BankSystem.Controllers
 				.DefaultIfEmpty()
 				.AverageAsync();
 
-			var result = new
+            var result = new
 			{
 				AverageRevenueGEL = averageRevenueGEL,
 				AverageRevenueUSD = averageRevenueUSD,
@@ -139,4 +138,3 @@ namespace BankSystem.Controllers
         }
     }
 }
-

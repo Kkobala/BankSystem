@@ -1,4 +1,6 @@
-﻿namespace BankSystem.Db.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BankSystem.Db.Entities
 {
     public class CardEntity
     {

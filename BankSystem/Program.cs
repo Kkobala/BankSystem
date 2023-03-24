@@ -4,6 +4,7 @@ using BankSystem.Db.Entities;
 using BankSystem.Middlewares;
 using BankSystem.Repositories;
 using BankSystem.Services;
+using BankSystem.Validations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -27,6 +28,7 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IATMService, ATMService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<ConverterService>();
+builder.Services.AddScoped<BankSystemValidations>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

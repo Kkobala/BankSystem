@@ -1,5 +1,4 @@
 ﻿using BankSystem.Db.Entities;
-using BankSystem.Models;
 using BankSystem.Models.Enums;
 using BankSystem.Repositories;
 
@@ -27,7 +26,7 @@ namespace BankSystem.Services
                 throw new Exception("One or more account(s) not found");
             }
 
-            decimal convertedAmount = _converterService.ConvertAmount(amount, fromiban.Currency, toCurrency);
+            decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toCurrency);
 
             if (fromiban.Amount < convertedAmount)
             {
@@ -46,6 +45,13 @@ namespace BankSystem.Services
                 TransactionDate = DateTime.UtcNow,
                 Type = TransactionType.Inner
             };
+
+            fromiban.Amount -= convertedAmount + fee;
+
+            if (toiban.Transactions == null)
+            {
+                toiban.Transactions = new List<TransactionEntity>();
+            }
 
             fromiban.Amount -= convertedAmount + fee;
             toiban.Amount += convertedAmount;
@@ -70,7 +76,7 @@ namespace BankSystem.Services
                 throw new Exception("Insufficient funds");
             }
 
-            decimal convertedAmount = _converterService.ConvertAmount(amount, currency, fromiban.Currency);
+            decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, currency, fromiban.Currency);
 
             var fee = (convertedAmount * 0.01m) + 0.5m;
 

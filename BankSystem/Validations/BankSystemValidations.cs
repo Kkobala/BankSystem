@@ -57,7 +57,7 @@ namespace BankSystem.Validations
             }
         }
 
-        public void /*Task*/ CheckCardNumberFormat(string cardNumber)
+        public void CheckCardNumberFormat(string cardNumber)
         {
             if (cardNumber.Length != 16)
             {
@@ -67,8 +67,6 @@ namespace BankSystem.Validations
             {
                 throw new Exception("Card Number must contain only numbers");
             }
-
-            //await _cardRepository.IsCardNumberInUse(cardNumber);
 
             var sum = 0;
             Parallel.For(cardNumber.Length - 1, -1, i =>
@@ -88,8 +86,6 @@ namespace BankSystem.Validations
                 throw new Exception("CardNumber is invalid");
             }
         }
-
- 
 
         public void CheckPrivateNumberFormat(string privateNumber)
         {

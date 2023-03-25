@@ -25,7 +25,7 @@ namespace BankSystem.Controllers
             _converterService = converterService;
         }
 
-        [HttpGet("user-stats-year")]
+        [HttpGet("user-stats-current-year")]
 		public async Task<IActionResult> GetStatsThisYear()
 		{
 			var currentDate = DateTime.Now;
@@ -100,8 +100,7 @@ namespace BankSystem.Controllers
 			{
 				AverageRevenueGEL = averageRevenueGEL,
 				AverageRevenueUSD = averageRevenueUSD,
-				AverageRevenueEUR = averageRevenueEUR,
-				
+				AverageRevenueEUR = averageRevenueEUR
 			};
 
 			return Ok(result);

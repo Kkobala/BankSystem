@@ -12,6 +12,16 @@ namespace BankSystem.Db.Mappings
             builder.Property(x => x.AccountId).IsRequired();
             builder.Property(x => x.Amount).IsRequired();
             builder.Property(x => x.Currency).IsRequired();
+
+            builder.HasOne(x => x.FromIBAN)
+                    .WithMany()
+                    .HasForeignKey(x => x.FromIBANId)
+                    .OnDelete(DeleteBehavior.Restrict); 
+
+            builder.HasOne(x => x.ToIBAN)
+                   .WithMany()
+                   .HasForeignKey(x => x.ToIBANId)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

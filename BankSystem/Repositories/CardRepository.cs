@@ -1,6 +1,5 @@
 ﻿using BankSystem.Db;
 using BankSystem.Db.Entities;
-using BankSystem.Models.Enums;
 using BankSystem.Models.Requests;
 using BankSystem.Validations;
 using Microsoft.EntityFrameworkCore;
@@ -39,11 +38,11 @@ namespace BankSystem.Repositories
                 OwnerLastName = request.OwnerLastName
             };
 
+            await _db.Cards.AddAsync(card);
+
             _validation.CheckCardNumberFormat(request.CardNumber);
             _validation.PinValidation(request.PIN);
             _validation.CvvValidation(request.CVV);
-
-            await _db.Cards.AddAsync(card);
 
             await _db.SaveChangesAsync();
         }

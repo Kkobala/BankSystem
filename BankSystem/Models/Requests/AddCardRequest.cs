@@ -1,4 +1,6 @@
 ﻿using BankSystem.Db.Entities;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace BankSystem.Models.Requests
 {

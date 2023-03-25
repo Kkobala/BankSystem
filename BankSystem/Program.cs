@@ -1,11 +1,9 @@
 using BankSystem.Auth;
 using BankSystem.Db;
-using BankSystem.Db.Entities;
 using BankSystem.Middlewares;
 using BankSystem.Repositories;
 using BankSystem.Services;
 using BankSystem.Validations;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
@@ -15,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddDbContextPool<AppDbContext>(c =>
-	c.UseSqlServer(builder.Configuration["DefaultConnection"]));
+    c.UseSqlServer(builder.Configuration["DefaultConnection"]));
 
 
 AuthConfigurator.Configure(builder);

@@ -16,7 +16,7 @@ namespace BankSystem.Db.Entities
         public Currency Currency { get; set; }
         public List<CardEntity> Cards { get; set; }
         [NotMapped]
-        public List<TransactionEntity> Transactions { get; internal set; }
+        public List<TransactionEntity> Transactions { get; set; }
 
         public AccountEntity()
         {

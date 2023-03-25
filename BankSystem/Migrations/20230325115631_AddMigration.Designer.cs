@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230324074213_initial")]
-    partial class initial
+    [Migration("20230325115631_AddMigration")]
+    partial class AddMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,10 +41,6 @@ namespace BankSystem.Migrations
 
                     b.Property<string>("IBAN")
                         .IsRequired()
-                        .HasMaxLength(34)
-                        .HasColumnType("nvarchar(34)");
-
-                    b.Property<string>("Json")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TransactionEntityId")
@@ -80,21 +76,27 @@ namespace BankSystem.Migrations
                         .HasColumnType("decimal");
 
                     b.Property<int>("CVV")
+                        .HasMaxLength(3)
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CardExpirationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CardNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
                     b.Property<string>("OwnerLastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PIN")
+                        .HasMaxLength(4)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -102,6 +104,93 @@ namespace BankSystem.Migrations
                     b.HasIndex("AccountId");
 
                     b.ToTable("Cards");
+                });
+
+            modelBuilder.Entity("BankSystem.Db.Entities.ExchangeRateEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CurrencyFrom")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CurrencyTo")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("money");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rates");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CurrencyFrom = 0,
+                            CurrencyTo = 1,
+                            Rate = 0.361m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CurrencyFrom = 1,
+                            CurrencyTo = 0,
+                            Rate = 2.77m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CurrencyFrom = 0,
+                            CurrencyTo = 2,
+                            Rate = 0.3636m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CurrencyFrom = 2,
+                            CurrencyTo = 0,
+                            Rate = 2.87m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CurrencyFrom = 1,
+                            CurrencyTo = 2,
+                            Rate = 0.98m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CurrencyFrom = 0,
+                            CurrencyTo = 0,
+                            Rate = 1m
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CurrencyFrom = 1,
+                            CurrencyTo = 1,
+                            Rate = 1m
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CurrencyFrom = 2,
+                            CurrencyTo = 2,
+                            Rate = 1m
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CurrencyFrom = 2,
+                            CurrencyTo = 1,
+                            Rate = 1.0071m
+                        });
                 });
 
             modelBuilder.Entity("BankSystem.Db.Entities.RoleEntity", b =>
@@ -168,10 +257,10 @@ namespace BankSystem.Migrations
                     b.Property<decimal>("Fee")
                         .HasColumnType("decimal");
 
-                    b.Property<int?>("FromIBANId")
+                    b.Property<int>("FromIBANId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ToIBANId")
+                    b.Property<int>("ToIBANId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TransactionDate")
@@ -200,8 +289,8 @@ namespace BankSystem.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("BirthDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -238,7 +327,9 @@ namespace BankSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PersonalNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(11)
+                        .HasColumnType("nvarchar(11)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -276,15 +367,17 @@ namespace BankSystem.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b3dd8479-ebfc-49bc-8bd1-40eb795c4862",
+                            BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "b196481c-2a3e-412a-97cd-03837fe4bb35",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJWs6FPdq/p2C2bu9FxUtwQVwtpsQtA3C4G5WvD09VePAqUTgR6L4/iuEcPaZqRILA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECmdnScs+gKb91dnNOGlDvalCFlSx2xdxjyxxlnJ4MAJinzpMVknKcRqCDmXGiwvXQ==",
+                            PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(2023, 3, 24, 7, 42, 13, 330, DateTimeKind.Utc).AddTicks(7673),
+                            RegisteredAt = new DateTime(2023, 3, 25, 11, 56, 30, 950, DateTimeKind.Utc).AddTicks(194),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });
@@ -426,11 +519,15 @@ namespace BankSystem.Migrations
                 {
                     b.HasOne("BankSystem.Db.Entities.AccountEntity", "FromIBAN")
                         .WithMany()
-                        .HasForeignKey("FromIBANId");
+                        .HasForeignKey("FromIBANId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("BankSystem.Db.Entities.AccountEntity", "ToIBAN")
                         .WithMany()
-                        .HasForeignKey("ToIBANId");
+                        .HasForeignKey("ToIBANId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("FromIBAN");
 

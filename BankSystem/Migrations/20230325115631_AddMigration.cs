@@ -8,11 +8,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class AddMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Rates",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CurrencyFrom = table.Column<int>(type: "int", nullable: false),
+                    CurrencyTo = table.Column<int>(type: "int", nullable: false),
+                    Rate = table.Column<decimal>(type: "money", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rates", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -37,8 +52,8 @@ namespace BankSystem.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RegisteredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PersonalNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BirthDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PersonalNumber = table.Column<string>(type: "nvarchar(11)", maxLength: 11, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -172,10 +187,9 @@ namespace BankSystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    IBAN = table.Column<string>(type: "nvarchar(34)", maxLength: 34, nullable: false),
+                    IBAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
-                    Json = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TransactionEntityId = table.Column<int>(type: "int", nullable: true),
                     UserEntityId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -197,12 +211,12 @@ namespace BankSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     Balance = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
-                    CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OwnerLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CardNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
+                    OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OwnerLastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CardExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CVV = table.Column<int>(type: "int", nullable: false),
-                    PIN = table.Column<int>(type: "int", nullable: false)
+                    CVV = table.Column<int>(type: "int", maxLength: 3, nullable: false),
+                    PIN = table.Column<int>(type: "int", maxLength: 4, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -222,8 +236,8 @@ namespace BankSystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
-                    ToIBANId = table.Column<int>(type: "int", nullable: true),
-                    FromIBANId = table.Column<int>(type: "int", nullable: true),
+                    FromIBANId = table.Column<int>(type: "int", nullable: false),
+                    ToIBANId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
                     Fee = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
@@ -237,12 +251,30 @@ namespace BankSystem.Migrations
                         name: "FK_Transactions_Accounts_FromIBANId",
                         column: x => x.FromIBANId,
                         principalTable: "Accounts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Transactions_Accounts_ToIBANId",
                         column: x => x.ToIBANId,
                         principalTable: "Accounts",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Rates",
+                columns: new[] { "Id", "CurrencyFrom", "CurrencyTo", "Rate" },
+                values: new object[,]
+                {
+                    { 1, 0, 1, 0.361m },
+                    { 2, 1, 0, 2.77m },
+                    { 3, 0, 2, 0.3636m },
+                    { 4, 2, 0, 2.87m },
+                    { 5, 1, 2, 0.98m },
+                    { 6, 0, 0, 1m },
+                    { 7, 1, 1, 1m },
+                    { 8, 2, 2, 1m },
+                    { 9, 2, 1, 1.0071m }
                 });
 
             migrationBuilder.InsertData(
@@ -257,7 +289,7 @@ namespace BankSystem.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastName", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PersonalNumber", "PhoneNumber", "PhoneNumberConfirmed", "RegisteredAt", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, null, "b3dd8479-ebfc-49bc-8bd1-40eb795c4862", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEJWs6FPdq/p2C2bu9FxUtwQVwtpsQtA3C4G5WvD09VePAqUTgR6L4/iuEcPaZqRILA==", null, null, false, new DateTime(2023, 3, 24, 7, 42, 13, 330, DateTimeKind.Utc).AddTicks(7673), null, false, "operator@bank.com" });
+                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "b196481c-2a3e-412a-97cd-03837fe4bb35", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAECmdnScs+gKb91dnNOGlDvalCFlSx2xdxjyxxlnJ4MAJinzpMVknKcRqCDmXGiwvXQ==", "30010088405", null, false, new DateTime(2023, 3, 25, 11, 56, 30, 950, DateTimeKind.Utc).AddTicks(194), null, false, "operator@bank.com" });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",
@@ -345,6 +377,9 @@ namespace BankSystem.Migrations
 
             migrationBuilder.DropTable(
                 name: "Cards");
+
+            migrationBuilder.DropTable(
+                name: "Rates");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");

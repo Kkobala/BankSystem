@@ -80,13 +80,18 @@ namespace BankSystem.Db
 
             var userName = "operator@bank.com";
             var password = "abc123";
+            var birthday = new DateTime(1990, 8, 11);
+            var personalnumber = "30010088405";
+
             var operatorUser = new UserEntity
             {
                 Id = 1,
                 Email = userName,
                 UserName = userName,
                 NormalizedEmail = userName.ToUpper(),
-                NormalizedUserName= userName.ToUpper()
+                NormalizedUserName= userName.ToUpper(),
+                BirthDate = birthday,
+                PersonalNumber = personalnumber
             };
 
             var hasher = new PasswordHasher<UserEntity>();

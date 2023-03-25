@@ -1,4 +1,5 @@
 ﻿using BankSystem.Models.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankSystem.Db.Entities
 {
@@ -6,11 +7,11 @@ namespace BankSystem.Db.Entities
     {
         public int Id { get; set; }
         public int AccountId { get; set; }
-        public AccountEntity? ToIBAN { get; set; }
-        public AccountEntity? FromIBAN { get; set; }
+        public int FromIBANId { get; set; }
+        public int ToIBANId { get; set; }
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
-        public List<AccountEntity>? Accounts { get; set; }
+        public List<AccountEntity> Accounts { get; set; }
         public decimal Fee { get; set; }
         public DateTime TransactionDate { get; set; }
         public TransactionType Type { get; set; }
@@ -19,5 +20,8 @@ namespace BankSystem.Db.Entities
         {
             Accounts = new List<AccountEntity>();
         }
+
+        public AccountEntity FromIBAN { get; set; }
+        public AccountEntity ToIBAN { get; set; }
     }
 }

@@ -89,25 +89,7 @@ namespace BankSystem.Validations
             }
         }
 
-        //public void CheckEmailDomainExistence(string email)
-        //{
-        //    var validEmail = new EmailValidation.EmailAttribute().IsValid(email);
-        //    if (!validEmail)
-        //    {
-        //        throw new Exception("Incorrect email provider");
-        //    }
-        //}
-
-        //public async Task<bool> CheckPrivateNumberUsage(string privateNumber)
-        //{
-        //    var user = await _userRepository.FindWithPrivateNumber(privateNumber);
-        //    if (user != null)
-        //    {
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
+ 
 
         public void CheckPrivateNumberFormat(string privateNumber)
         {

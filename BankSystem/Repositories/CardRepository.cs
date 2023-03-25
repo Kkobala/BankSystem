@@ -43,7 +43,6 @@ namespace BankSystem.Repositories
             _validation.PinValidation(request.PIN);
             _validation.CvvValidation(request.CVV);
 
-            await _db.Accounts.AddAsync(account);
             await _db.Cards.AddAsync(card);
 
             await _db.SaveChangesAsync();

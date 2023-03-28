@@ -1,4 +1,5 @@
-﻿using BankSystem.Models.Requests;
+﻿using BankSystem.Db.Entities;
+using BankSystem.Models.Requests;
 using BankSystem.Repositories;
 using BankSystem.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -43,12 +44,12 @@ namespace BankSystem.Controllers
 		[HttpPost("withdraw")]
 		public async Task<IActionResult> Withdraw([FromQuery] WithdrawRequest request)
 		{
-			var transaction = await _atmService.Withdraw(request.AccountId, request.CardId, request.Amount, request.FromCurrency, request.ToCurrency);
+			var transaction = await _atmService.Withdraw(request.CardNumber, request.Amount, request.FromCurrency, request.ToCurrency);
 
 			return Ok(transaction);
-        }
+		}
 
-        [HttpPost("change-pin")]
+		[HttpPost("change-pin")]
         public async Task<IActionResult> ChangePIN([FromQuery] ChangePINRequest request)
         {
             var changepin = await _cardRepository.ChangePINAsync(request);

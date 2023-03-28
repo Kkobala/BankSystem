@@ -47,5 +47,42 @@ namespace BankSystem.Repositories
 
             return entity.ToDomainModel();
         }
+
+        public async Task<AccountEntity?> GetAccountById(int accountid)
+        {
+            var account = await _db.Accounts.FirstOrDefaultAsync(a => a.Id == accountid);
+
+            if (account == null)
+            {
+                throw new Exception($"Account with ID {accountid} not found");
+            }
+
+            return account;
+        }
+
+        public async Task<AccountEntity> GetAccountByIBAN(string iban)
+        {
+            var account = await _db.Accounts.FirstOrDefaultAsync(x => x.IBAN == iban);
+
+            if (account == null)
+            {
+                throw new Exception($"Account with IBAN {iban} not found");
+            }
+
+            return account;
+        }
+
+        public async Task<AccountEntity?> GetAccountByCardNumber(string cardNumber)
+        {
+            var account = await _db.Accounts.FirstOrDefaultAsync(a => a.Cards.Any(c => c.CardNumber == cardNumber));
+
+            return account;
+        }
+
+        public async Task UpdateAccountAsync(AccountEntity account)
+        {
+            _db.Accounts.Update(account);
+            await _db.SaveChangesAsync();
+        }
     }
 }

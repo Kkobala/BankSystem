@@ -9,38 +9,45 @@ namespace BankSystem.Services
     {
         Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pinCode);
         Task<decimal> GetBalanceAsync(string cardNumber);
-        Task<int> Withdraw(int accountId, int cardId, decimal amount, Currency fromCurrency, Currency toCurrency);
+        Task<decimal> Withdraw(string cardNumber, decimal amount, Currency fromCurrency, Currency toCurrency);
     }
 
     public class ATMService : IATMService
     {
-        private readonly IATMRepository _repository;
+        private readonly IATMRepository _atmRepository;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ConverterService _converterService;
+        private readonly IConverterService _converterService;
+        private readonly IAccountRepository _accountRepository;
+        private readonly ICardRepository _cardRepository;
 
         public ATMService(IATMRepository repository,
             ITransactionRepository transactionRepository,
-            ConverterService converterService)
+            IConverterService converterService,
+            IAccountRepository accountRepository,
+            ICardRepository cardRepository)
         {
-            _repository = repository;
+            _atmRepository = repository;
             _transactionRepository = transactionRepository;
             _converterService = converterService;
+            _accountRepository = accountRepository;
+            _cardRepository = cardRepository;
         }
 
-        public async Task<int> Withdraw(int accountId, int cardId, decimal amount, Currency fromCurrency, Currency toCurrency)
+        //withdraw(cardnumber, pin, decimal amount, Currency fromCurrency, Currency toCurrency)
+        public async Task<decimal> Withdraw(string cardNumber, decimal amount, Currency fromCurrency, Currency toCurrency)
         {
-            var transactions = await _transactionRepository.GetTransactionsByAccountId(accountId);
+            var transactions = await _transactionRepository.GetTransactionsByCardNumber(cardNumber);
 
-            var last24HoursTransactions = transactions.Where(t => t.TransactionDate >= DateTime.UtcNow.AddDays(-1));
+            var last24HoursTransactions = transactions.Where(t => t!.TransactionDate >= DateTime.UtcNow.AddDays(-1));
 
-            var totalWithdrawalsLast24Hours = last24HoursTransactions.Where(t => t.Type == TransactionType.ATM).Sum(t => t.Amount);
+            var totalWithdrawalsLast24Hours = last24HoursTransactions.Where(t => t!.Type == TransactionType.ATM).Sum(t => t!.Amount);
 
             if (totalWithdrawalsLast24Hours + amount > 10000)
             {
                 throw new Exception("Withdrawal limit exceeded.");
             }
 
-            var account = await _transactionRepository.GetAccountById(accountId);
+            var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
 
             if (account == null)
             {
@@ -52,16 +59,11 @@ namespace BankSystem.Services
                 throw new Exception("Insufficient balance.");
             }
 
-            var card = await _transactionRepository.GetCardById(cardId);
+            var card = await _atmRepository.GetCardByCardNumberAsync(cardNumber);
 
             if (card == null)
             {
                 throw new Exception("Card not found.");
-            }
-
-            if (card.Balance < amount)
-            {
-                throw new Exception("Insufficient balance.");
             }
 
             var fee = CalculateFee(amount, fromCurrency);
@@ -69,6 +71,8 @@ namespace BankSystem.Services
             var transaction = new TransactionEntity
             {
                 AccountId = account.Id,
+                CardId = card.Id,
+                CardNumber = cardNumber,
                 Amount = amount,
                 Currency = toCurrency,
                 Fee = 0,
@@ -84,13 +88,12 @@ namespace BankSystem.Services
             transaction.Amount = convertedAmount;
 
             account.Amount -= convertedAmount;
-            card.Balance -= convertedAmount;
 
-            await _transactionRepository.UpdateAccountAsync(account);
-            await _transactionRepository.UpdateCardAsync(card);
+            await _accountRepository.UpdateAccountAsync(account);
+            await _cardRepository.UpdateCardAsync(card);
             await _transactionRepository.CreateWithdrawAsync(transaction);
 
-            return transaction.Id;
+            return account.Amount;
         }
 
         private decimal CalculateFee(decimal amount, Currency currency)
@@ -111,7 +114,7 @@ namespace BankSystem.Services
 
         public async Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pin)
         {
-            var card = await _repository.GetCardByCardNumberAsync(cardNumber);
+            var card = await _atmRepository.GetCardByCardNumberAsync(cardNumber);
             if (card == null)
             {
                 return (false, "Invalid card number.");
@@ -132,8 +135,14 @@ namespace BankSystem.Services
 
         public async Task<decimal> GetBalanceAsync(string cardNumber)
         {
-            var card = await _repository.GetCardByCardNumberAsync(cardNumber);
-            return card.Balance;
+            var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
+
+            if (account == null)
+            {
+                throw new Exception($"Account not found for card with number {cardNumber}");
+            }
+
+            return account!.Amount;
         }
     }
 }

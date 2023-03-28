@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMigration : Migration
+    public partial class CreateTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -210,10 +210,8 @@ namespace BankSystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
-                    Balance = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     CardNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
-                    OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OwnerLastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OwnerFullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CardExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CVV = table.Column<int>(type: "int", maxLength: 3, nullable: false),
                     PIN = table.Column<int>(type: "int", maxLength: 4, nullable: false)
@@ -236,8 +234,9 @@ namespace BankSystem.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
-                    FromIBANId = table.Column<int>(type: "int", nullable: false),
-                    ToIBANId = table.Column<int>(type: "int", nullable: false),
+                    CardId = table.Column<int>(type: "int", nullable: false),
+                    FromAccountId = table.Column<int>(type: "int", nullable: false),
+                    ToAccountId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
                     Fee = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
@@ -248,14 +247,14 @@ namespace BankSystem.Migrations
                 {
                     table.PrimaryKey("PK_Transactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Transactions_Accounts_FromIBANId",
-                        column: x => x.FromIBANId,
+                        name: "FK_Transactions_Accounts_FromAccountId",
+                        column: x => x.FromAccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Transactions_Accounts_ToIBANId",
-                        column: x => x.ToIBANId,
+                        name: "FK_Transactions_Accounts_ToAccountId",
+                        column: x => x.ToAccountId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -289,7 +288,7 @@ namespace BankSystem.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastName", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PersonalNumber", "PhoneNumber", "PhoneNumberConfirmed", "RegisteredAt", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "b196481c-2a3e-412a-97cd-03837fe4bb35", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAECmdnScs+gKb91dnNOGlDvalCFlSx2xdxjyxxlnJ4MAJinzpMVknKcRqCDmXGiwvXQ==", "30010088405", null, false, new DateTime(2023, 3, 25, 11, 56, 30, 950, DateTimeKind.Utc).AddTicks(194), null, false, "operator@bank.com" });
+                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "6f52b461-55b2-4a30-83c5-fc35311a22d8", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEEtZW48XnVWL8kND/eR4LD2/kIwqLVTdBZFFRqDmVjn3e0OnKi2B8nZP5DkXaPEmOA==", "30010088405", null, false, new DateTime(2023, 3, 28, 13, 26, 42, 672, DateTimeKind.Utc).AddTicks(3704), null, false, "operator@bank.com" });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",
@@ -324,14 +323,14 @@ namespace BankSystem.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_FromIBANId",
+                name: "IX_Transactions_FromAccountId",
                 table: "Transactions",
-                column: "FromIBANId");
+                column: "FromAccountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transactions_ToIBANId",
+                name: "IX_Transactions_ToAccountId",
                 table: "Transactions",
-                column: "ToIBANId");
+                column: "ToAccountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaims_UserId",

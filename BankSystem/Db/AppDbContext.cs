@@ -41,11 +41,6 @@ namespace BankSystem.Db
                 .HasColumnType("decimal");
 
             modelBuilder
-                .Entity<CardEntity>()
-                .Property(t => t.Balance)
-                .HasColumnType("decimal");
-
-            modelBuilder
                 .Entity<TransactionEntity>()
                 .Property(t => t.Amount)
                 .HasColumnType("decimal");

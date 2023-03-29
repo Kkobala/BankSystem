@@ -8,22 +8,42 @@ namespace BankSystem.Services
     {
         private readonly ITransactionRepository _transactionRepository;
         private readonly IConverterService _converterService;
+<<<<<<< HEAD
 
         public TransactionService(ITransactionRepository transactionRepository,
             IConverterService converterService)
+=======
+        private readonly IAccountRepository _accountRepository;
+
+        public TransactionService(
+            ITransactionRepository transactionRepository,
+            IConverterService converterService,
+            IAccountRepository accountRepository)
+>>>>>>> bdef389ba1f3f76d831491ce33d419cac69f231c
         {
             _transactionRepository = transactionRepository;
             _converterService = converterService;
+            _accountRepository = accountRepository;
         }
 
-        public async Task<int> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency toCurrency)
+        public async Task<decimal> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency toCurrency)
         {
-            var fromiban = await _transactionRepository.GetAccountByIBAN(fromIBAN);
-            var toiban = await _transactionRepository.GetAccountByIBAN(toIBAN);
+            var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
+            var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
 
             if (fromiban == null || toiban == null)
             {
                 throw new Exception("One or more account(s) not found");
+            }
+
+            if (fromiban.UserId != toiban.UserId)
+            {
+                throw new Exception("Sender and receiver must be the same user");
+            }
+
+            if (amount < 0)
+            {
+                throw new Exception("Amount must be greater than 0");
             }
 
             decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toCurrency);
@@ -37,8 +57,8 @@ namespace BankSystem.Services
 
             var transaction = new TransactionEntity
             {
-                FromIBAN = fromiban,
-                ToIBAN = toiban,
+                FromAccount = fromiban,
+                ToAccount = toiban,
                 Amount = convertedAmount,
                 Currency = toCurrency,
                 Fee = fee,
@@ -47,28 +67,36 @@ namespace BankSystem.Services
             };
 
             fromiban.Amount -= convertedAmount + fee;
+            toiban.Amount += convertedAmount;
 
             if (toiban.Transactions == null)
             {
                 toiban.Transactions = new List<TransactionEntity>();
             }
 
-            fromiban.Amount -= convertedAmount + fee;
-            toiban.Amount += convertedAmount;
-
             await _transactionRepository.CreateTransactionAsync(transaction);
 
-            return transaction.Id;
+            return toiban.Amount;
         }
 
-        public async Task<int> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency currency)
+        public async Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency currency)
         {
-            var fromiban = await _transactionRepository.GetAccountByIBAN(fromIBAN);
-            var toiban = await _transactionRepository.GetAccountByIBAN(toIBAN);
+            var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
+            var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
 
             if (fromiban == null || toiban == null)
             {
                 throw new Exception("One or more account(s) not found");
+            }
+
+            if (fromiban.UserId == toiban.UserId)
+            {
+                throw new Exception("Sender and receiver must not be the same user");
+            }
+
+            if (amount < 0)
+            {
+                throw new Exception("Amount must be greater than 0");
             }
 
             if (fromiban.Amount < amount)
@@ -82,8 +110,8 @@ namespace BankSystem.Services
 
             var transaction = new TransactionEntity
             {
-                FromIBAN = fromiban,
-                ToIBAN = toiban,
+                FromAccount = fromiban,
+                ToAccount = toiban,
                 Amount = convertedAmount,
                 Currency = fromiban.Currency,
                 Fee = fee,
@@ -104,7 +132,7 @@ namespace BankSystem.Services
 
             await _transactionRepository.CreateTransactionAsync(transaction);
 
-            return transaction.Id;
+            return toiban.Amount;
         }
     }
 }

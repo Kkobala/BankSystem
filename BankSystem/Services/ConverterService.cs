@@ -6,8 +6,13 @@ namespace BankSystem.Services
     public interface IConverterService
     {
         Task<decimal> ConvertAmountAsync(decimal amount, Currency fromCurrency, Currency toCurrency);
+<<<<<<< HEAD
 
 	}
+=======
+    }
+
+>>>>>>> bdef389ba1f3f76d831491ce33d419cac69f231c
     public class ConverterService : IConverterService
     {
         private readonly ITransactionRepository _transactionRepository;

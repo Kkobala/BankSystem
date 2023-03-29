@@ -14,11 +14,11 @@ namespace BankSystem.Controllers
 	{
         private readonly AppDbContext _db;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly ConverterService _converterService;
+        private readonly IConverterService _converterService;
 
         public ReportsController(AppDbContext db,
             ITransactionRepository transactionRepository,
-            ConverterService converterService)
+            IConverterService converterService)
         {
             _db = db;
             _transactionRepository = transactionRepository;

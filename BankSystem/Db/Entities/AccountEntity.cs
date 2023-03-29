@@ -1,8 +1,5 @@
 ﻿using BankSystem.Models;
 using BankSystem.Models.Enums;
-using IbanNet;
-using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankSystem.Db.Entities
@@ -15,6 +12,7 @@ namespace BankSystem.Db.Entities
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
         public List<CardEntity> Cards { get; set; }
+
         [NotMapped]
         public List<TransactionEntity> Transactions { get; set; }
 
@@ -34,8 +32,6 @@ namespace BankSystem.Db.Entities
                 {
                     Id = cardEntity.Id,
                     CardNumber = cardEntity.CardNumber,
-                    OwnerName = cardEntity.OwnerName,
-                    OwnerLastName = cardEntity.OwnerLastName,
                     CardExpirationDate = cardEntity.CardExpirationDate,
                     CVV = cardEntity.CVV,
                     PIN = cardEntity.PIN

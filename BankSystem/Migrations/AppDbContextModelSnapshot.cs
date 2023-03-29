@@ -17,7 +17,7 @@ namespace BankSystem.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -69,9 +69,6 @@ namespace BankSystem.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("decimal");
-
                     b.Property<int>("CVV")
                         .HasMaxLength(3)
                         .HasColumnType("int");
@@ -83,14 +80,6 @@ namespace BankSystem.Migrations
                         .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
-
-                    b.Property<string>("OwnerLastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PIN")
                         .HasMaxLength(4)
@@ -248,16 +237,22 @@ namespace BankSystem.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal");
 
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CardNumber")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Currency")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Fee")
                         .HasColumnType("decimal");
 
-                    b.Property<int>("FromIBANId")
+                    b.Property<int?>("FromAccountId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ToIBANId")
+                    b.Property<int?>("ToAccountId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TransactionDate")
@@ -268,9 +263,9 @@ namespace BankSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FromIBANId");
+                    b.HasIndex("FromAccountId");
 
-                    b.HasIndex("ToIBANId");
+                    b.HasIndex("ToAccountId");
 
                     b.ToTable("Transactions");
                 });
@@ -365,16 +360,27 @@ namespace BankSystem.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
+<<<<<<< HEAD
                             ConcurrencyStamp = "9c24bd9b-076e-4fbf-bf51-06cfa5822259",
+=======
+                            ConcurrencyStamp = "623a8434-9c5a-4ba8-a66c-ec320a492dce",
+>>>>>>> bdef389ba1f3f76d831491ce33d419cac69f231c
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
+<<<<<<< HEAD
                             PasswordHash = "AQAAAAIAAYagAAAAEMYiLKT400o5h1BTHuLPeZpGVov8KNPauGTQ+5LdSs0Gx0JLex3/UZ+huB5lW1MkAg==",
                             PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
                             RegisteredAt = new DateTime(2023, 3, 25, 11, 41, 34, 178, DateTimeKind.Utc).AddTicks(1759),
+=======
+                            PasswordHash = "AQAAAAIAAYagAAAAEOxk5JseOzCuFg0VWz/fuYOxNJcpw4NHp0Z71tcHxGVwSTheguoHqOSKGWrQWgc+ZQ==",
+                            PersonalNumber = "30010088405",
+                            PhoneNumberConfirmed = false,
+                            RegisteredAt = new DateTime(2023, 3, 29, 12, 29, 33, 374, DateTimeKind.Utc).AddTicks(1952),
+>>>>>>> bdef389ba1f3f76d831491ce33d419cac69f231c
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });
@@ -514,21 +520,21 @@ namespace BankSystem.Migrations
 
             modelBuilder.Entity("BankSystem.Db.Entities.TransactionEntity", b =>
                 {
-                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "FromIBAN")
+                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "FromAccount")
                         .WithMany()
-                        .HasForeignKey("FromIBANId")
+                        .HasForeignKey("FromAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "ToIBAN")
+                    b.HasOne("BankSystem.Db.Entities.AccountEntity", "ToAccount")
                         .WithMany()
-                        .HasForeignKey("ToIBANId")
+                        .HasForeignKey("ToAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("FromIBAN");
+                    b.Navigation("FromAccount");
 
-                    b.Navigation("ToIBAN");
+                    b.Navigation("ToAccount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

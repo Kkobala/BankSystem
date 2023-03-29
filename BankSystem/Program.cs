@@ -1,6 +1,6 @@
 using BankSystem.Auth;
 using BankSystem.Db;
-using BankSystem.Middlewares;
+//using BankSystem.Middlewares;
 using BankSystem.Repositories;
 using BankSystem.Services;
 using BankSystem.Validations;
@@ -24,9 +24,12 @@ builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 builder.Services.AddTransient<IATMRepository, ATMRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IATMService, ATMService>();
+<<<<<<< HEAD
 builder.Services.AddTransient<IConverterService,ConverterService>();
+=======
+builder.Services.AddTransient<IConverterService, ConverterService>();
+>>>>>>> bdef389ba1f3f76d831491ce33d419cac69f231c
 builder.Services.AddScoped<TransactionService>();
-builder.Services.AddScoped<ConverterService>();
 builder.Services.AddScoped<BankSystemValidations>();
 
 builder.Services.AddControllers()
@@ -77,7 +80,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseMiddleware<ErrorHandlerMiddleware>();
+//app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

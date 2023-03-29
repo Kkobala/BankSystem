@@ -29,13 +29,10 @@ namespace BankSystem.Repositories
             {
                 AccountId = request.AccountId,
                 CardNumber = request.CardNumber,
-                Balance = request.Balance,
                 Account = account,
                 PIN = request.PIN,
                 CVV = request.CVV,
-                CardExpirationDate = request.CardExpirationDate,
-                OwnerName = request.OwnerName,
-                OwnerLastName = request.OwnerLastName
+                CardExpirationDate = request.CardExpirationDate
             };
 
             await _db.Cards.AddAsync(card);
@@ -86,6 +83,31 @@ namespace BankSystem.Repositories
             await _db.SaveChangesAsync();
 
             return account.ToList();
+        }
+
+        public async Task UpdateCardAsync(CardEntity card)
+        {
+            _db.Cards.Update(card);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<CardEntity?> GetCardByPIN(int pin)
+        {
+            var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);
+
+            return card;
+        }
+
+        public async Task<CardEntity?> GetCardById(int id)
+        {
+            var card = await _db.Cards.FirstOrDefaultAsync(a => a.Id == id);
+
+            if (card == null)
+            {
+                throw new Exception($"Card with ID {id} not found");
+            }
+
+            return card;
         }
     }
 }

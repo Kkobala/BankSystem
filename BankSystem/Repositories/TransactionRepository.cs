@@ -2,6 +2,7 @@
 using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace BankSystem.Repositories
 {
@@ -26,52 +27,16 @@ namespace BankSystem.Repositories
             return await _db.Transactions.ToListAsync();
         }
 
-        public async Task<List<TransactionEntity>> GetTransactionsByAccountId(int accoundId)
+        public async Task<List<TransactionEntity?>> GetTransactionsByCardNumber(string cardNumber)
         {
-            var transaction = await _db.Transactions.Where(x => x.AccountId == accoundId).ToListAsync();
+            var transaction = await _db.Transactions.Where(a => a.CardNumber == cardNumber).ToListAsync();
 
             if (transaction == null)
             {
-                throw new ArgumentException($"Transaction with Accound ID {accoundId} Not Found");
+                throw new ArgumentException($"Transaction with Card Number {cardNumber} Not Found");
             }
 
-            return transaction;
-        }
-
-        public async Task<AccountEntity> GetAccountByIBAN(string iban)
-        {
-            var account = await _db.Accounts.FirstOrDefaultAsync(x => x.IBAN == iban);
-
-            if (account == null)
-            {
-                throw new Exception($"Account with IBAN {iban} not found");
-            }
-
-            return account;
-        }
-
-        public async Task<AccountEntity?> GetAccountById(int id)
-        {
-            var account = await _db.Accounts.FirstOrDefaultAsync(a => a.Id == id);
-
-            if (account == null)
-            {
-                throw new Exception($"Account with ID {id} not found");
-            }
-
-            return account;
-        }
-
-        public async Task<CardEntity?> GetCardById(int id)
-        {
-            var card = await _db.Cards.FirstOrDefaultAsync(a => a.Id == id);
-
-            if (card == null)
-            {
-                throw new Exception($"Card with ID {id} not found");
-            }
-
-            return card;
+            return transaction!;
         }
 
         public async Task<int> CreateWithdrawAsync(TransactionEntity transaction)
@@ -84,8 +49,8 @@ namespace BankSystem.Repositories
         public async Task<List<TransactionEntity>> GetAllTransactionsAsync()
         {
             var transactions = await _db.Transactions
-                .Include(x => x.FromIBAN)
-                .Include(x => x.ToIBAN)
+                .Include(x => x.FromAccount)
+                .Include(x => x.ToAccount)
                 .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
                        x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
                 .Where(x => x.Amount > 0)
@@ -104,18 +69,6 @@ namespace BankSystem.Repositories
             }
 
             return exchangeRateEntity;
-        }
-
-        public async Task UpdateCardAsync(CardEntity card)
-        {
-            _db.Cards.Update(card);
-            await _db.SaveChangesAsync();
-        }
-
-        public async Task UpdateAccountAsync(AccountEntity account)
-        {
-            _db.Accounts.Update(account);
-            await _db.SaveChangesAsync();
         }
     }
 }

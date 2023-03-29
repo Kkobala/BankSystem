@@ -3,7 +3,12 @@ using BankSystem.Repositories;
 
 namespace BankSystem.Services
 {
-    public class ConverterService
+    public interface IConverterService
+    {
+        Task<decimal> ConvertAmountAsync(decimal amount, Currency fromCurrency, Currency toCurrency);
+
+	}
+    public class ConverterService : IConverterService
     {
         private readonly ITransactionRepository _transactionRepository;
 

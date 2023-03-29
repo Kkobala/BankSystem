@@ -134,6 +134,7 @@ namespace BankSystem.Services
         {
             var card = await _repository.GetCardByCardNumberAsync(cardNumber);
             return card.Balance;
+
         }
     }
 }

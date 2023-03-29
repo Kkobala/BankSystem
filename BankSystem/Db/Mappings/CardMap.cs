@@ -12,7 +12,6 @@ namespace BankSystem.Db.Mappings
             builder.Property(x => x.CVV).HasMaxLength(3).IsRequired();
             builder.Property(x => x.PIN).HasMaxLength(4).IsRequired();
             builder.Property(x => x.CardNumber).HasMaxLength(16).IsRequired();
-            builder.Property(x => x.OwnerFullName).IsRequired();
             builder.Property(x => x.CardExpirationDate).IsRequired();
         }
     }

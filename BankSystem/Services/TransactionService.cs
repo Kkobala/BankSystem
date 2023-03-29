@@ -35,6 +35,11 @@ namespace BankSystem.Services
                 throw new Exception("Sender and receiver must be the same user");
             }
 
+            if (amount < 0)
+            {
+                throw new Exception("Amount must be greater than 0");
+            }
+
             decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toCurrency);
 
             if (fromiban.Amount < convertedAmount)
@@ -78,14 +83,19 @@ namespace BankSystem.Services
                 throw new Exception("One or more account(s) not found");
             }
 
-            if (fromiban.Amount < amount)
-            {
-                throw new Exception("Insufficient funds");
-            }
-
             if (fromiban.UserId == toiban.UserId)
             {
                 throw new Exception("Sender and receiver must not be the same user");
+            }
+
+            if (amount < 0)
+            {
+                throw new Exception("Amount must be greater than 0");
+            }
+
+            if (fromiban.Amount < amount)
+            {
+                throw new Exception("Insufficient funds");
             }
 
             decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, currency, fromiban.Currency);

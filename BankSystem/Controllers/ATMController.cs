@@ -44,7 +44,7 @@ namespace BankSystem.Controllers
 		[HttpPost("withdraw")]
 		public async Task<IActionResult> Withdraw([FromQuery] WithdrawRequest request)
 		{
-			var transaction = await _atmService.Withdraw(request.CardNumber, request.Amount, request.FromCurrency, request.ToCurrency);
+			var transaction = await _atmService.Withdraw(request.CardNumber,   request.PIN, request.Amount, request.FromCurrency, request.ToCurrency);
 
 			return Ok(transaction);
 		}

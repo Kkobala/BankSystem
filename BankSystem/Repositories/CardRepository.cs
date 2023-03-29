@@ -32,8 +32,7 @@ namespace BankSystem.Repositories
                 Account = account,
                 PIN = request.PIN,
                 CVV = request.CVV,
-                CardExpirationDate = request.CardExpirationDate,
-                OwnerFullName = request.OwnerFullName
+                CardExpirationDate = request.CardExpirationDate
             };
 
             await _db.Cards.AddAsync(card);
@@ -90,6 +89,13 @@ namespace BankSystem.Repositories
         {
             _db.Cards.Update(card);
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<CardEntity?> GetCardByPIN(int pin)
+        {
+            var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);
+
+            return card;
         }
 
         public async Task<CardEntity?> GetCardById(int id)

@@ -81,10 +81,6 @@ namespace BankSystem.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
-                    b.Property<string>("OwnerFullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("PIN")
                         .HasMaxLength(4)
                         .HasColumnType("int");
@@ -364,16 +360,16 @@ namespace BankSystem.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "ea668fd9-91a4-461c-9f7d-8a80aeb50910",
+                            ConcurrencyStamp = "a7164d7d-3ddb-4362-9c03-5fead77452bd",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENBS6OWPC0yuyDN0DHUJdht2No98wI6ui4LjykdymQAz8jHNUDXqfiDy3eLchaMuCg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBA522jA3GVoXWBFAkUhoSjOxP13cOKLP6BGBTOXB9YqFn3bdlSG9sm70KSPbBLvaQ==",
                             PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(2023, 3, 28, 15, 43, 52, 290, DateTimeKind.Utc).AddTicks(6511),
+                            RegisteredAt = new DateTime(2023, 3, 29, 10, 20, 32, 529, DateTimeKind.Utc).AddTicks(1011),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });

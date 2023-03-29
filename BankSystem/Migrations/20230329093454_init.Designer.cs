@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230328154352_MakeChangesTransactionTable")]
-    partial class MakeChangesTransactionTable
+    [Migration("20230329093454_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,10 +83,6 @@ namespace BankSystem.Migrations
                         .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
-
-                    b.Property<string>("OwnerFullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PIN")
                         .HasMaxLength(4)
@@ -367,16 +363,16 @@ namespace BankSystem.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "ea668fd9-91a4-461c-9f7d-8a80aeb50910",
+                            ConcurrencyStamp = "62e49935-cf8d-4b80-ba59-7085a7c88095",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENBS6OWPC0yuyDN0DHUJdht2No98wI6ui4LjykdymQAz8jHNUDXqfiDy3eLchaMuCg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEO696KeyyMWlIVrtPCMD+p3ABNYFBjhhPfszUS7pizjXB7m6PlPwCdarfTMhnYPd4Q==",
                             PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(2023, 3, 28, 15, 43, 52, 290, DateTimeKind.Utc).AddTicks(6511),
+                            RegisteredAt = new DateTime(2023, 3, 29, 9, 34, 54, 351, DateTimeKind.Utc).AddTicks(9828),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });

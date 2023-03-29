@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateTables : Migration
+    public partial class AddMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -211,7 +211,6 @@ namespace BankSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     CardNumber = table.Column<string>(type: "nvarchar(16)", maxLength: 16, nullable: false),
-                    OwnerFullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CardExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CVV = table.Column<int>(type: "int", maxLength: 3, nullable: false),
                     PIN = table.Column<int>(type: "int", maxLength: 4, nullable: false)
@@ -235,6 +234,7 @@ namespace BankSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     CardId = table.Column<int>(type: "int", nullable: false),
+                    CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FromAccountId = table.Column<int>(type: "int", nullable: false),
                     ToAccountId = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
@@ -288,7 +288,7 @@ namespace BankSystem.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastName", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PersonalNumber", "PhoneNumber", "PhoneNumberConfirmed", "RegisteredAt", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "6f52b461-55b2-4a30-83c5-fc35311a22d8", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEEtZW48XnVWL8kND/eR4LD2/kIwqLVTdBZFFRqDmVjn3e0OnKi2B8nZP5DkXaPEmOA==", "30010088405", null, false, new DateTime(2023, 3, 28, 13, 26, 42, 672, DateTimeKind.Utc).AddTicks(3704), null, false, "operator@bank.com" });
+                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "ea5834e2-2dd0-424b-95a6-29f74d8e04fd", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEAYbYxYwzMks7kMZbXrRbqveWzqDZDvvh6ejf3P+jxOREWj6SFpdL9ck7OPAe5gaow==", "30010088405", null, false, new DateTime(2023, 3, 29, 9, 2, 21, 468, DateTimeKind.Utc).AddTicks(9257), null, false, "operator@bank.com" });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",

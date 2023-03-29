@@ -9,7 +9,7 @@ namespace BankSystem.Services
     {
         Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pinCode);
         Task<decimal> GetBalanceAsync(string cardNumber);
-        Task<decimal> Withdraw(string cardNumber, decimal amount, Currency fromCurrency, Currency toCurrency);
+        Task<decimal> Withdraw(string cardNumber,int pin, decimal amount, Currency fromCurrency, Currency toCurrency);
     }
 
     public class ATMService : IATMService
@@ -33,8 +33,7 @@ namespace BankSystem.Services
             _cardRepository = cardRepository;
         }
 
-        //withdraw(cardnumber, pin, decimal amount, Currency fromCurrency, Currency toCurrency)
-        public async Task<decimal> Withdraw(string cardNumber, decimal amount, Currency fromCurrency, Currency toCurrency)
+        public async Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency fromCurrency, Currency toCurrency)
         {
             var transactions = await _transactionRepository.GetTransactionsByCardNumber(cardNumber);
 
@@ -57,6 +56,13 @@ namespace BankSystem.Services
             if (account.Amount < amount)
             {
                 throw new Exception("Insufficient balance.");
+            }
+
+            var pinCode = await _cardRepository.GetCardByPIN(pin);
+
+            if (pinCode == null)
+            {
+                throw new Exception("Card with this pincode does not exist.");
             }
 
             var card = await _atmRepository.GetCardByCardNumberAsync(cardNumber);

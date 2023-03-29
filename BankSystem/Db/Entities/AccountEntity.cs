@@ -32,7 +32,6 @@ namespace BankSystem.Db.Entities
                 {
                     Id = cardEntity.Id,
                     CardNumber = cardEntity.CardNumber,
-                    OwnerFullName = cardEntity.OwnerFullName,
                     CardExpirationDate = cardEntity.CardExpirationDate,
                     CVV = cardEntity.CVV,
                     PIN = cardEntity.PIN

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230328143826_MakeChangesInAtm")]
-    partial class MakeChangesInAtm
+    [Migration("20230329102032_initalmigration")]
+    partial class initalmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,10 +83,6 @@ namespace BankSystem.Migrations
                         .IsRequired()
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
-
-                    b.Property<string>("OwnerFullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PIN")
                         .HasMaxLength(4)
@@ -248,7 +244,6 @@ namespace BankSystem.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CardNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Currency")
@@ -368,16 +363,16 @@ namespace BankSystem.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "ecd0fc0d-1580-4518-a804-6a3c9794b81b",
+                            ConcurrencyStamp = "a7164d7d-3ddb-4362-9c03-5fead77452bd",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJznKoW46Lwu7cb9d+9qz8Cf9xf08mQZQkcmo4qI2axpxUhQ6BQNLCi5ihZkA/Y1vg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBA522jA3GVoXWBFAkUhoSjOxP13cOKLP6BGBTOXB9YqFn3bdlSG9sm70KSPbBLvaQ==",
                             PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(2023, 3, 28, 14, 38, 26, 323, DateTimeKind.Utc).AddTicks(8049),
+                            RegisteredAt = new DateTime(2023, 3, 29, 10, 20, 32, 529, DateTimeKind.Utc).AddTicks(1011),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });

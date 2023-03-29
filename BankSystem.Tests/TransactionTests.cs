@@ -9,6 +9,7 @@ namespace BankSystem.Tests
     public class TransactionTests
     {
         private Mock<ITransactionRepository> _transactionRepositoryMock;
+        private Mock<IAccountRepository> _accountRepositoryMck;
         private Mock<IConverterService> _converterServiceMock;
 
         [SetUp]
@@ -16,6 +17,7 @@ namespace BankSystem.Tests
         {
             _transactionRepositoryMock = new Mock<ITransactionRepository>();
             _converterServiceMock = new Mock<IConverterService>();
+            _accountRepositoryMck = new Mock<IAccountRepository>();
         }
 
         [TestCase("ABC123", "DEF456", 100, Currency.GEL, 100)]
@@ -38,15 +40,15 @@ namespace BankSystem.Tests
                 Currency = Currency.GEL
             };
 
-            _transactionRepositoryMock.Setup(r => r.GetAccountByIBAN(fromIBAN))
+            _accountRepositoryMck.Setup(r => r.GetAccountByIBAN(fromIBAN))
                                       .ReturnsAsync(fromAccount);
-            _transactionRepositoryMock.Setup(r => r.GetAccountByIBAN(toIBAN))
+            _accountRepositoryMck.Setup(r => r.GetAccountByIBAN(toIBAN))
                                       .ReturnsAsync(toAccount);
 
             _converterServiceMock.Setup(s => s.ConvertAmountAsync(amount, fromAccount.Currency, toCurrency))
                      .ReturnsAsync(amount);
 
-            var transactionService = new TransactionService(_transactionRepositoryMock.Object, _converterServiceMock.Object);
+            var transactionService = new TransactionService(_transactionRepositoryMock.Object, _converterServiceMock.Object, _accountRepositoryMck.Object);
 
             var actualTransaction = await transactionService.InnerTransactionAsync(fromIBAN, toIBAN, amount, toCurrency);
 
@@ -73,16 +75,16 @@ namespace BankSystem.Tests
                 Currency = Currency.USD
             };
 
-            _transactionRepositoryMock.Setup(r => r.GetAccountByIBAN(fromIBAN))
+            _accountRepositoryMck.Setup(r => r.GetAccountByIBAN(fromIBAN))
                                       .ReturnsAsync(fromAccount);
-            _transactionRepositoryMock.Setup(r => r.GetAccountByIBAN(toIBAN))
+            _accountRepositoryMck.Setup(r => r.GetAccountByIBAN(toIBAN))
                                       .ReturnsAsync(toAccount);
 
             decimal convertedAmount = amount * 0.361m;
             _converterServiceMock.Setup(s => s.ConvertAmountAsync(amount, fromAccount.Currency, toCurrency))
                      .ReturnsAsync(convertedAmount);
 
-            var transactionService = new TransactionService(_transactionRepositoryMock.Object, _converterServiceMock.Object);
+            var transactionService = new TransactionService(_transactionRepositoryMock.Object, _converterServiceMock.Object, _accountRepositoryMck.Object);
 
             var actualTransaction = await transactionService.InnerTransactionAsync(fromIBAN, toIBAN, amount, toCurrency);
 
@@ -109,16 +111,16 @@ namespace BankSystem.Tests
                 Currency = Currency.EUR
             };
 
-            _transactionRepositoryMock.Setup(r => r.GetAccountByIBAN(fromIBAN))
+            _accountRepositoryMck.Setup(r => r.GetAccountByIBAN(fromIBAN))
                                       .ReturnsAsync(fromAccount);
-            _transactionRepositoryMock.Setup(r => r.GetAccountByIBAN(toIBAN))
+            _accountRepositoryMck.Setup(r => r.GetAccountByIBAN(toIBAN))
                                       .ReturnsAsync(toAccount);
 
             decimal convertedAmount = amount * 0.3636m;
             _converterServiceMock.Setup(s => s.ConvertAmountAsync(amount, fromAccount.Currency, toCurrency))
                      .ReturnsAsync(convertedAmount);
 
-            var transactionService = new TransactionService(_transactionRepositoryMock.Object, _converterServiceMock.Object);
+            var transactionService = new TransactionService(_transactionRepositoryMock.Object, _converterServiceMock.Object, _accountRepositoryMck.Object);
 
             var actualTransaction = await transactionService.InnerTransactionAsync(fromIBAN, toIBAN, amount, toCurrency);
 

@@ -4,6 +4,7 @@ using BankSystem.Db.Entities;
 using BankSystem.Models;
 using BankSystem.Models.AuthRequests;
 using BankSystem.Validations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,7 @@ namespace BankSystem.Controllers
             _validation = validations;
         }
 
+        [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
         [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUser([FromQuery] RegisterUserRequest request)
         {
@@ -58,7 +60,7 @@ namespace BankSystem.Controllers
 
             await _db.SaveChangesAsync();
 
-            return Ok(entity);
+            return Ok(request);
         }
 
         [HttpPost("login-user")]

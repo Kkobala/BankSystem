@@ -13,8 +13,8 @@ namespace BankSystem.Db.Mappings
             builder.Property(x => x.CardId).IsRequired();
             builder.Property(x => x.Amount).IsRequired();
             builder.Property(x => x.Currency).IsRequired();
-            builder.Property(x => x.FromAccountId).IsRequired();
-            builder.Property(x => x.ToAccountId).IsRequired();
+            builder.Property(x => x.FromAccountId).IsRequired(false);
+            builder.Property(x => x.ToAccountId).IsRequired(false);
 
             builder.HasOne(x => x.FromAccount)
                     .WithMany()

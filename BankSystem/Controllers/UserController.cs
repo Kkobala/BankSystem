@@ -1,7 +1,6 @@
 ﻿using BankSystem.Auth;
 using BankSystem.Db;
 using BankSystem.Db.Entities;
-using BankSystem.Models;
 using BankSystem.Models.AuthRequests;
 using BankSystem.Validations;
 using Microsoft.AspNetCore.Authorization;
@@ -45,8 +44,11 @@ namespace BankSystem.Controllers
                 Email = request.Email
             };
 
+            _validation.CheckPrivateNumberFormat(request.PersonalNumber);
+            _validation.CheckNameOrSurname(request.Name);
+
             var result = await _userManager.CreateAsync(entity, request.Password!);
-           
+
             if (!result.Succeeded)
             {
                 var firstError = result.Errors.First();
@@ -54,9 +56,6 @@ namespace BankSystem.Controllers
             }
 
             await _userManager.AddToRoleAsync(entity, "Operator");
-
-            _validation.CheckPrivateNumberFormat(request.PersonalNumber);
-            _validation.CheckNameOrSurname(request.Name);
 
             await _db.SaveChangesAsync();
 
@@ -99,20 +98,20 @@ namespace BankSystem.Controllers
 
             var isCoorrectPassword = await _userManager.CheckPasswordAsync(Operator, request.Password);
 
-            if (!isCoorrectPassword) 
+            if (!isCoorrectPassword)
             {
                 return BadRequest("Invalid Password or Email jimson");
             }
 
-			var isOperator = await _userManager.IsInRoleAsync(Operator, "operator");
+            var isOperator = await _userManager.IsInRoleAsync(Operator, "operator");
 
-            if (!isOperator) 
+            if (!isOperator)
             {
                 return BadRequest("There is no such role brodie");
             }
-			var roles = await _userManager.GetRolesAsync(Operator);
+            var roles = await _userManager.GetRolesAsync(Operator);
 
-			return Ok(_tokenGenerator.Generate(Operator.Id.ToString(),roles));
-		}
+            return Ok(_tokenGenerator.Generate(Operator.Id.ToString(), roles));
+        }
     }
 }

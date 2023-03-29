@@ -249,10 +249,10 @@ namespace BankSystem.Migrations
                     b.Property<decimal>("Fee")
                         .HasColumnType("decimal");
 
-                    b.Property<int>("FromAccountId")
+                    b.Property<int?>("FromAccountId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ToAccountId")
+                    b.Property<int?>("ToAccountId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("TransactionDate")
@@ -360,16 +360,16 @@ namespace BankSystem.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "a7164d7d-3ddb-4362-9c03-5fead77452bd",
+                            ConcurrencyStamp = "623a8434-9c5a-4ba8-a66c-ec320a492dce",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBA522jA3GVoXWBFAkUhoSjOxP13cOKLP6BGBTOXB9YqFn3bdlSG9sm70KSPbBLvaQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOxk5JseOzCuFg0VWz/fuYOxNJcpw4NHp0Z71tcHxGVwSTheguoHqOSKGWrQWgc+ZQ==",
                             PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(2023, 3, 29, 10, 20, 32, 529, DateTimeKind.Utc).AddTicks(1011),
+                            RegisteredAt = new DateTime(2023, 3, 29, 12, 29, 33, 374, DateTimeKind.Utc).AddTicks(1952),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });

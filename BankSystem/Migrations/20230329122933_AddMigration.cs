@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMigrations : Migration
+    public partial class AddMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -235,8 +235,8 @@ namespace BankSystem.Migrations
                     AccountId = table.Column<int>(type: "int", nullable: false),
                     CardId = table.Column<int>(type: "int", nullable: false),
                     CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FromAccountId = table.Column<int>(type: "int", nullable: false),
-                    ToAccountId = table.Column<int>(type: "int", nullable: false),
+                    FromAccountId = table.Column<int>(type: "int", nullable: true),
+                    ToAccountId = table.Column<int>(type: "int", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
                     Fee = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
@@ -288,7 +288,7 @@ namespace BankSystem.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastName", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PersonalNumber", "PhoneNumber", "PhoneNumberConfirmed", "RegisteredAt", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "ea5834e2-2dd0-424b-95a6-29f74d8e04fd", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEAYbYxYwzMks7kMZbXrRbqveWzqDZDvvh6ejf3P+jxOREWj6SFpdL9ck7OPAe5gaow==", "30010088405", null, false, new DateTime(2023, 3, 29, 9, 2, 21, 468, DateTimeKind.Utc).AddTicks(9257), null, false, "operator@bank.com" });
+                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "623a8434-9c5a-4ba8-a66c-ec320a492dce", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEOxk5JseOzCuFg0VWz/fuYOxNJcpw4NHp0Z71tcHxGVwSTheguoHqOSKGWrQWgc+ZQ==", "30010088405", null, false, new DateTime(2023, 3, 29, 12, 29, 33, 374, DateTimeKind.Utc).AddTicks(1952), null, false, "operator@bank.com" });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",

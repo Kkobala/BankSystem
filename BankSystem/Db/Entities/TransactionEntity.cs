@@ -9,8 +9,8 @@ namespace BankSystem.Db.Entities
         public int AccountId { get; set; }
         public int CardId { get; set; }
         public string? CardNumber { get; set; }
-        public int FromAccountId { get; set; }
-        public int ToAccountId { get; set; }
+        public int? FromAccountId { get; set; }
+        public int? ToAccountId { get; set; }
         public decimal Amount { get; set; }
         public Currency Currency { get; set; }
         public List<AccountEntity> Accounts { get; set; }

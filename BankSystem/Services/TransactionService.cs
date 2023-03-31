@@ -73,7 +73,7 @@ namespace BankSystem.Services
             return toiban.Amount;
         }
 
-        public async Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency currency)
+        public async Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount, Currency toCurrency)
         {
             var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
             var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
@@ -98,7 +98,7 @@ namespace BankSystem.Services
                 throw new Exception("Insufficient funds");
             }
 
-            decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, currency, fromiban.Currency);
+            decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toCurrency);
 
             var fee = (convertedAmount * 0.01m) + 0.5m;
 

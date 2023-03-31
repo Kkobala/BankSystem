@@ -10,8 +10,12 @@ namespace BankSystem.Repositories
     public class AccountRepository : IAccountRepository
     {
         private readonly AppDbContext _db;
-        private readonly BankSystemValidations _validations;
+        private readonly BankSystemValidations? _validations;
 
+        public AccountRepository(AppDbContext db)
+        {
+            _db= db;
+        }
         public AccountRepository(
             AppDbContext db,
             BankSystemValidations validations)
@@ -28,7 +32,7 @@ namespace BankSystem.Repositories
             entity.Amount = request.Amount;
             entity.Currency = request.Currency;
 
-            _validations.CheckIbanFormat(request.IBAN);
+            _validations!.CheckIbanFormat(request.IBAN);
 
             await _db.Accounts.AddAsync(entity);
             await _db.SaveChangesAsync();
@@ -36,16 +40,16 @@ namespace BankSystem.Repositories
             return entity.Id;
         }
 
-        public async Task<Account?> GetAccountAsync(int userId)
+        public async Task<List<AccountEntity>> GetAccountAsync(int userId)
         {
-            var entity = await _db.Accounts.Include(a => a.Cards).FirstOrDefaultAsync(a => a.UserId == userId);
+            var entity = await _db.Accounts.Where(a => a.UserId == userId).ToListAsync();
 
             if (entity == null)
             {
-                return null;
+                throw new ArgumentException("Account such an user Id cannot be found");
             }
 
-            return entity.ToDomainModel();
+            return entity;
         }
 
         public async Task<AccountEntity?> GetAccountById(int accountid)

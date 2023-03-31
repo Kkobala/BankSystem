@@ -21,31 +21,5 @@ namespace BankSystem.Db.Entities
             Cards = new List<CardEntity>();
             Transactions = new List<TransactionEntity>();
         }
-
-        public Account ToDomainModel()
-        {
-            var cards = new List<Card>();
-
-            foreach (var cardEntity in Cards)
-            {
-                cards.Add(new Card
-                {
-                    Id = cardEntity.Id,
-                    CardNumber = cardEntity.CardNumber,
-                    CardExpirationDate = cardEntity.CardExpirationDate,
-                    CVV = cardEntity.CVV,
-                    PIN = cardEntity.PIN
-                });
-            }
-
-            return new Account
-            {
-                Id = Id,
-                UserId = UserId,
-                Amount = Amount,
-                Currency = Currency,
-                Cards = cards
-            };
-        }
     }
 }

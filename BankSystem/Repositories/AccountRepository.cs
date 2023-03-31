@@ -11,12 +11,12 @@ namespace BankSystem.Repositories
     {
         private readonly AppDbContext _db;
         private readonly BankSystemValidations? _validations;
-
+        
         public AccountRepository(AppDbContext db)
         {
-            _db = db;
+            _db= db;
         }
-
+        
         public AccountRepository(
             AppDbContext db,
             BankSystemValidations validations)

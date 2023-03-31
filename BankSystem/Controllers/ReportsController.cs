@@ -54,12 +54,25 @@ namespace BankSystem.Controllers
         [HttpGet("count-transactions-in-last-onemonth-or-sixmonth-or-oneyear")]
         public async Task<IActionResult> CountLastTransactions()
         {
-            var transactions = await _db.Transactions
+            var innertransactions = await _db.Transactions
                        .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
                        x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
+					   .Where(x => x.Type == TransactionType.Inner)
                        .CountAsync();
 
-            return Ok(transactions);
+            var outertransactions = await _db.Transactions
+                       .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
+                       x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
+					   .Where(x => x.Type == TransactionType.Outter)
+                       .CountAsync();
+
+			var resutl = new
+			{
+				InnerTransaction = innertransactions,
+				OuterTransaction = outertransactions
+			};
+
+            return Ok(resutl);
         }
 
         [HttpGet("count-revenue-from-transactions-in-last-onemonth-or-sixmonth-or-oneyear")]

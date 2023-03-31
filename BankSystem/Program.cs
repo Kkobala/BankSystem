@@ -1,6 +1,6 @@
 using BankSystem.Auth;
 using BankSystem.Db;
-//using BankSystem.Middlewares;
+using BankSystem.Middlewares;
 using BankSystem.Repositories;
 using BankSystem.Services;
 using BankSystem.Validations;
@@ -14,7 +14,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContextPool<AppDbContext>(c =>
     c.UseSqlServer(builder.Configuration["DefaultConnection"]));
-
 
 AuthConfigurator.Configure(builder);
 
@@ -36,7 +35,6 @@ builder.Services.AddControllers()
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -76,7 +74,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//app.UseMiddleware<ErrorHandlerMiddleware>();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 

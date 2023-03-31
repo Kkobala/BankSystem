@@ -23,7 +23,7 @@ namespace BankSystem.Repositories
         {
             var account = await _db.Accounts
                 .FirstOrDefaultAsync(a => a.Id == request.AccountId)
-                ?? throw new Exception("Can not find account");
+                ?? throw new Exception($"Card with {request.AccountId} cannot be found");
 
             var card = new CardEntity()
             {
@@ -35,11 +35,11 @@ namespace BankSystem.Repositories
                 CardExpirationDate = request.CardExpirationDate
             };
 
-            await _db.Cards.AddAsync(card);
-
             _validation.CheckCardNumberFormat(request.CardNumber);
             _validation.PinValidation(request.PIN);
             _validation.CvvValidation(request.CVV);
+
+            await _db.Cards.AddAsync(card);
 
             await _db.SaveChangesAsync();
         }
@@ -50,7 +50,7 @@ namespace BankSystem.Repositories
 
             if (card == null)
             {
-                throw new ArgumentException("Can not find a Card");
+                throw new ArgumentException($"Card with {request.Id} cannot be found");
             }
 
             card.PIN = request.NewPIN;

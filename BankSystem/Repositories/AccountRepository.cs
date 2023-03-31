@@ -11,11 +11,12 @@ namespace BankSystem.Repositories
     {
         private readonly AppDbContext _db;
         private readonly BankSystemValidations? _validations;
-
+        
         public AccountRepository(AppDbContext db)
         {
             _db= db;
         }
+        
         public AccountRepository(
             AppDbContext db,
             BankSystemValidations validations)
@@ -46,10 +47,10 @@ namespace BankSystem.Repositories
 
             if (entity == null)
             {
-                throw new ArgumentException("Account such an user Id cannot be found");
+                throw new ArgumentException($"Account with this {userId} cannot be found");
             }
 
-            return entity;
+            return entity.ToList();
         }
 
         public async Task<AccountEntity?> GetAccountById(int accountid)

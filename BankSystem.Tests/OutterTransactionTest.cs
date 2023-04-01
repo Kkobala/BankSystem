@@ -1,20 +1,9 @@
 ﻿using BankSystem.Db;
 using BankSystem.Db.Entities;
-using BankSystem.Models;
 using BankSystem.Models.Enums;
 using BankSystem.Repositories;
 using BankSystem.Services;
-using Castle.Components.DictionaryAdapter.Xml;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework.Internal;
-using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BankSystem.Tests
 {
@@ -183,7 +172,7 @@ namespace BankSystem.Tests
 			var fromAccount = new AccountEntity
 			{
 				Id = 15,
-				UserId= 1,
+				UserId = 1,
 				IBAN = fromIBAN,
 				Amount = 200.0m,
 				Currency = Currency.GEL
@@ -192,7 +181,7 @@ namespace BankSystem.Tests
 			var toAccount = new AccountEntity
 			{
 				Id = 16,
-				UserId= 2,
+				UserId = 2,
 				IBAN = toIBAN,
 				Amount = 0.0m,
 				Currency = Currency.USD

@@ -28,7 +28,8 @@ namespace BankSystem.Controllers
             return Ok();
         }
 
-        [HttpGet("get-user-cards")]
+        [Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
+		[HttpGet("get-user-cards")]
         public async Task<IActionResult> GetUserCards(int accountId)
         {
             var userCard = await _cardRepository.GetUserCardsAsync(accountId);

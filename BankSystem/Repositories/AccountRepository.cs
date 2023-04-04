@@ -4,6 +4,7 @@ using BankSystem.Models.Requests;
 using BankSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using BankSystem.Validations;
+using IbanNet;
 
 namespace BankSystem.Repositories
 {
@@ -27,7 +28,14 @@ namespace BankSystem.Repositories
 
         public async Task<int> CreateAsync(CreateAccountRequest request)
         {
-            AccountEntity entity = new AccountEntity();
+			var checkIban = await _db.Accounts.AnyAsync(x => x.IBAN == request.IBAN);
+
+            if (checkIban)
+            {
+                throw new ArgumentException("Iban already registered");
+            }
+
+			AccountEntity entity = new AccountEntity();
             entity.UserId = request.UserId;
             entity.IBAN = request.IBAN;
             entity.Amount = request.Amount;

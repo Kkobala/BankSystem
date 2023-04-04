@@ -46,7 +46,7 @@ namespace BankSystem.Auth
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("ApiUser",
-                    policy => policy.RequireClaim(ClaimTypes.Role, "api-user"));
+                    policy => policy.RequireClaim(ClaimTypes.Role, "user"));
 
                 options.AddPolicy("Operator",
                     policy => policy.RequireClaim(ClaimTypes.Role, "operator"));

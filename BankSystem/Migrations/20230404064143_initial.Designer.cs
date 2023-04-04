@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230401083441_something3")]
-    partial class something3
+    [Migration("20230404064143_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -363,16 +363,16 @@ namespace BankSystem.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "913f6190-0714-4ffe-8551-a3e10d7edb41",
+                            ConcurrencyStamp = "f7740664-10ba-4d89-8dfe-db653c87948d",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE5YkCp8JRB82jMvAXHN4ClO3A5/TcGmmP6yO6GiXHm1+OroIjYCyekyARx/YzOTbg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKkvxZVEhWZiO+U88M7M66YnC8D7ISA+Ho4uJeRmOWXrTfhpBwGvubVVdxrhwfaJQA==",
                             PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(2023, 4, 1, 8, 34, 41, 146, DateTimeKind.Utc).AddTicks(2880),
+                            RegisteredAt = new DateTime(2023, 4, 4, 6, 41, 43, 228, DateTimeKind.Utc).AddTicks(9628),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });

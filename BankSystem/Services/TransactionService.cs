@@ -35,7 +35,7 @@ namespace BankSystem.Services
                 throw new Exception("Sender and receiver must be the same user");
             }
 
-            if (amount < 0)
+            if (amount <= 0)
             {
                 throw new Exception("Amount must be greater than 0");
             }

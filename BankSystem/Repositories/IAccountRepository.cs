@@ -12,5 +12,5 @@ namespace BankSystem.Repositories
         Task<AccountEntity> GetAccountByIBAN(string iban);
         Task UpdateAccountAsync(AccountEntity account);
         Task<AccountEntity?> GetAccountByCardNumber(string cardNumber);
-    }
+	}
 }

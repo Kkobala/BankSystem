@@ -17,7 +17,8 @@ namespace BankSystem.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpPost("create-account")]
+		[Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
+		[HttpPost("create-account")]
         public async Task<IActionResult> CreateAsync([FromQuery]CreateAccountRequest request)
         {
             var accountId = await _accountRepository.CreateAsync(request);
@@ -25,7 +26,8 @@ namespace BankSystem.Controllers
             return Ok(accountId);
         }
 
-        [HttpGet("get-account")]
+        [Authorize(Policy ="ApiUser", AuthenticationSchemes ="Bearer")]
+		[HttpGet("get-account")]
         public async Task<IActionResult> GetAccountAsync(int userId)
         {
             var account = await _accountRepository.GetAccountAsync(userId);

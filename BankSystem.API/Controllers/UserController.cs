@@ -30,8 +30,8 @@ namespace BankSystem.Controllers
             _validation = validations;
         }
 
-        [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
-        [HttpPost("register-user")]
+		[Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
+		[HttpPost("register-user")]
         public async Task<IActionResult> RegisterUser([FromQuery] RegisterUserRequest request)
         {
             var entity = new UserEntity
@@ -55,7 +55,7 @@ namespace BankSystem.Controllers
                 return BadRequest(firstError.Description);
             }
 
-            await _userManager.AddToRoleAsync(entity, "Operator");
+            await _userManager.AddToRoleAsync(entity, "user");
 
             await _db.SaveChangesAsync();
 
@@ -81,7 +81,7 @@ namespace BankSystem.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            var isOperator = await _userManager.IsInRoleAsync(user, "operator");
+            //var isOperator = await _userManager.IsInRoleAsync(user, "operator");
 
             return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
@@ -89,29 +89,23 @@ namespace BankSystem.Controllers
         [HttpPost("operator-login")]
         public async Task<IActionResult> LoginOperator([FromQuery] LoginRequest request)
         {
-            var Operator = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email);
 
-            if (Operator == null)
+            if (user == null)
             {
                 return NotFound("Operator not found jima");
             }
 
-            var isCoorrectPassword = await _userManager.CheckPasswordAsync(Operator, request.Password);
+            var isCoorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password);
 
             if (!isCoorrectPassword)
             {
                 return BadRequest("Invalid Password or Email jimson");
             }
 
-            var isOperator = await _userManager.IsInRoleAsync(Operator, "operator");
+            var roles = await _userManager.GetRolesAsync(user);
 
-            if (!isOperator)
-            {
-                return BadRequest("There is no such role brodie");
-            }
-            var roles = await _userManager.GetRolesAsync(Operator);
-
-            return Ok(_tokenGenerator.Generate(Operator.Id.ToString(), roles));
+            return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
     }
 }

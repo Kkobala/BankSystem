@@ -1,7 +1,9 @@
 ﻿using BankSystem.Db;
 using BankSystem.Models.Requests;
 using BankSystem.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace BankSystem.Controllers
 {
@@ -20,7 +22,8 @@ namespace BankSystem.Controllers
             _db = db;
         }
 
-        [HttpPost("inner-transfer")]
+		[Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
+		[HttpPost("inner-transfer")]
         public async Task<IActionResult> InnerTransfer([FromQuery] TransferInnerRequest innerTransferRequest)
         {
             await _transactionService.InnerTransactionAsync(innerTransferRequest.FromIBAN!, innerTransferRequest.ToIBAN!, innerTransferRequest.Amount, innerTransferRequest.Currency);
@@ -28,7 +31,8 @@ namespace BankSystem.Controllers
             return Ok("Transfer successful");
         }
 
-        [HttpPost("out-transfer")]
+        [Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
+		[HttpPost("out-transfer")]
         public async Task<IActionResult> OutTransfer([FromQuery] TransferOutterRequest outTransferRequest)
         {
             await _transactionService.OutTransactionAsync(outTransferRequest.FromIBAN!, outTransferRequest.ToIBAN!, outTransferRequest.Amount, outTransferRequest.Currency);

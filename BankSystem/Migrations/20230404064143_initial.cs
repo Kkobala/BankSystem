@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class something3 : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -288,7 +288,7 @@ namespace BankSystem.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastName", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PersonalNumber", "PhoneNumber", "PhoneNumberConfirmed", "RegisteredAt", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "913f6190-0714-4ffe-8551-a3e10d7edb41", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEE5YkCp8JRB82jMvAXHN4ClO3A5/TcGmmP6yO6GiXHm1+OroIjYCyekyARx/YzOTbg==", "30010088405", null, false, new DateTime(2023, 4, 1, 8, 34, 41, 146, DateTimeKind.Utc).AddTicks(2880), null, false, "operator@bank.com" });
+                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "f7740664-10ba-4d89-8dfe-db653c87948d", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEKkvxZVEhWZiO+U88M7M66YnC8D7ISA+Ho4uJeRmOWXrTfhpBwGvubVVdxrhwfaJQA==", "30010088405", null, false, new DateTime(2023, 4, 4, 6, 41, 43, 228, DateTimeKind.Utc).AddTicks(9628), null, false, "operator@bank.com" });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",

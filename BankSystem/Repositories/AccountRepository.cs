@@ -26,7 +26,7 @@ namespace BankSystem.Repositories
             _validations = validations;
         }
 
-        public async Task<int> CreateAsync(CreateAccountRequest request)
+        public async Task<AccountEntity> CreateAsync(CreateAccountRequest request)
         {
 			var checkIban = await _db.Accounts.AnyAsync(x => x.IBAN == request.IBAN);
 
@@ -46,7 +46,7 @@ namespace BankSystem.Repositories
             await _db.Accounts.AddAsync(entity);
             await _db.SaveChangesAsync();
 
-            return entity.Id;
+            return entity;
         }
 
         public async Task<List<AccountEntity>> GetAccountAsync(int userId)
@@ -59,18 +59,6 @@ namespace BankSystem.Repositories
             }
 
             return entity.ToList();
-        }
-
-        public async Task<AccountEntity?> GetAccountById(int accountid)
-        {
-            var account = await _db.Accounts.FirstOrDefaultAsync(a => a.Id == accountid);
-
-            if (account == null)
-            {
-                throw new Exception($"Account with ID {accountid} not found");
-            }
-
-            return account;
         }
 
         public async Task<AccountEntity> GetAccountByIBAN(string iban)

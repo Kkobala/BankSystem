@@ -30,8 +30,8 @@ namespace BankSystem.Controllers
             _validation = validations;
         }
 
-		[Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
-		[HttpPost("register-user")]
+        [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
+        [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUser([FromQuery] RegisterUserRequest request)
         {
             var entity = new UserEntity
@@ -81,8 +81,6 @@ namespace BankSystem.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            //var isOperator = await _userManager.IsInRoleAsync(user, "operator");
-
             return Ok(_tokenGenerator.Generate(user.Id.ToString(), roles));
         }
 
@@ -93,14 +91,14 @@ namespace BankSystem.Controllers
 
             if (user == null)
             {
-                return NotFound("Operator not found jima");
+                return NotFound("Operator not found");
             }
 
             var isCoorrectPassword = await _userManager.CheckPasswordAsync(user, request.Password);
 
             if (!isCoorrectPassword)
             {
-                return BadRequest("Invalid Password or Email jimson");
+                return BadRequest("Invalid Password or Email");
             }
 
             var roles = await _userManager.GetRolesAsync(user);

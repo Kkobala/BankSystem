@@ -1,8 +1,6 @@
 ﻿using BankSystem.Models.Requests;
-using BankSystem.Models.Responses;
 using BankSystem.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankSystem.Controllers
@@ -17,17 +15,17 @@ namespace BankSystem.Controllers
             _accountRepository = accountRepository;
         }
 
-		[Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
-		[HttpPost("create-account")]
-        public async Task<IActionResult> CreateAsync([FromQuery]CreateAccountRequest request)
+        [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
+        [HttpPost("create-account")]
+        public async Task<IActionResult> CreateAsync([FromQuery] CreateAccountRequest request)
         {
             var accountId = await _accountRepository.CreateAsync(request);
 
             return Ok(accountId);
         }
 
-        [Authorize(Policy ="ApiUser", AuthenticationSchemes ="Bearer")]
-		[HttpGet("get-account")]
+        [Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
+        [HttpGet("get-account")]
         public async Task<IActionResult> GetAccountAsync(int userId)
         {
             var account = await _accountRepository.GetAccountAsync(userId);

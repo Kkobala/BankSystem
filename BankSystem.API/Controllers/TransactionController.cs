@@ -11,11 +11,11 @@ namespace BankSystem.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly TransactionService _transactionService;
+        private readonly ITransactionService _transactionService;
         private readonly AppDbContext _db;
 
         public TransactionController(
-            TransactionService transactionService,
+            ITransactionService transactionService,
             AppDbContext db)
         {
             _transactionService = transactionService;

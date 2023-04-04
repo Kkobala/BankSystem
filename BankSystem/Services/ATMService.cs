@@ -35,48 +35,27 @@ namespace BankSystem.Services
 
         public async Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency fromCurrency, Currency toCurrency)
         {
-            var transactions = await _transactionRepository.GetTransactionsByCardNumber(cardNumber);
-
-            var last24HoursTransactions = transactions.Where(t => t!.TransactionDate >= DateTime.UtcNow.AddDays(-1));
-
-            var totalWithdrawalsLast24Hours = last24HoursTransactions.Where(t => t!.Type == TransactionType.ATM).Sum(t => t!.Amount);
-
-            if (totalWithdrawalsLast24Hours + amount > 10000)
-            {
-                throw new Exception("Withdrawal limit exceeded.");
-            }
+            await LimitFor24Hours(cardNumber, amount);
 
             var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
 
-            if (account == null)
-            {
-                throw new Exception("Account not found.");
-            }
+            CheckAccountExistence(account);
 
-            if (account.Amount < amount)
-            {
-                throw new Exception("Insufficient balance.");
-            }
+            CheckAccountBalance(amount, account);
 
             var pinCode = await _cardRepository.GetCardByPIN(pin);
 
-            if (pinCode == null)
-            {
-                throw new Exception("Card with this pincode does not exist.");
-            }
+            CheckPIN(pinCode);
 
             var card = await _atmRepository.GetCardByCardNumberAsync(cardNumber);
 
-            if (card == null)
-            {
-                throw new Exception("Card not found.");
-            }
+            CheckCardExistence(card);
 
             var fee = CalculateFee(amount, fromCurrency);
 
             var transaction = new TransactionEntity
             {
-                AccountId = account.Id,
+                AccountId = account!.Id,
                 CardId = card.Id,
                 CardNumber = cardNumber,
                 Amount = amount,
@@ -102,6 +81,52 @@ namespace BankSystem.Services
             return account.Amount;
         }
 
+        private static void CheckCardExistence(CardEntity card)
+        {
+            if (card == null)
+            {
+                throw new Exception("Card not found.");
+            }
+        }
+
+        private static void CheckPIN(CardEntity? pinCode)
+        {
+            if (pinCode == null)
+            {
+                throw new Exception("Card with this pincode does not exist.");
+            }
+        }
+
+        private static void CheckAccountBalance(decimal amount, AccountEntity? account)
+        {
+            if (account!.Amount < amount)
+            {
+                throw new Exception("Insufficient balance.");
+            }
+        }
+
+        private static void CheckAccountExistence(AccountEntity? account)
+        {
+            if (account == null)
+            {
+                throw new Exception("Account not found.");
+            }
+        }
+
+        private async Task LimitFor24Hours(string cardNumber, decimal amount)
+        {
+            var transactions = await _transactionRepository.GetTransactionsByCardNumber(cardNumber);
+
+            var last24HoursTransactions = transactions.Where(t => t!.TransactionDate >= DateTime.UtcNow.AddDays(-1));
+
+            var totalWithdrawalsLast24Hours = last24HoursTransactions.Where(t => t!.Type == TransactionType.ATM).Sum(t => t!.Amount);
+
+            if (totalWithdrawalsLast24Hours + amount > 10000)
+            {
+                throw new Exception("Withdrawal limit exceeded.");
+            }
+        }
+
         private decimal CalculateFee(decimal amount, Currency currency)
         {
             decimal fee = 0;
@@ -110,7 +135,11 @@ namespace BankSystem.Services
             {
                 fee = amount * 0.00m;
             }
-            else if (currency == Currency.EUR || currency == Currency.USD)
+            else if (currency == Currency.EUR)
+            {
+                fee = (amount * 0.01m) + 0.5m;
+            }
+            else if (currency == Currency.USD)
             {
                 fee = (amount * 0.01m) + 0.5m;
             }

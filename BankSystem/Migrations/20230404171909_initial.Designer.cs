@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230404064143_initial")]
+    [Migration("20230404171909_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -363,16 +363,16 @@ namespace BankSystem.Migrations
                             Id = 1,
                             AccessFailedCount = 0,
                             BirthDate = new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            ConcurrencyStamp = "f7740664-10ba-4d89-8dfe-db653c87948d",
+                            ConcurrencyStamp = "dfb8cedf-0c57-40f4-8a8a-f436c134847d",
                             Email = "operator@bank.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "OPERATOR@BANK.COM",
                             NormalizedUserName = "OPERATOR@BANK.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKkvxZVEhWZiO+U88M7M66YnC8D7ISA+Ho4uJeRmOWXrTfhpBwGvubVVdxrhwfaJQA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGid3/koAmaB2B7saY9A+lvWOtNv3XTU86mrACYTY3UPwPa7SCBZidrZykQBknw3UQ==",
                             PersonalNumber = "30010088405",
                             PhoneNumberConfirmed = false,
-                            RegisteredAt = new DateTime(2023, 4, 4, 6, 41, 43, 228, DateTimeKind.Utc).AddTicks(9628),
+                            RegisteredAt = new DateTime(2023, 4, 4, 17, 19, 9, 684, DateTimeKind.Utc).AddTicks(45),
                             TwoFactorEnabled = false,
                             UserName = "operator@bank.com"
                         });

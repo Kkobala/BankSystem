@@ -9,11 +9,5 @@ namespace BankSystem.Models
 		public string IBAN { get; set; }
 		public decimal Amount { get; set; }
 		public Currency Currency { get; set; }
-
-		public List<Card> Cards { get; set; }
-        public Account()
-        {
-            Cards = new List<Card>();
-        }
     }
 }

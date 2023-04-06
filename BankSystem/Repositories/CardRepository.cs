@@ -1,5 +1,6 @@
 ﻿using BankSystem.Db;
 using BankSystem.Db.Entities;
+using BankSystem.Models;
 using BankSystem.Models.Requests;
 using BankSystem.Validations;
 using Microsoft.EntityFrameworkCore;
@@ -19,13 +20,13 @@ namespace BankSystem.Repositories
             _validation = validations;
         }
 
-        public async Task AddCardAsync(AddCardRequest request)
+        public async Task<Card> AddCardAsync(AddCardRequest request)
         {
             var account = await _db.Accounts
                 .FirstOrDefaultAsync(a => a.Id == request.AccountId)
                 ?? throw new Exception($"Account with {request.AccountId} cannot be found");
 
-            var card = new CardEntity()
+            var cardEntity = new CardEntity()
             {
                 AccountId = request.AccountId,
                 CardNumber = request.CardNumber,
@@ -39,9 +40,21 @@ namespace BankSystem.Repositories
             _validation.PinValidation(request.PIN);
             _validation.CvvValidation(request.CVV);
 
-            await _db.Cards.AddAsync(card);
+            await _db.Cards.AddAsync(cardEntity);
 
             await _db.SaveChangesAsync();
+
+            var card = new Card()
+            {
+                Id = cardEntity.Id,
+                AccountId = cardEntity.AccountId,
+                CardNumber = cardEntity.CardNumber,
+                CVV = cardEntity.CVV,
+                PIN = cardEntity.PIN,
+                CardExpirationDate = cardEntity.CardExpirationDate
+            };
+
+            return card;
         }
 
         public async Task<CardEntity> ChangePINAsync(ChangePINRequest request)
@@ -62,7 +75,7 @@ namespace BankSystem.Repositories
             return card;
         }
 
-        public async Task<List<CardEntity>> GetUserCardsAsync(int accountId)
+        public async Task<List<Card>> GetUserCardsAsync(int accountId)
         {
             var account = await _db.Cards
                 .Where(u => u.AccountId == accountId)
@@ -80,9 +93,19 @@ namespace BankSystem.Repositories
                 }
             });
 
+            var card = account.Select(e => new Card
+            {
+                Id = e.Id,
+                AccountId = e.AccountId,
+                CardNumber = e.CardNumber,
+                CardExpirationDate = e.CardExpirationDate,
+                CVV = e.CVV,
+                PIN = e.PIN,
+            }).ToList();
+
             await _db.SaveChangesAsync();
 
-            return account.ToList();
+            return card;
         }
 
         public async Task<CardEntity?> GetCardByPIN(int pin)

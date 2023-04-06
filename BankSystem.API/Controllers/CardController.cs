@@ -16,16 +16,15 @@ namespace BankSystem.Controllers
             ICardRepository cardRepository)
         {
             _cardRepository = cardRepository;
-
         }
 
         [Authorize(Policy = "Operator", AuthenticationSchemes = "Bearer")]
         [HttpPost("add-card")]
         public async Task<IActionResult> AddCard([FromQuery]AddCardRequest request)
         {
-            await _cardRepository.AddCardAsync(request);
+            var card = await _cardRepository.AddCardAsync(request);
 
-            return Ok();
+            return Ok(card);
         }
 
         [Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]

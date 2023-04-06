@@ -49,7 +49,7 @@ namespace BankSystem.Repositories
             return entity;
         }
 
-        public async Task<List<AccountEntity>> GetAccountAsync(int userId)
+        public async Task<List<Account>> GetAccountAsync(int userId)
         {
             var entity = await _db.Accounts.Where(a => a.UserId == userId).ToListAsync();
 
@@ -58,7 +58,16 @@ namespace BankSystem.Repositories
                 throw new ArgumentException($"Account with this {userId} cannot be found");
             }
 
-            return entity.ToList();
+            var accounts = entity.Select(e => new Account
+            {
+                Id = e.Id,
+                UserId = e.UserId,
+                IBAN = e.IBAN,
+                Amount = e.Amount,
+                Currency = e.Currency
+            }).ToList();
+
+            return accounts;
         }
 
         public async Task<AccountEntity> GetAccountByIBAN(string iban)

@@ -24,7 +24,7 @@ namespace BankSystem.Controllers
         }
 
         [Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
-        [HttpGet("get-account")]
+        [HttpGet("get-accounts")]
         public async Task<IActionResult> GetAccountAsync(int userId)
         {
             var account = await _accountRepository.GetAccountAsync(userId);

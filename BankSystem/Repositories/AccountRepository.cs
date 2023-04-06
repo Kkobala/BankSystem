@@ -79,11 +79,5 @@ namespace BankSystem.Repositories
 
             return account;
         }
-
-        public async Task UpdateAccountAsync(AccountEntity account)
-        {
-            _db.Accounts.Update(account);
-            await _db.SaveChangesAsync();
-        }
     }
 }

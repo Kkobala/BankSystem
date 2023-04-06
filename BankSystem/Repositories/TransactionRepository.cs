@@ -2,7 +2,6 @@
 using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
 
 namespace BankSystem.Repositories
 {
@@ -58,7 +57,7 @@ namespace BankSystem.Repositories
         {
             var exchangeRateEntity = await _db.Rates.FirstOrDefaultAsync(e => e.CurrencyFrom == fromCurrency && e.CurrencyTo == toCurrency);
 
-			if (exchangeRateEntity == null)
+            if (exchangeRateEntity == null)
             {
                 throw new ArgumentException($"No exchange rate found for {fromCurrency} to {toCurrency}.");
             }

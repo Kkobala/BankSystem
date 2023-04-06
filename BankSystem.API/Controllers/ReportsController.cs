@@ -2,16 +2,15 @@
 using BankSystem.Models.Enums;
 using BankSystem.Repositories;
 using BankSystem.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankSystem.Controllers
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class ReportsController : ControllerBase
-	{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ReportsController : ControllerBase
+    {
         private readonly AppDbContext _db;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IConverterService _converterService;
@@ -26,20 +25,20 @@ namespace BankSystem.Controllers
         }
 
         [HttpGet("user-stats-current-year")]
-		public async Task<IActionResult> GetStatsThisYear()
-		{
-			var currentDate = DateTime.Now;
-			var usersThisYear = await _db.Users.CountAsync(u => u.RegisteredAt.Year == currentDate.Year);
-			return Ok(usersThisYear);
-		}
+        public async Task<IActionResult> GetStatsThisYear()
+        {
+            var currentDate = DateTime.Now;
+            var usersThisYear = await _db.Users.CountAsync(u => u.RegisteredAt.Year == currentDate.Year);
+            return Ok(usersThisYear);
+        }
 
-		[HttpGet("user-stats-last-year")]
-		public async Task<IActionResult> GetStatsLastYear()
-		{
-			var lastYearDate = DateTime.Now.AddYears(-1);
-			var usersLastYear =  await _db.Users.CountAsync(u => u.RegisteredAt.Year == lastYearDate.Year);
-			return Ok(usersLastYear);
-		}
+        [HttpGet("user-stats-last-year")]
+        public async Task<IActionResult> GetStatsLastYear()
+        {
+            var lastYearDate = DateTime.Now.AddYears(-1);
+            var usersLastYear = await _db.Users.CountAsync(u => u.RegisteredAt.Year == lastYearDate.Year);
+            return Ok(usersLastYear);
+        }
 
         [HttpGet("last-registered-users-in-30-Days")]
         public async Task<IActionResult> LastRegisteredUsersIn30Days()
@@ -57,20 +56,20 @@ namespace BankSystem.Controllers
             var innertransactions = await _db.Transactions
                        .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
                        x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
-					   .Where(x => x.Type == TransactionType.Inner)
+                       .Where(x => x.Type == TransactionType.Inner)
                        .CountAsync();
 
             var outertransactions = await _db.Transactions
                        .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
                        x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
-					   .Where(x => x.Type == TransactionType.Outter)
+                       .Where(x => x.Type == TransactionType.Outter)
                        .CountAsync();
 
-			var resutl = new
-			{
-				InnerTransaction = innertransactions,
-				OuterTransaction = outertransactions
-			};
+            var resutl = new
+            {
+                InnerTransaction = innertransactions,
+                OuterTransaction = outertransactions
+            };
 
             return Ok(resutl);
         }
@@ -87,55 +86,56 @@ namespace BankSystem.Controllers
         }
 
         [HttpGet("transaction-statistics-average-revenue")]
-		public async Task<IActionResult> GetAverageRevenue()
-		{
-			var last30DaysDate = DateTime.Now.AddDays(-30);
+        public async Task<IActionResult> GetAverageRevenue()
+        {
+            var last30DaysDate = DateTime.Now.AddDays(-30);
 
-			var averageRevenueGEL = await _db.Transactions
-				.Where(x => x.Currency == Currency.GEL)
-				.Select(x => x.Amount)
-				.DefaultIfEmpty()
-				.AverageAsync();
+            var averageRevenueGEL = await _db.Transactions
+                .Where(x => x.Currency == Currency.GEL)
+                .Select(x => x.Amount)
+                .DefaultIfEmpty()
+                .AverageAsync();
 
-			var averageRevenueUSD = await _db.Transactions
-				.Where(x =>x.Currency== Currency.USD)
-				.Select(x=>x.Amount)
-				.DefaultIfEmpty()
-				.AverageAsync();
+            var averageRevenueUSD = await _db.Transactions
+                .Where(x => x.Currency == Currency.USD)
+                .Select(x => x.Amount)
+                .DefaultIfEmpty()
+                .AverageAsync();
 
-			var averageRevenueEUR = await _db.Transactions
-				.Where(x=>x.Currency== Currency.EUR)
-				.Select(x=>x.Amount)
-				.DefaultIfEmpty()
-				.AverageAsync();
+            var averageRevenueEUR = await _db.Transactions
+                .Where(x => x.Currency == Currency.EUR)
+                .Select(x => x.Amount)
+                .DefaultIfEmpty()
+                .AverageAsync();
 
             var result = new
-			{
-				AverageRevenueGEL = averageRevenueGEL,
-				AverageRevenueUSD = averageRevenueUSD,
-				AverageRevenueEUR = averageRevenueEUR
-			};
+            {
+                AverageRevenueGEL = averageRevenueGEL,
+                AverageRevenueUSD = averageRevenueUSD,
+                AverageRevenueEUR = averageRevenueEUR
+            };
 
-			return Ok(result);
-		}
+            return Ok(result);
+        }
 
-		[HttpGet("transaction-statistics-according-to-days")]
-		public async Task<IActionResult> GetTransactionStatsByDay()
-		{
-			var last30DaysDate = DateTime.Now.AddDays(-30);
+        [HttpGet("transaction-statistics-according-to-days")]
+        public async Task<IActionResult> GetTransactionStatsByDay()
+        {
+            var last30DaysDate = DateTime.Now.AddDays(-30);
 
-			var transactionsByDay = await _db.Transactions
-				.Where(t => t.TransactionDate >= last30DaysDate)
-				.GroupBy(t => t.TransactionDate.Day)
-				.Select(g => new { Day = g.Key, Count = g.Count() })
-				.ToListAsync();
+            var transactionsByDay = await _db.Transactions
+                .Where(t => t.TransactionDate >= last30DaysDate)
+                .GroupBy(t => t.TransactionDate.Day)
+                .Select(g => new { Day = g.Key, Count = g.Count() })
+                .ToListAsync();
 
-			var result = new
-			{
-				transactionsByDay = transactionsByDay,
-			};
-			return Ok(result);
-		}
+            var result = new
+            {
+                transactionsByDay = transactionsByDay,
+            };
+
+            return Ok(result);
+        }
 
         [HttpGet("Total-amount-of-money-withdraw-from-the-ATM")]
         public async Task<IActionResult> GetTotalamountofmoneywithdrawnfromtheATM()

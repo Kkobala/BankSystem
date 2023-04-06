@@ -105,8 +105,6 @@ namespace BankSystem.Services
 
             toiban.Amount += convertedAmount;
 
-            toiban.Transactions.Add(transaction);
-
             await _transactionRepository.CreateTransactionAsync(transaction);
 
             return toiban.Amount;

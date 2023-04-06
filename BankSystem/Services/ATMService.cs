@@ -177,7 +177,7 @@ namespace BankSystem.Services
                 throw new Exception($"Account not found for card with number {cardNumber}");
             }
 
-            return account!.Amount;
+            return account.Amount;
         }
     }
 }

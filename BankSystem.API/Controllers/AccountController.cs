@@ -22,8 +22,7 @@ namespace BankSystem.Controllers
         public async Task<IActionResult> CreateAsync([FromQuery]CreateAccountRequest request)
         {
             var accountId = await _accountRepository.CreateAsync(request);
-
-            return Ok(accountId);
+			return Ok(accountId);
         }
 
         [Authorize(Policy ="ApiUser", AuthenticationSchemes ="Bearer")]

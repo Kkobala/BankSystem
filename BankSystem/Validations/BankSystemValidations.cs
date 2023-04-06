@@ -11,7 +11,15 @@ namespace BankSystem.Validations
             return amount >= 0;
         }
 
-        public void CheckIbanFormat(string iban)
+		public void ValidateEmailAddress(string emailAddress)
+		{
+			if (!Regex.IsMatch(emailAddress, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+			{
+				throw new Exception("Please enter a valid email address.");
+			}
+		}
+
+		public void CheckIbanFormat(string iban)
         {
             var validator = new IbanValidator();
 

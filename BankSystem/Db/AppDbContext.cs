@@ -48,7 +48,7 @@ namespace BankSystem.Db
             modelBuilder
                 .Entity<TransactionEntity>()
                 .Property(t => t.Fee)
-                .HasColumnType("decimal");
+                .HasColumnType("money");
 
             modelBuilder
                 .Entity<ExchangeRateEntity>()

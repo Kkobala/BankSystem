@@ -183,8 +183,8 @@ namespace BankSystem.Services
             };
 
             fromiban.Amount -= amount + fee;
-
-            if (toiban.Transactions == null)
+            
+			if (toiban.Transactions == null)
             {
                 toiban.Transactions = new List<TransactionEntity>();
             }

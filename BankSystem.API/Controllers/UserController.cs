@@ -44,6 +44,7 @@ namespace BankSystem.Controllers
                 Email = request.Email
             };
 
+            _validation.ValidateEmailAddress(request.Email);
             _validation.CheckPrivateNumberFormat(request.PersonalNumber);
             _validation.CheckNameOrSurname(request.Name);
 

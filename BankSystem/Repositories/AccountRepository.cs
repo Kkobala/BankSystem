@@ -26,7 +26,7 @@ namespace BankSystem.Repositories
             _validations = validations;
         }
 
-        public async Task<AccountEntity> CreateAsync(CreateAccountRequest request)
+        public async Task<Account> CreateAsync(CreateAccountRequest request)
         {
 			var checkIban = await _db.Accounts.AnyAsync(x => x.IBAN == request.IBAN);
 
@@ -46,7 +46,16 @@ namespace BankSystem.Repositories
             await _db.Accounts.AddAsync(entity);
             await _db.SaveChangesAsync();
 
-            return entity;
+			var accounts =  new Account
+			{
+				Id = entity.Id,
+				UserId = entity.UserId,
+				IBAN = entity.IBAN,
+				Amount = entity.Amount,
+				Currency = entity.Currency
+			};
+
+			return accounts;
         }
 
         public async Task<List<Account>> GetAccountAsync(int userId)

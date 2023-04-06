@@ -20,8 +20,7 @@ namespace BankSystem.Controllers
 			_cardRepository = cardRepository;
 		}
 		
-
-		[HttpPost("authorize")]
+		[HttpPost("authorize-card")]
 		public async Task<IActionResult> AuthorizeCard(string cardNumber, int pinCode)
 		{
 			var (success, message) = await _atmService.AuthorizeCardAsync(cardNumber,pinCode);

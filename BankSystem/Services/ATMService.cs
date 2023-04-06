@@ -1,5 +1,4 @@
 ﻿using BankSystem.Db.Entities;
-using BankSystem.Models;
 using BankSystem.Models.Enums;
 using BankSystem.Repositories;
 
@@ -9,7 +8,7 @@ namespace BankSystem.Services
     {
         Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pinCode);
         Task<decimal> GetBalanceAsync(string cardNumber);
-        Task<decimal> Withdraw(string cardNumber,int pin, decimal amount, Currency fromCurrency, Currency toCurrency);
+        Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency fromCurrency, Currency toCurrency);
     }
 
     public class ATMService : IATMService
@@ -74,8 +73,6 @@ namespace BankSystem.Services
 
             account.Amount -= convertedAmount;
 
-            await _accountRepository.UpdateAccountAsync(account);
-            await _cardRepository.UpdateCardAsync(card);
             await _transactionRepository.CreateWithdrawAsync(transaction);
 
             return account.Amount;

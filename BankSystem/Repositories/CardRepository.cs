@@ -85,12 +85,6 @@ namespace BankSystem.Repositories
             return account.ToList();
         }
 
-        public async Task UpdateCardAsync(CardEntity card)
-        {
-            _db.Cards.Update(card);
-            await _db.SaveChangesAsync();
-        }
-
         public async Task<CardEntity?> GetCardByPIN(int pin)
         {
             var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);

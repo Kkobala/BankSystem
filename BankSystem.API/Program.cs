@@ -24,7 +24,7 @@ builder.Services.AddTransient<IATMRepository, ATMRepository>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IATMService, ATMService>();
 builder.Services.AddTransient<IConverterService, ConverterService>();
-builder.Services.AddScoped<TransactionService>();
+builder.Services.AddTransient<ITransactionService, TransactionService>();
 builder.Services.AddScoped<BankSystemValidations>();
 
 builder.Services.AddControllers()

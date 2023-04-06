@@ -23,7 +23,7 @@ namespace BankSystem.Repositories
         {
             var account = await _db.Accounts
                 .FirstOrDefaultAsync(a => a.Id == request.AccountId)
-                ?? throw new Exception($"Card with {request.AccountId} cannot be found");
+                ?? throw new Exception($"Account with {request.AccountId} cannot be found");
 
             var card = new CardEntity()
             {
@@ -94,18 +94,6 @@ namespace BankSystem.Repositories
         public async Task<CardEntity?> GetCardByPIN(int pin)
         {
             var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);
-
-            return card;
-        }
-
-        public async Task<CardEntity?> GetCardById(int id)
-        {
-            var card = await _db.Cards.FirstOrDefaultAsync(a => a.Id == id);
-
-            if (card == null)
-            {
-                throw new Exception($"Card with ID {id} not found");
-            }
 
             return card;
         }

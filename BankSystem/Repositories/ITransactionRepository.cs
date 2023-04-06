@@ -6,7 +6,6 @@ namespace BankSystem.Repositories
     public interface ITransactionRepository
     {
         Task<int> CreateTransactionAsync(TransactionEntity transaction);
-        Task<List<TransactionEntity>> GetTransactionsAsync();
         Task<List<TransactionEntity>> GetAllTransactionsAsync();
         Task<int> CreateWithdrawAsync(TransactionEntity transaction);
         Task<ExchangeRateEntity> GetExchangeRateAsync(Currency fromCurrency, Currency toCurrency);

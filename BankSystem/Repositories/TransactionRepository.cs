@@ -22,11 +22,6 @@ namespace BankSystem.Repositories
             return transaction.Id;
         }
 
-        public async Task<List<TransactionEntity>> GetTransactionsAsync()
-        {
-            return await _db.Transactions.ToListAsync();
-        }
-
         public async Task<List<TransactionEntity?>> GetTransactionsByCardNumber(string cardNumber)
         {
             var transaction = await _db.Transactions.Where(a => a.CardNumber == cardNumber).ToListAsync();

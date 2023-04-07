@@ -58,9 +58,9 @@ namespace BankSystem.Repositories
 			return accounts;
         }
 
-        public async Task<List<Account>> GetAccountAsync(int userId)
+        public async Task<List<Account>> GetAccountAsync(string userId)
         {
-            var entity = await _db.Accounts.Where(a => a.UserId == userId).ToListAsync();
+            var entity = await _db.Accounts.Where(a => a.UserId.ToString() == userId).ToListAsync();
 
             if (entity == null)
             {

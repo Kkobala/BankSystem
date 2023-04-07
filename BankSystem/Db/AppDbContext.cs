@@ -38,12 +38,12 @@ namespace BankSystem.Db
             modelBuilder
                 .Entity<AccountEntity>()
                 .Property(t => t.Amount)
-                .HasColumnType("decimal");
+                .HasColumnType("money");
 
             modelBuilder
                 .Entity<TransactionEntity>()
                 .Property(t => t.Amount)
-                .HasColumnType("decimal");
+                .HasColumnType("money");
 
             modelBuilder
                 .Entity<TransactionEntity>()

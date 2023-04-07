@@ -59,11 +59,17 @@ namespace BankSystem.Repositories
 
         public async Task<CardEntity> ChangePINAsync(ChangePINRequest request)
         {
-            var card = await _db.Cards.FirstOrDefaultAsync(c => c.Id == request.Id);
+            var card = await _db.Cards.FirstOrDefaultAsync(c => c.CardNumber == request.CardNumber);
+            var pin = await _db.Cards.FirstOrDefaultAsync(x => x.PIN == request.OldPIN);
 
             if (card == null)
             {
-                throw new ArgumentException($"Card with {request.Id} cannot be found");
+                throw new ArgumentException($"Card with {request.CardNumber} cannot be found");
+            }
+
+            if (pin == null)
+            {
+                throw new ArgumentException($"Card with {request.OldPIN} cannot be found");
             }
 
             card.PIN = request.NewPIN;
@@ -75,40 +81,75 @@ namespace BankSystem.Repositories
             return card;
         }
 
-        public async Task<List<Card>> GetUserCardsAsync(int accountId)
-        {
-            var account = await _db.Cards
-                .Where(u => u.AccountId == accountId)
-                .ToListAsync();
+		public async Task<List<Card>> GetUserCardsAsync(string userId)
+		{
+			var account = await _db.Cards
+				.Join(_db.Accounts, c => c.AccountId, a => a.Id, (c, a) => new { Card = c, Account = a })
+				.Where(ca => ca.Account.UserId.ToString() == userId)
+				.Select(ca => ca.Card)
+				.ToListAsync();
 
-            Parallel.ForEach(account, acc =>
-            {
-                if (acc.CardExpirationDate < DateTime.Now)
-                {
-                    throw new Exception("Your card will expired");
-                }
-                else if (acc.CardExpirationDate < DateTime.Now.AddMonths(3))
-                {
-                    throw new Exception("Your card will expire in 3 months");
-                }
-            });
+			Parallel.ForEach(account, acc =>
+			{
+				if (acc.CardExpirationDate < DateTime.Now)
+				{
+					throw new Exception("Your card will expired");
+				}
+				else if (acc.CardExpirationDate < DateTime.Now.AddMonths(3))
+				{
+					throw new Exception("Your card will expire in 3 months");
+				}
+			});
 
-            var card = account.Select(e => new Card
-            {
-                Id = e.Id,
-                AccountId = e.AccountId,
-                CardNumber = e.CardNumber,
-                CardExpirationDate = e.CardExpirationDate,
-                CVV = e.CVV,
-                PIN = e.PIN,
-            }).ToList();
+			var card = account.Select(e => new Card
+			{
+				Id = e.Id,
+				AccountId = e.AccountId,
+				CardNumber = e.CardNumber,
+				CardExpirationDate = e.CardExpirationDate,
+				CVV = e.CVV,
+				PIN = e.PIN,
+			}).ToList();
 
-            await _db.SaveChangesAsync();
+			await _db.SaveChangesAsync();
 
-            return card;
-        }
+			return card;
+		}
 
-        public async Task<CardEntity?> GetCardByPIN(int pin)
+		//public async Task<List<Card>> GetUserCardsAsync(int accountId)
+		//{
+		//    var account = await _db.Cards
+		//        .Where(u => u.AccountId == accountId)
+		//        .ToListAsync();
+
+		//    Parallel.ForEach(account, acc =>
+		//    {
+		//        if (acc.CardExpirationDate < DateTime.Now)
+		//        {
+		//            throw new Exception("Your card will expired");
+		//        }
+		//        else if (acc.CardExpirationDate < DateTime.Now.AddMonths(3))
+		//        {
+		//            throw new Exception("Your card will expire in 3 months");
+		//        }
+		//    });
+
+		//    var card = account.Select(e => new Card
+		//    {
+		//        Id = e.Id,
+		//        AccountId = e.AccountId,
+		//        CardNumber = e.CardNumber,
+		//        CardExpirationDate = e.CardExpirationDate,
+		//        CVV = e.CVV,
+		//        PIN = e.PIN,
+		//    }).ToList();
+
+		//    await _db.SaveChangesAsync();
+
+		//    return card;
+		//}
+
+		public async Task<CardEntity?> GetCardByPIN(int pin)
         {
             var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);
 

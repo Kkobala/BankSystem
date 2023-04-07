@@ -15,11 +15,12 @@ namespace BankSystem.Auth
             _settings = settings.Value;
         }
 
-        public string Generate(string userId, IList<string> roles)
+		public string Generate(string userId, IList<string> roles)
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId)
+                new Claim(JwtRegisteredClaimNames.Sub, userId),
+				new Claim(ClaimTypes.NameIdentifier, userId)    
             };
 
             foreach (var role in roles)

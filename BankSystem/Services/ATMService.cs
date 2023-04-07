@@ -7,8 +7,8 @@ namespace BankSystem.Services
     public interface IATMService
     {
         Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pinCode);
-        Task<decimal> GetBalanceAsync(string cardNumber);
-        Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency fromCurrency, Currency toCurrency);
+        Task<decimal> GetBalanceAsync(string cardNumber, int pin);
+        Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency toCurrency);
     }
 
     public class ATMService : IATMService
@@ -32,7 +32,7 @@ namespace BankSystem.Services
             _cardRepository = cardRepository;
         }
 
-        public async Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency fromCurrency, Currency toCurrency)
+        public async Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency toCurrency)
         {
             await LimitFor24Hours(cardNumber, amount);
 
@@ -50,7 +50,7 @@ namespace BankSystem.Services
 
             CheckCardExistence(card);
 
-            var fee = CalculateFee(amount, fromCurrency);
+            var fee = CalculateFee(amount, account!.Currency);
 
             var transaction = new TransactionEntity
             {
@@ -67,7 +67,7 @@ namespace BankSystem.Services
             transaction.Fee = fee;
             transaction.Amount -= fee;
 
-            var convertedAmount = await _converterService.ConvertAmountAsync(amount, fromCurrency, toCurrency);
+            var convertedAmount = await _converterService.ConvertAmountAsync(amount, account.Currency, toCurrency);
 
             transaction.Amount = convertedAmount;
 
@@ -165,13 +165,19 @@ namespace BankSystem.Services
             return (true, "Card authorized successfully.");
         }
 
-        public async Task<decimal> GetBalanceAsync(string cardNumber)
+        public async Task<decimal> GetBalanceAsync(string cardNumber, int pin)
         {
             var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
+            var card = await _cardRepository.GetCardByPIN(pin);
 
             if (account == null)
             {
                 throw new Exception($"Account not found for card with number {cardNumber}");
+            }
+
+            if (card == null)
+            {
+                throw new Exception($"Account not found for card with pin {pin}");
             }
 
             return account.Amount;

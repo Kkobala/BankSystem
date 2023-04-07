@@ -47,7 +47,12 @@ namespace BankSystem.Controllers
                        .Where(x => x.RegisteredAt >= DateTime.Now.AddDays(-30))
                        .CountAsync();
 
-            return Ok(users);
+            var result = new
+            {
+                RegisteredUsers = users
+            };
+
+            return Ok(result);
         }
 
         [HttpGet("count-transactions-in-last-onemonth-or-sixmonth-or-oneyear")]

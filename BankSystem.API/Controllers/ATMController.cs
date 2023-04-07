@@ -34,16 +34,16 @@ namespace BankSystem.Controllers
 		}
 
 		[HttpGet("get-balance/{cardNumber}")]
-		public async Task<IActionResult> GetBalanceAsync(string cardNumber)
+		public async Task<IActionResult> GetBalanceAsync(string cardNumber, int pin)
 		{
-			var balance = await _atmService.GetBalanceAsync(cardNumber);
+			var balance = await _atmService.GetBalanceAsync(cardNumber, pin);
 			return Ok(new { Balance = balance });
 		}
 
 		[HttpPost("withdraw")]
 		public async Task<IActionResult> Withdraw([FromQuery] WithdrawRequest request)
 		{
-			var transaction = await _atmService.Withdraw(request.CardNumber,   request.PIN, request.Amount, request.FromCurrency, request.ToCurrency);
+			var transaction = await _atmService.Withdraw(request.CardNumber,   request.PIN, request.Amount, request.ToCurrency);
 
 			return Ok(transaction);
 		}

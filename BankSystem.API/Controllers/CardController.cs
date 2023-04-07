@@ -3,6 +3,7 @@ using BankSystem.Repositories;
 using BankSystem.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BankSystem.Controllers
 {
@@ -29,9 +30,16 @@ namespace BankSystem.Controllers
 
         [Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
 		[HttpGet("get-user-cards")]
-        public async Task<IActionResult> GetUserCards(int accountId)
+        public async Task<IActionResult> GetUserCards()
         {
-            var userCard = await _cardRepository.GetUserCardsAsync(accountId);
+			var authenticatedUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+			if (authenticatedUserId == null)
+			{
+				throw new ArgumentException("User ID not found in token");
+			}
+
+			var userCard = await _cardRepository.GetUserCardsAsync(authenticatedUserId);
 
             return Ok(userCard);
         }

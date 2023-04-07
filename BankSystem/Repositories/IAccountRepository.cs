@@ -7,7 +7,7 @@ namespace BankSystem.Repositories
     public interface IAccountRepository
     {
         Task<Account> CreateAsync(CreateAccountRequest request);
-        Task<List<Account>> GetAccountAsync(int accountId);
+        Task<List<Account>> GetAccountAsync(string userId);
         Task<AccountEntity> GetAccountByIBAN(string iban);
         Task<AccountEntity?> GetAccountByCardNumber(string cardNumber);
     }

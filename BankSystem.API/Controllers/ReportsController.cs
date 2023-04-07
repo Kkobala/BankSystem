@@ -29,7 +29,11 @@ namespace BankSystem.Controllers
         {
             var currentDate = DateTime.Now;
             var usersThisYear = await _db.Users.CountAsync(u => u.RegisteredAt.Year == currentDate.Year);
-            return Ok(usersThisYear);
+            var result = new
+            {
+                UsersCurrentYear = usersThisYear,
+            };
+            return Ok(result);
         }
 
         [HttpGet("user-stats-last-year")]
@@ -37,7 +41,11 @@ namespace BankSystem.Controllers
         {
             var lastYearDate = DateTime.Now.AddYears(-1);
             var usersLastYear = await _db.Users.CountAsync(u => u.RegisteredAt.Year == lastYearDate.Year);
-            return Ok(usersLastYear);
+            var result = new
+            {
+                UsersLastYear = usersLastYear, 
+            };
+            return Ok(result);
         }
 
         [HttpGet("last-registered-users-in-30-Days")]
@@ -84,10 +92,13 @@ namespace BankSystem.Controllers
         {
             var transactions = await _transactionRepository.GetAllTransactionsAsync();
             decimal totalRevenue = transactions.Sum(x => x.Amount);
-
             decimal revenue = await _converterService.ConvertAmountAsync(totalRevenue, transactions.First().Currency, currency);
 
-            return Ok(revenue);
+            var result = new
+            {
+                AllRevenue = revenue
+            };
+            return Ok(result);
         }
 
         [HttpGet("transaction-statistics-average-revenue")]
@@ -136,7 +147,7 @@ namespace BankSystem.Controllers
 
             var result = new
             {
-                transactionsByDay = transactionsByDay,
+                TransactionsByDay = transactionsByDay,
             };
 
             return Ok(result);
@@ -150,8 +161,12 @@ namespace BankSystem.Controllers
                 .ToListAsync();
 
             var sum = transaction.Sum(x => x.Amount);
+            var result = new
+            {
+                TotalAmount = sum,
+            };
 
-            return Ok(sum);
+            return Ok(result);
         }
     }
 }

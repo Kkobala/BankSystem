@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BankSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -188,7 +188,7 @@ namespace BankSystem.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     IBAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
+                    Amount = table.Column<decimal>(type: "money", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
                     TransactionEntityId = table.Column<int>(type: "int", nullable: true),
                     UserEntityId = table.Column<int>(type: "int", nullable: true)
@@ -237,9 +237,9 @@ namespace BankSystem.Migrations
                     CardNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FromAccountId = table.Column<int>(type: "int", nullable: true),
                     ToAccountId = table.Column<int>(type: "int", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
+                    Amount = table.Column<decimal>(type: "money", nullable: false),
                     Currency = table.Column<int>(type: "int", nullable: false),
-                    Fee = table.Column<decimal>(type: "decimal(18,0)", nullable: false),
+                    Fee = table.Column<decimal>(type: "money", nullable: false),
                     TransactionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false)
                 },
@@ -288,7 +288,7 @@ namespace BankSystem.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "AccessFailedCount", "BirthDate", "ConcurrencyStamp", "Email", "EmailConfirmed", "LastName", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PersonalNumber", "PhoneNumber", "PhoneNumberConfirmed", "RegisteredAt", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "9c16c446-15dc-4380-99d0-7fc8b4adc41a", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAENEFZ+KtHJKNRgIsQ7QTE5j2whF7yfhHDSYyPk8YPnNGFsvG/I6Oxk2mB+OLQYRbnQ==", "30010088405", null, false, new DateTime(2023, 4, 6, 16, 42, 59, 81, DateTimeKind.Utc).AddTicks(1476), null, false, "operator@bank.com" });
+                values: new object[] { 1, 0, new DateTime(1990, 8, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), "0cea517c-81e7-43f4-8821-a380674d483c", "operator@bank.com", false, null, false, null, null, "OPERATOR@BANK.COM", "OPERATOR@BANK.COM", "AQAAAAIAAYagAAAAEDdXrejtTLZ4AYsnqRhyOYOkgQqXgk2kHfWorkR80n5y2iShjg3jbNer5f1JYC8W+Q==", "30010088405", null, false, new DateTime(2023, 4, 9, 11, 1, 41, 90, DateTimeKind.Utc).AddTicks(7085), null, false, "operator@bank.com" });
 
             migrationBuilder.InsertData(
                 table: "UserRoles",

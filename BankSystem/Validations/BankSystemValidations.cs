@@ -1,25 +1,24 @@
-﻿using BankSystem.Repositories;
-using IbanNet;
+﻿using IbanNet;
 using System.Text.RegularExpressions;
 
 namespace BankSystem.Validations
 {
-    public class BankSystemValidations 
+    public class BankSystemValidations
     {
         public bool CheckAmount(decimal amount)
         {
             return amount >= 0;
         }
 
-		public void ValidateEmailAddress(string emailAddress)
-		{
-			if (!Regex.IsMatch(emailAddress, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-			{
-				throw new Exception("Please enter a valid email address.");
-			}
-		}
+        public void ValidateEmailAddress(string emailAddress)
+        {
+            if (!Regex.IsMatch(emailAddress, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                throw new Exception("Please enter a valid email address.");
+            }
+        }
 
-		public void CheckIbanFormat(string iban)
+        public void CheckIbanFormat(string iban)
         {
             var validator = new IbanValidator();
 

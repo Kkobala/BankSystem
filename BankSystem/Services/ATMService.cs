@@ -34,13 +34,14 @@ namespace BankSystem.Services
 
         public async Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency toCurrency)
         {
-            await LimitFor24Hours(cardNumber, amount);
+            //await LimitFor24Hours(cardNumber, amount);
 
             var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
-
+            
             CheckAccountExistence(account);
 
             CheckAccountBalance(amount, account);
+            CheckAmountToBeMoreThanZero(amount);
 
             var pinCode = await _cardRepository.GetCardByPIN(pin);
 
@@ -69,6 +70,8 @@ namespace BankSystem.Services
 
             var convertedAmount = await _converterService.ConvertAmountAsync(amount, account.Currency, toCurrency);
 
+            await LimitFor24Hours(cardNumber, convertedAmount);
+
             transaction.Amount = convertedAmount;
 
             account.Amount -= convertedAmount;
@@ -76,6 +79,14 @@ namespace BankSystem.Services
             await _transactionRepository.CreateWithdrawAsync(transaction);
 
             return account.Amount;
+        }
+
+        private static void CheckAmountToBeMoreThanZero(decimal amount)
+        {
+            if (amount <= 0)
+            {
+                throw new ArgumentException("Please Enter Valid Amount");
+            }
         }
 
         private static void CheckCardExistence(CardEntity card)
@@ -114,9 +125,12 @@ namespace BankSystem.Services
         {
             var transactions = await _transactionRepository.GetTransactionsByCardNumber(cardNumber);
 
-            var last24HoursTransactions = transactions.Where(t => t!.TransactionDate >= DateTime.UtcNow.AddDays(-1));
+            var last24HoursTransactions = transactions
+                .Where(t => t!.TransactionDate >= DateTime.UtcNow.AddDays(-1));
 
-            var totalWithdrawalsLast24Hours = last24HoursTransactions.Where(t => t!.Type == TransactionType.ATM).Sum(t => t!.Amount);
+            var totalWithdrawalsLast24Hours = last24HoursTransactions
+                .Where(t => t!.Type == TransactionType.ATM)
+                .Sum(t => t!.Amount);
 
             if (totalWithdrawalsLast24Hours + amount > 10000)
             {

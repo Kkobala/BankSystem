@@ -29,10 +29,12 @@ namespace BankSystem.Controllers
         {
             var currentDate = DateTime.Now;
             var usersThisYear = await _db.Users.CountAsync(u => u.RegisteredAt.Year == currentDate.Year);
+
             var result = new
             {
                 UsersCurrentYear = usersThisYear,
             };
+
             return Ok(result);
         }
 
@@ -41,10 +43,12 @@ namespace BankSystem.Controllers
         {
             var lastYearDate = DateTime.Now.AddYears(-1);
             var usersLastYear = await _db.Users.CountAsync(u => u.RegisteredAt.Year == lastYearDate.Year);
+
             var result = new
             {
                 UsersLastYear = usersLastYear, 
             };
+
             return Ok(result);
         }
 
@@ -98,6 +102,7 @@ namespace BankSystem.Controllers
             {
                 AllRevenue = revenue
             };
+
             return Ok(result);
         }
 
@@ -161,6 +166,7 @@ namespace BankSystem.Controllers
                 .ToListAsync();
 
             var sum = transaction.Sum(x => x.Amount);
+
             var result = new
             {
                 TotalAmount = sum,

@@ -21,43 +21,52 @@ namespace BankSystem.Repositories
         }
 
         public async Task<Card> AddCardAsync(AddCardRequest request)
-        {
-            var account = await _db.Accounts
-                .FirstOrDefaultAsync(a => a.Id == request.AccountId)
-                ?? throw new Exception($"Account with {request.AccountId} cannot be found");
+		{
+			var account = await _db.Accounts
+				.FirstOrDefaultAsync(a => a.Id == request.AccountId)
+				?? throw new Exception($"Account with {request.AccountId} cannot be found");
 
-            var cardEntity = new CardEntity()
-            {
-                AccountId = request.AccountId,
-                CardNumber = request.CardNumber,
-                Account = account,
-                PIN = request.PIN,
-                CVV = request.CVV,
-                CardExpirationDate = request.CardExpirationDate
-            };
+			var cardEntity = new CardEntity()
+			{
+				AccountId = request.AccountId,
+				CardNumber = request.CardNumber,
+				Account = account,
+				PIN = request.PIN,
+				CVV = request.CVV,
+				CardExpirationDate = request.CardExpirationDate
+			};
 
-            _validation.CheckCardNumberFormat(request.CardNumber);
-            _validation.PinValidation(request.PIN);
-            _validation.CvvValidation(request.CVV);
+			_validation.CheckCardNumberFormat(request.CardNumber);
+			_validation.PinValidation(request.PIN);
+			_validation.CvvValidation(request.CVV);
+			CheckExpirationDate(request);
 
-            await _db.Cards.AddAsync(cardEntity);
+			await _db.Cards.AddAsync(cardEntity);
 
-            await _db.SaveChangesAsync();
+			await _db.SaveChangesAsync();
 
-            var card = new Card()
-            {
-                Id = cardEntity.Id,
-                AccountId = cardEntity.AccountId,
-                CardNumber = cardEntity.CardNumber,
-                CVV = cardEntity.CVV,
-                PIN = cardEntity.PIN,
-                CardExpirationDate = cardEntity.CardExpirationDate
-            };
+			var card = new Card()
+			{
+				Id = cardEntity.Id,
+				AccountId = cardEntity.AccountId,
+				CardNumber = cardEntity.CardNumber,
+				CVV = cardEntity.CVV,
+				PIN = cardEntity.PIN,
+				CardExpirationDate = cardEntity.CardExpirationDate
+			};
 
-            return card;
-        }
+			return card;
+		}
 
-        public async Task<CardEntity> ChangePINAsync(ChangePINRequest request)
+		private static void CheckExpirationDate(AddCardRequest request)
+		{
+			if (request.CardExpirationDate <= DateTime.UtcNow)
+			{
+				throw new Exception("Your Card is already expired");
+			}
+		}
+
+		public async Task<CardEntity> ChangePINAsync(ChangePINRequest request)
         {
             var card = await _db.Cards.FirstOrDefaultAsync(c => c.CardNumber == request.CardNumber);
             var pin = await _db.Cards.FirstOrDefaultAsync(x => x.PIN == request.OldPIN);

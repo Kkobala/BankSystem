@@ -34,8 +34,6 @@ namespace BankSystem.Services
 
         public async Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency toCurrency)
         {
-            //await LimitFor24Hours(cardNumber, amount);
-
             var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
             
             CheckAccountExistence(account);

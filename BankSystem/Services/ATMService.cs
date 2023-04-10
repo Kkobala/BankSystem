@@ -37,7 +37,6 @@ namespace BankSystem.Services
             var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
             
             CheckAccountExistence(account);
-
             CheckAccountBalance(amount, account);
             CheckAmountToBeMoreThanZero(amount);
 
@@ -159,6 +158,7 @@ namespace BankSystem.Services
         public async Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pin)
         {
             var card = await _atmRepository.GetCardByCardNumberAsync(cardNumber);
+
             if (card == null)
             {
                 return (false, "Invalid card number.");

@@ -37,6 +37,7 @@ namespace BankSystem.Controllers
 		public async Task<IActionResult> GetBalanceAsync(string cardNumber, int pin)
 		{
 			var balance = await _atmService.GetBalanceAsync(cardNumber, pin);
+
 			return Ok(new { Balance = balance });
 		}
 

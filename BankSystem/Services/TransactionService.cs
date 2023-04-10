@@ -58,11 +58,6 @@ namespace BankSystem.Services
             fromiban.Amount -= amount + fee;
             toiban.Amount += convertedAmount;
 
-            if (toiban.Transactions == null)
-            {
-                toiban.Transactions = new List<TransactionEntity>();
-            }
-
             await _transactionRepository.CreateTransactionAsync(transaction);
 
             return toiban.Amount;
@@ -74,11 +69,8 @@ namespace BankSystem.Services
             var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
 
             ValidateAccountWithIBAN(fromiban, toiban);
-
             CheckUsersIdNotBeSame(fromiban, toiban);
-
             CheckAmount(amount);
-
             CheckSenderBalance(amount, fromiban);
 
             decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toiban.Currency);
@@ -97,11 +89,6 @@ namespace BankSystem.Services
             };
 
             fromiban.Amount -= amount + fee;
-            
-			if (toiban.Transactions == null)
-            {
-                toiban.Transactions = new List<TransactionEntity>();
-            }
 
             toiban.Amount += convertedAmount;
 

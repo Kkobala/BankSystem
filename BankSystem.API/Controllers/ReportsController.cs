@@ -13,15 +13,12 @@ namespace BankSystem.Controllers
     {
         private readonly AppDbContext _db;
         private readonly ITransactionRepository _transactionRepository;
-        private readonly IConverterService _converterService;
 
         public ReportsController(AppDbContext db,
-            ITransactionRepository transactionRepository,
-            IConverterService converterService)
+            ITransactionRepository transactionRepository)
         {
             _db = db;
             _transactionRepository = transactionRepository;
-            _converterService = converterService;
         }
 
         [HttpGet("user-stats-current-year")]
@@ -94,17 +91,17 @@ namespace BankSystem.Controllers
         [HttpGet("count-revenue-from-transactions-in-last-onemonth-or-sixmonth-or-oneyear")]
         public async Task<IActionResult> GetRevenueAsync()
         {
-            var totalrevenueingel = await _transactionRepository.GetAllTransactionsInGELAsync();
+            var totalrevenueinGEL = await _transactionRepository.GetAllTransactionsInGELAsync();
 
-            var totalrevenueinusd = await _transactionRepository.GetAllTransactionsInUSDAsync();
-            
-            var totalrevenueineur = await _transactionRepository.GetAllTransactionsInEURAsync();
-            
+            var totalrevenueinUSD = await _transactionRepository.GetAllTransactionsInUSDAsync();
+
+            var totalrevenueinEUR = await _transactionRepository.GetAllTransactionsInEURAsync();
+
             var result = new
             {
-                TotalRevenueInGEL = totalrevenueingel,
-                TotalRevenueInUSD = totalrevenueinusd,
-                TotalRevenueInEur = totalrevenueineur,
+                TotalRevenueInGEL = totalrevenueinGEL,
+                TotalRevenueInUSD = totalrevenueinUSD,
+                TotalRevenueInEur = totalrevenueinEUR,
             };
 
             return Ok(result);

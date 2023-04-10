@@ -46,7 +46,7 @@ namespace BankSystem.Controllers
 
             var result = new
             {
-                UsersLastYear = usersLastYear, 
+                UsersLastYear = usersLastYear,
             };
 
             return Ok(result);
@@ -61,7 +61,7 @@ namespace BankSystem.Controllers
 
             var result = new
             {
-                RegisteredUsers = users
+                UsersInLast30Days = users
             };
 
             return Ok(result);
@@ -92,15 +92,19 @@ namespace BankSystem.Controllers
         }
 
         [HttpGet("count-revenue-from-transactions-in-last-onemonth-or-sixmonth-or-oneyear")]
-        public async Task<IActionResult> GetRevenueAsync(Currency currency)
+        public async Task<IActionResult> GetRevenueAsync()
         {
-            var transactions = await _transactionRepository.GetAllTransactionsAsync();
-            decimal totalRevenue = transactions.Sum(x => x.Amount);
-            decimal revenue = await _converterService.ConvertAmountAsync(totalRevenue, transactions.First().Currency, currency);
+            var totalrevenueingel = await _transactionRepository.GetAllTransactionsInGELAsync();
 
+            var totalrevenueinusd = await _transactionRepository.GetAllTransactionsInUSDAsync();
+            
+            var totalrevenueineur = await _transactionRepository.GetAllTransactionsInEURAsync();
+            
             var result = new
             {
-                AllRevenue = revenue
+                TotalRevenueInGEL = totalrevenueingel,
+                TotalRevenueInUSD = totalrevenueinusd,
+                TotalRevenueInEur = totalrevenueineur,
             };
 
             return Ok(result);

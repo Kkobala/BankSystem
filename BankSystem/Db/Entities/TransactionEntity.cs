@@ -1,5 +1,4 @@
 ﻿using BankSystem.Models.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BankSystem.Db.Entities
 {

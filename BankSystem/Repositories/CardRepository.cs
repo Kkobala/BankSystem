@@ -125,39 +125,6 @@ namespace BankSystem.Repositories
 			return card;
 		}
 
-		//public async Task<List<Card>> GetUserCardsAsync(int accountId)
-		//{
-		//    var account = await _db.Cards
-		//        .Where(u => u.AccountId == accountId)
-		//        .ToListAsync();
-
-		//    Parallel.ForEach(account, acc =>
-		//    {
-		//        if (acc.CardExpirationDate < DateTime.Now)
-		//        {
-		//            throw new Exception("Your card will expired");
-		//        }
-		//        else if (acc.CardExpirationDate < DateTime.Now.AddMonths(3))
-		//        {
-		//            throw new Exception("Your card will expire in 3 months");
-		//        }
-		//    });
-
-		//    var card = account.Select(e => new Card
-		//    {
-		//        Id = e.Id,
-		//        AccountId = e.AccountId,
-		//        CardNumber = e.CardNumber,
-		//        CardExpirationDate = e.CardExpirationDate,
-		//        CVV = e.CVV,
-		//        PIN = e.PIN,
-		//    }).ToList();
-
-		//    await _db.SaveChangesAsync();
-
-		//    return card;
-		//}
-
 		public async Task<CardEntity?> GetCardByPIN(int pin)
         {
             var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);

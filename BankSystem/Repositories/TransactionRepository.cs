@@ -40,7 +40,7 @@ namespace BankSystem.Repositories
             return transaction.Id;
         }
 
-        public async Task<List<TransactionEntity>> GetAllTransactionsAsync()
+        public async Task<decimal> GetAllTransactionsInGELAsync()
         {
             var transactions = await _db.Transactions
                 .Include(x => x.FromAccount)
@@ -48,7 +48,36 @@ namespace BankSystem.Repositories
                 .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
                        x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
                 .Where(x => x.Amount > 0)
-                .ToListAsync();
+                .Where(x => x.Currency == Currency.GEL)
+                .SumAsync(x => x.Amount);
+
+            return transactions;
+        }
+        
+        public async Task<decimal> GetAllTransactionsInUSDAsync()
+        {
+            var transactions = await _db.Transactions
+                .Include(x => x.FromAccount)
+                .Include(x => x.ToAccount)
+                .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
+                       x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
+                .Where(x => x.Amount > 0)
+                .Where(x => x.Currency == Currency.USD)
+                .SumAsync(x => x.Amount);
+
+            return transactions;
+        }
+        
+        public async Task<decimal> GetAllTransactionsInEURAsync()
+        {
+            var transactions = await _db.Transactions
+                .Include(x => x.FromAccount)
+                .Include(x => x.ToAccount)
+                .Where(x => x.TransactionDate >= DateTime.Now.AddMonths(-1) ||
+                       x.TransactionDate >= DateTime.Now.AddMonths(-6) || x.TransactionDate >= DateTime.Now.AddYears(-1))
+                .Where(x => x.Amount > 0)
+                .Where(x => x.Currency == Currency.EUR)
+                .SumAsync(x => x.Amount);
 
             return transactions;
         }

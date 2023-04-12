@@ -29,111 +29,23 @@ namespace BankSystem.Services
             _accountRepository = accountRepository;
         }
 
-        //public async Task<decimal> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
-        //{
-        //    var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
-        //    var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
-
-        //    ValidateAccountWithIBAN(fromiban, toiban);
-        //    CheckSenderAndRecieverId(fromiban, toiban);
-        //    CheckAmount(amount);
-
-        //    decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toiban.Currency);
-
-        //    if (fromiban.Amount < convertedAmount)
-        //    {
-        //        throw new Exception("Insufficient funds");
-        //    }
-
-        //    var fee = convertedAmount * 0.00m;
-
-        //    var transaction = new TransactionEntity
-        //    {
-        //        FromAccount = fromiban,
-        //        ToAccount = toiban,
-        //        Amount = convertedAmount,
-        //        Currency = fromiban.Currency,
-        //        Fee = fee,
-        //        TransactionDate = DateTime.UtcNow,
-        //        Type = TransactionType.Inner
-        //    };
-
-        //    fromiban.Amount -= amount + fee;
-        //    toiban.Amount += convertedAmount;
-
-        //    await _transactionRepository.CreateTransactionAsync(transaction);
-
-        //    var logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-
-        //    logger.Information("Transaction Succesfully completed");
-
-        //    return toiban.Amount;
-        //}
-
-        //public async Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
-        //{
-        //    var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
-        //    var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
-
-        //    ValidateAccountWithIBAN(fromiban, toiban);
-        //    CheckUsersIdNotBeSame(fromiban, toiban);
-        //    CheckAmount(amount);
-        //    CheckSenderBalance(amount, fromiban);
-
-        //    decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toiban.Currency);
-
-        //    var fee = (convertedAmount * 0.01m) + 0.5m;
-
-        //    var transaction = new TransactionEntity
-        //    {
-        //        FromAccount = fromiban,
-        //        ToAccount = toiban,
-        //        Amount = convertedAmount,
-        //        Currency = fromiban.Currency,
-        //        Fee = fee,
-        //        TransactionDate = DateTime.UtcNow,
-        //        Type = TransactionType.Outter
-        //    };
-
-        //    fromiban.Amount -= amount + fee;
-
-        //    toiban.Amount += convertedAmount;
-
-        //    await _transactionRepository.CreateTransactionAsync(transaction);
-
-        //    return toiban.Amount;
-        //}
-
-        public async Task<decimal> TransferAsync(string fromIBAN, string toIBAN, decimal amount, TransactionType transactionType)
+        public async Task<decimal> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
         {
             var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
             var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
 
             ValidateAccountWithIBAN(fromiban, toiban);
+            CheckSenderAndRecieverId(fromiban, toiban);
             CheckAmount(amount);
 
             decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toiban.Currency);
 
-            decimal fee = 0m;
-            if (transactionType == TransactionType.Inner)
-            {
-                CheckSenderAndRecieverId(fromiban, toiban);
-            }
-            else if (transactionType == TransactionType.Outter)
-            {
-                CheckUsersIdNotBeSame(fromiban, toiban);
-                CheckSenderBalance(amount, fromiban);
-                fee = (convertedAmount * 0.01m) + 0.5m;
-            }
-            else
-            {
-                throw new Exception("Invalid transaction type");
-            }
-
-            if (fromiban.Amount < convertedAmount + fee)
+            if (fromiban.Amount < convertedAmount)
             {
                 throw new Exception("Insufficient funds");
             }
+
+            var fee = convertedAmount * 0.00m;
 
             var transaction = new TransactionEntity
             {
@@ -143,10 +55,48 @@ namespace BankSystem.Services
                 Currency = fromiban.Currency,
                 Fee = fee,
                 TransactionDate = DateTime.UtcNow,
-                Type = transactionType
+                Type = TransactionType.Inner
             };
 
-            fromiban.Amount -= convertedAmount + fee;
+            fromiban.Amount -= amount + fee;
+            toiban.Amount += convertedAmount;
+
+            await _transactionRepository.CreateTransactionAsync(transaction);
+
+            var logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+
+            logger.Information("Transaction Succesfully completed");
+
+            return toiban.Amount;
+        }
+
+        public async Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
+        {
+            var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
+            var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
+
+            ValidateAccountWithIBAN(fromiban, toiban);
+            CheckUsersIdNotBeSame(fromiban, toiban);
+            CheckAmount(amount);
+            CheckSenderBalance(amount, fromiban);
+
+            decimal convertedAmount = await _converterService.ConvertAmountAsync(amount, fromiban.Currency, toiban.Currency);
+
+            var fee = (convertedAmount * 0.01m) + 0.5m;
+
+            var transaction = new TransactionEntity
+            {
+                FromAccount = fromiban,
+                ToAccount = toiban,
+                Amount = convertedAmount,
+                Currency = fromiban.Currency,
+                Fee = fee,
+                TransactionDate = DateTime.UtcNow,
+                Type = TransactionType.Outter
+            };
+
+            fromiban.Amount -= amount + fee;
+
             toiban.Amount += convertedAmount;
 
             await _transactionRepository.CreateTransactionAsync(transaction);

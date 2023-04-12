@@ -173,18 +173,18 @@ namespace BankSystem.API.Controllers
         [HttpPost("inner-transfer")]
         public async Task<IActionResult> InnerTransfer([FromQuery] TransferInnerRequest innerTransferRequest)
         {
-            var transaction = await _transactionService.InnerTransactionAsync(innerTransferRequest.FromIBAN!, innerTransferRequest.ToIBAN!, innerTransferRequest.Amount);
+            var transaction = await _transactionService.TransferAsync(innerTransferRequest.FromIBAN!, innerTransferRequest.ToIBAN!, innerTransferRequest.Amount, innerTransferRequest.Type);
 
             return Ok(transaction);
         }
 
-        [Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
-        [HttpPost("out-transfer")]
-        public async Task<IActionResult> OutTransfer([FromQuery] TransferOutterRequest outTransferRequest)
-        {
-            var transaction = await _transactionService.OutTransactionAsync(outTransferRequest.FromIBAN!, outTransferRequest.ToIBAN!, outTransferRequest.Amount);
+        //[Authorize(Policy = "ApiUser", AuthenticationSchemes = "Bearer")]
+        //[HttpPost("out-transfer")]
+        //public async Task<IActionResult> OutTransfer([FromQuery] TransferOutterRequest outTransferRequest)
+        //{
+        //    var transaction = await _transactionService.OutTransactionAsync(outTransferRequest.FromIBAN!, outTransferRequest.ToIBAN!, outTransferRequest.Amount);
 
-            return Ok(transaction);
-        }
+        //    return Ok(transaction);
+        //}
     }
 }

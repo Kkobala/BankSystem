@@ -57,8 +57,8 @@ namespace BankSystem.Auth
                 {
                     o.Password.RequireDigit = true;
                     o.Password.RequireLowercase = false;
-                    o.Password.RequireUppercase = false;
-                    o.Password.RequireNonAlphanumeric = false;
+                    o.Password.RequireUppercase = true;
+                    o.Password.RequireNonAlphanumeric = true;
                     o.Password.RequiredLength = 8;
                 })
                 .AddEntityFrameworkStores<AppDbContext>()

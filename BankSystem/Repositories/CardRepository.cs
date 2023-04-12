@@ -66,12 +66,12 @@ namespace BankSystem.Repositories
 			}
 		}
 
-		public async Task<CardEntity> ChangePINAsync(ChangePINRequest request)
+		public async Task<Card> ChangePINAsync(ChangePINRequest request)
         {
-            var card = await _db.Cards.FirstOrDefaultAsync(c => c.CardNumber == request.CardNumber);
+            var cardentity = await _db.Cards.FirstOrDefaultAsync(c => c.CardNumber == request.CardNumber);
             var pin = await _db.Cards.FirstOrDefaultAsync(x => x.PIN == request.OldPIN);
 
-            if (card == null)
+            if (cardentity == null)
             {
                 throw new ArgumentException($"Card with {request.CardNumber} cannot be found");
             }
@@ -81,11 +81,21 @@ namespace BankSystem.Repositories
                 throw new ArgumentException($"Card with {request.OldPIN} cannot be found");
             }
 
-            card.PIN = request.NewPIN;
+            cardentity.PIN = request.NewPIN;
 
-            _db.Cards.Update(card);
+            _db.Cards.Update(cardentity);
 
             await _db.SaveChangesAsync();
+
+            var card = new Card()
+            {
+                Id = cardentity.Id,
+                AccountId = cardentity.AccountId,
+                CardNumber = cardentity.CardNumber,
+                CVV = cardentity.CVV,
+                PIN = cardentity.PIN,
+                CardExpirationDate = cardentity.CardExpirationDate
+            };
 
             return card;
         }

@@ -17,13 +17,13 @@ builder.Services.AddDbContextPool<AppDbContext>(c =>
 
 AuthConfigurator.Configure(builder);
 
-builder.Services.AddTransient<ICardRepository, CardRepository>();
-builder.Services.AddTransient<IAccountRepository, AccountRepository>();
-builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
-builder.Services.AddTransient<IATMRepository, ATMRepository>();
-builder.Services.AddTransient<IATMService, ATMService>();
-builder.Services.AddTransient<IConverterService, ConverterService>();
-builder.Services.AddTransient<ITransactionService, TransactionService>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IATMRepository, ATMRepository>();
+builder.Services.AddScoped<IATMService, ATMService>();
+builder.Services.AddScoped<IConverterService, ConverterService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 builder.Services.AddScoped<BankSystemValidations>();
 
 builder.Services.AddControllers()

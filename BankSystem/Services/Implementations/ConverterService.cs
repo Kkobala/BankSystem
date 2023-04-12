@@ -1,13 +1,9 @@
 ﻿using BankSystem.Models.Enums;
-using BankSystem.Repositories;
+using BankSystem.Repositories.Interfaces;
+using BankSystem.Services.Interfaces;
 
-namespace BankSystem.Services
+namespace BankSystem.Services.Implementations
 {
-    public interface IConverterService
-    {
-        Task<decimal> ConvertAmountAsync(decimal amount, Currency fromCurrency, Currency toCurrency);
-    }
-
     public class ConverterService : IConverterService
     {
         private readonly ITransactionRepository _transactionRepository;

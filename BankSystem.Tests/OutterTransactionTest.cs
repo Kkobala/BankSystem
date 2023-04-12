@@ -1,8 +1,8 @@
 ﻿using BankSystem.Db;
 using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
-using BankSystem.Repositories;
-using BankSystem.Services;
+using BankSystem.Repositories.Implementations;
+using BankSystem.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankSystem.Tests
@@ -125,7 +125,7 @@ namespace BankSystem.Tests
 		[TestCase("THBN789", "MNAR012", 200, 200)]
 		public async Task Test_OutterTransactionAsync_In_GEL(
 			string fromIBAN,
-			string toIBAN, 
+			string toIBAN,
 			decimal amount,
 			int expectedTransaction)
 		{

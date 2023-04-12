@@ -1,9 +1,10 @@
 ﻿using BankSystem.Db;
 using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
+using BankSystem.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankSystem.Repositories
+namespace BankSystem.Repositories.Implementations
 {
     public class TransactionRepository : ITransactionRepository
     {
@@ -53,7 +54,7 @@ namespace BankSystem.Repositories
 
             return transactions;
         }
-        
+
         public async Task<decimal> GetAllTransactionsInUSDAsync()
         {
             var transactions = await _db.Transactions
@@ -67,7 +68,7 @@ namespace BankSystem.Repositories
 
             return transactions;
         }
-        
+
         public async Task<decimal> GetAllTransactionsInEURAsync()
         {
             var transactions = await _db.Transactions

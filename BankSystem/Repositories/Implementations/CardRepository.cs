@@ -2,25 +2,26 @@
 using BankSystem.Db.Entities;
 using BankSystem.Models;
 using BankSystem.Models.Requests;
-using BankSystem.Validations;
+using BankSystem.Repositories.Interfaces;
+using BankSystem.Validations.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankSystem.Repositories
+namespace BankSystem.Repositories.Implementations
 {
-    public class CardRepository : ICardRepository
-    {
-        private readonly AppDbContext _db;
-        private readonly BankSystemValidations _validation;
+	public class CardRepository : ICardRepository
+	{
+		private readonly AppDbContext _db;
+		private readonly IBankSystemValidations _validation;
 
-        public CardRepository(
-            AppDbContext db,
-            BankSystemValidations validations)
-        {
-            _db = db;
-            _validation = validations;
-        }
+		public CardRepository(
+			AppDbContext db,
+			IBankSystemValidations validations)
+		{
+			_db = db;
+			_validation = validations;
+		}
 
-        public async Task<Card> AddCardAsync(AddCardRequest request)
+		public async Task<Card> AddCardAsync(AddCardRequest request)
 		{
 			var account = await _db.Accounts
 				.FirstOrDefaultAsync(a => a.Id == request.AccountId)
@@ -136,10 +137,10 @@ namespace BankSystem.Repositories
 		}
 
 		public async Task<CardEntity?> GetCardByPIN(int pin)
-        {
-            var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);
+		{
+			var card = await _db.Cards.FirstOrDefaultAsync(a => a.PIN == pin);
 
-            return card;
-        }
-    }
+			return card;
+		}
+	}
 }

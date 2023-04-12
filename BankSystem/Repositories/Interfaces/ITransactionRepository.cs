@@ -1,7 +1,7 @@
 ﻿using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
 
-namespace BankSystem.Repositories
+namespace BankSystem.Repositories.Interfaces
 {
     public interface ITransactionRepository
     {

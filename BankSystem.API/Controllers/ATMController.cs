@@ -20,7 +20,7 @@ namespace BankSystem.Controllers
 		}
 
 		[HttpPost("authorize-card")]
-		public async Task<IActionResult> AuthorizeCard([FromBody]string cardNumber, int pinCode)
+		public async Task<IActionResult> AuthorizeCard(string cardNumber, int pinCode)
 		{
 			var (success, message) = await _atmService.AuthorizeCardAsync(cardNumber, pinCode);
 
@@ -31,11 +31,11 @@ namespace BankSystem.Controllers
 			return Ok(message);
 		}
 
-		[HttpGet("get-balance")]
-		public async Task<IActionResult> GetBalanceAsync(string cardNumber, int pin)
+		[HttpPost("{cardNumber}/balance")]
+		public async Task<IActionResult> GetBalanceAsync(string cardNumber,[FromBody] int pin)
 		{
 			var balance = await _atmService.GetBalanceAsync(cardNumber, pin);
-
+			throw new Exception("erori gaq dzma");
 			return Ok(new { Balance = balance });
 		}
 

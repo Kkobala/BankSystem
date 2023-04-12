@@ -9,12 +9,23 @@ using BankSystem.Validations.Implementation;
 using BankSystem.Validations.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Logging.ClearProviders();
+builder.Services.AddLogging(options =>
+{
+	options.AddSerilog(dispose: true);
+});
+Log.Logger = new LoggerConfiguration()
+	.ReadFrom.Configuration(builder.Configuration)
+	.CreateLogger();
+builder.Logging.AddSerilog();
 
+builder.Host.UseSerilog();
 
 builder.Services.AddDbContextPool<AppDbContext>(c =>
 	c.UseSqlServer(builder.Configuration["DefaultConnection"]));

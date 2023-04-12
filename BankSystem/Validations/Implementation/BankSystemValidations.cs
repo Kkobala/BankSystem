@@ -31,6 +31,8 @@ namespace BankSystem.Validations.Implementation
                 throw new Exception("IBAN does not contain CountryCode or BankCode");
             }
 
+            Validate(iban);
+
             if (Regex.IsMatch(iban, @"^(?=.*[\W_]).+$"))
             {
                 throw new Exception("IBAN should not contain Symbols");
@@ -58,6 +60,51 @@ namespace BankSystem.Validations.Implementation
             {
                 throw new Exception("PIN must be a 4-digit number");
             }
+        }
+
+        private bool Validate(string iban)
+        {
+            string[] currency = new[] { "GEL", "USD", "EUR" };
+            for (int i = 0; i < iban.Length; i++)
+            {
+                string x = iban.Substring(8, 14);
+
+                string y = iban.Substring(22, 3);
+
+                if (IsPalindrome(x))
+                {
+                    return true;
+                }
+
+                if (y.Contains(currency[0]))
+                {
+                    return true;
+                }
+                else if (y.Contains(currency[1]))
+                {
+                    return true;
+                }
+                if (y.Contains(currency[2]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsPalindrome(string str)
+        {
+            int length = str.Length;
+            for (int i = 0; i < length; i++)
+            {
+                if (str[i] != str[length - 1 - i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void CheckCardNumberFormat(string cardNumber)

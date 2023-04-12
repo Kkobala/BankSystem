@@ -3,7 +3,7 @@ using BankSystem.Models;
 using BankSystem.Models.Enums;
 using BankSystem.Models.Requests;
 
-namespace BankSystem.Repositories
+namespace BankSystem.Repositories.Interfaces
 {
     public interface ICardRepository
     {

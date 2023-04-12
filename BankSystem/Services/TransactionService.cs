@@ -7,10 +7,8 @@ namespace BankSystem.Services
 {
     public interface ITransactionService
     {
-        //Task<decimal> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount);
-        //Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount);
-
-        Task<decimal> TransferAsync(string fromIBAN, string toIBAN, decimal amount, TransactionType transactionType);
+        Task<decimal> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount);
+        Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount);
     }
 
     public class TransactionService : ITransactionService

@@ -60,11 +60,7 @@ namespace BankSystem.Services
             toiban.Amount += convertedAmount;
 
             await _transactionRepository.CreateTransactionAsync(transaction);
-
-            var logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
-
-            logger.Information("Transaction Succesfully completed");
-
+            
             return toiban.Amount;
         }
 

@@ -3,6 +3,7 @@ using BankSystem.Db.Entities;
 using BankSystem.Models.Enums;
 using BankSystem.Repositories.Implementations;
 using BankSystem.Services.Implementations;
+using BankSystem.UnitofWork;
 using Microsoft.EntityFrameworkCore;
 
 namespace BankSystem.Tests
@@ -25,16 +26,24 @@ namespace BankSystem.Tests
 			//Initialize the InternalTransactionsRepository with the test database context
 
 			var transactionRepository = new TransactionRepository(_context);
-			var converterService = new ConverterService(transactionRepository);
 			var accountRepository = new AccountRepository(_context);
+            var cardRepository = new CardRepository(_context);
+            var atmRepository = new ATMRepository(_context);
 
-			var transactionService = new TransactionService(
-				transactionRepository,
-				converterService,
-				accountRepository);
+            var unitofwork = new UnitOfWork(
+                accountRepository,
+                cardRepository,
+                atmRepository,
+                transactionRepository);
+            var converterService = new ConverterService(unitofwork);
 
-			//Add some test data to the BankAccounts table
-			_context.Accounts.Add(new AccountEntity
+            var transactionService = new TransactionService(
+                converterService,
+                unitofwork);
+
+
+            //Add some test data to the BankAccounts table
+            _context.Accounts.Add(new AccountEntity
 			{
 				IBAN = "GE29CDK60161331926819",
 				Currency = Currency.GEL,
@@ -155,11 +164,22 @@ namespace BankSystem.Tests
 
 			var accountRepository = new AccountRepository(_context);
 
-			var converterService = new ConverterService(transactionRepository);
+            var cardRepository = new CardRepository(_context);
+            var atmRepository = new ATMRepository(_context);
 
-			var transactionService = new TransactionService(transactionRepository, converterService, accountRepository);
+            var unitofwork = new UnitOfWork(
+                accountRepository,
+                cardRepository,
+                atmRepository,
+                transactionRepository);
+            var converterService = new ConverterService(unitofwork);
 
-			var actualTransaction = await transactionService.OutTransactionAsync(fromIBAN, toIBAN, amount);
+            var transactionService = new TransactionService(
+                converterService,
+                unitofwork);
+
+
+            var actualTransaction = await transactionService.OutTransactionAsync(fromIBAN, toIBAN, amount);
 
 			Assert.That(actualTransaction, Is.EqualTo(expectedTransaction));
 		}
@@ -198,11 +218,22 @@ namespace BankSystem.Tests
 
 			var accountRepository = new AccountRepository(_context);
 
-			var converterService = new ConverterService(transactionRepository);
+            var cardRepository = new CardRepository(_context);
+            var atmRepository = new ATMRepository(_context);
 
-			var transactionService = new TransactionService(transactionRepository, converterService, accountRepository);
+            var unitofwork = new UnitOfWork(
+                accountRepository,
+                cardRepository,
+                atmRepository,
+                transactionRepository);
+            var converterService = new ConverterService(unitofwork);
 
-			var actualTransaction = await transactionService.OutTransactionAsync(fromIBAN, toIBAN, amount);
+            var transactionService = new TransactionService(
+                converterService,
+                unitofwork);
+
+
+            var actualTransaction = await transactionService.OutTransactionAsync(fromIBAN, toIBAN, amount);
 
 			Assert.That(actualTransaction, Is.EqualTo(expectedTransaction));
 		}
@@ -241,11 +272,22 @@ namespace BankSystem.Tests
 
 			var accountRepository = new AccountRepository(_context);
 
-			var converterService = new ConverterService(transactionRepository);
+            var cardRepository = new CardRepository(_context);
+            var atmRepository = new ATMRepository(_context);
 
-			var transactionService = new TransactionService(transactionRepository, converterService, accountRepository);
+            var unitofwork = new UnitOfWork(
+                accountRepository,
+                cardRepository,
+                atmRepository,
+                transactionRepository);
+            var converterService = new ConverterService(unitofwork);
 
-			var actualTransaction = await transactionService.OutTransactionAsync(fromIBAN, toIBAN, amount);
+            var transactionService = new TransactionService(
+                converterService,
+                unitofwork);
+
+
+            var actualTransaction = await transactionService.OutTransactionAsync(fromIBAN, toIBAN, amount);
 
 			Assert.That(actualTransaction, Is.EqualTo(expectedTransaction));
 		}

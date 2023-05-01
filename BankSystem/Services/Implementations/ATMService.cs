@@ -2,44 +2,37 @@
 using BankSystem.Models.Enums;
 using BankSystem.Repositories.Interfaces;
 using BankSystem.Services.Interfaces;
+using BankSystem.UnitofWork;
 
 namespace BankSystem.Services.Implementations
 {
 
 	public class ATMService : IATMService
 	{
-		private readonly IATMRepository _atmRepository;
-		private readonly ITransactionRepository _transactionRepository;
 		private readonly IConverterService _converterService;
-		private readonly IAccountRepository _accountRepository;
-		private readonly ICardRepository _cardRepository;
+		private readonly IUnitOfWork _unitOfWork;
 
-		public ATMService(IATMRepository repository,
-			ITransactionRepository transactionRepository,
+		public ATMService(
 			IConverterService converterService,
-			IAccountRepository accountRepository,
-			ICardRepository cardRepository)
+			IUnitOfWork unitOfWork)
 		{
-			_atmRepository = repository;
-			_transactionRepository = transactionRepository;
 			_converterService = converterService;
-			_accountRepository = accountRepository;
-			_cardRepository = cardRepository;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<decimal> Withdraw(string cardNumber, int pin, decimal amount, Currency toCurrency)
 		{
-			var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
+			var account = await _unitOfWork.AccountRepository.GetAccountByCardNumber(cardNumber);
 
 			CheckAccountExistence(account);
 			CheckAccountBalance(amount, account);
 			CheckAmountToBeMoreThanZero(amount);
 
-			var pinCode = await _cardRepository.GetCardByPIN(pin);
+			var pinCode = await _unitOfWork.CardRepository.GetCardByPIN(pin);
 
 			CheckPIN(pinCode);
 
-			var card = await _atmRepository.GetCardByCardNumberAsync(cardNumber);
+			var card = await _unitOfWork.ATMRepository.GetCardByCardNumberAsync(cardNumber);
 
 			CheckCardExistence(card);
 
@@ -68,7 +61,7 @@ namespace BankSystem.Services.Implementations
 
 			account.Amount -= convertedAmount;
 
-			await _transactionRepository.CreateWithdrawAsync(transaction);
+			await _unitOfWork.TransactionRepository.CreateWithdrawAsync(transaction);
 
 			return account.Amount;
 		}
@@ -115,7 +108,7 @@ namespace BankSystem.Services.Implementations
 
 		private async Task LimitFor24Hours(string cardNumber, decimal amount)
 		{
-			var transactions = await _transactionRepository.GetTransactionsByCardNumber(cardNumber);
+			var transactions = await _unitOfWork.TransactionRepository.GetTransactionsByCardNumber(cardNumber);
 
 			var last24HoursTransactions = transactions
 				.Where(t => t!.TransactionDate >= DateTime.UtcNow.AddDays(-1));
@@ -152,7 +145,7 @@ namespace BankSystem.Services.Implementations
 
 		public async Task<(bool, string)> AuthorizeCardAsync(string cardNumber, int pin)
 		{
-			var card = await _atmRepository.GetCardByCardNumberAsync(cardNumber);
+			var card = await _unitOfWork.ATMRepository.GetCardByCardNumberAsync(cardNumber);
 
 			if (card == null)
 			{
@@ -174,8 +167,8 @@ namespace BankSystem.Services.Implementations
 
 		public async Task<decimal> GetBalanceAsync(string cardNumber, int pin)
 		{
-			var account = await _accountRepository.GetAccountByCardNumber(cardNumber);
-			var card = await _cardRepository.GetCardByPIN(pin);
+			var account = await _unitOfWork.AccountRepository.GetAccountByCardNumber(cardNumber);
+			var card = await _unitOfWork.CardRepository.GetCardByPIN(pin);
 
 			if (account == null)
 			{

@@ -11,9 +11,14 @@ namespace BankSystem.Repositories.Implementations
 	public class CardRepository : ICardRepository
 	{
 		private readonly AppDbContext _db;
-		private readonly IBankSystemValidations _validation;
+		private readonly IBankSystemValidations? _validation;
 
-		public CardRepository(
+        public CardRepository(AppDbContext db)
+        {
+			_db = db;
+        }
+
+        public CardRepository(
 			AppDbContext db,
 			IBankSystemValidations validations)
 		{

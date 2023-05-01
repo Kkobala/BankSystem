@@ -35,7 +35,6 @@ namespace BankSystem.Controllers
 		public async Task<IActionResult> GetBalanceAsync(string cardNumber,[FromBody] int pin)
 		{
 			var balance = await _atmService.GetBalanceAsync(cardNumber, pin);
-			throw new Exception("erori gaq dzma");
 			return Ok(new { Balance = balance });
 		}
 

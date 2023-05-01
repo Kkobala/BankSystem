@@ -2,30 +2,28 @@
 using BankSystem.Models.Enums;
 using BankSystem.Repositories.Interfaces;
 using BankSystem.Services.Interfaces;
+using BankSystem.UnitofWork;
 
 namespace BankSystem.Services.Implementations
 {
 
 	public class TransactionService : ITransactionService
 	{
-		private readonly ITransactionRepository _transactionRepository;
+		private readonly IUnitOfWork _unitOfWork;
 		private readonly IConverterService _converterService;
-		private readonly IAccountRepository _accountRepository;
 
-		public TransactionService(
-			ITransactionRepository transactionRepository,
+        public TransactionService(
 			IConverterService converterService,
-			IAccountRepository accountRepository)
+			IUnitOfWork unitOfWork)
 		{
-			_transactionRepository = transactionRepository;
 			_converterService = converterService;
-			_accountRepository = accountRepository;
+			_unitOfWork = unitOfWork;
 		}
 
 		public async Task<decimal> InnerTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
 		{
-			var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
-			var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
+			var fromiban = await _unitOfWork.AccountRepository.GetAccountByIBAN(fromIBAN);
+			var toiban = await _unitOfWork.AccountRepository.GetAccountByIBAN(toIBAN);
 
 			ValidateAccountWithIBAN(fromiban, toiban);
 			CheckSenderAndRecieverId(fromiban, toiban);
@@ -54,15 +52,15 @@ namespace BankSystem.Services.Implementations
 			fromiban.Amount -= amount + fee;
 			toiban.Amount += convertedAmount;
 
-			await _transactionRepository.CreateTransactionAsync(transaction);
+			await _unitOfWork.TransactionRepository.CreateTransactionAsync(transaction);
 
 			return toiban.Amount;
 		}
 
 		public async Task<decimal> OutTransactionAsync(string fromIBAN, string toIBAN, decimal amount)
 		{
-			var fromiban = await _accountRepository.GetAccountByIBAN(fromIBAN);
-			var toiban = await _accountRepository.GetAccountByIBAN(toIBAN);
+			var fromiban = await _unitOfWork.AccountRepository.GetAccountByIBAN(fromIBAN);
+			var toiban = await _unitOfWork.AccountRepository.GetAccountByIBAN(toIBAN);
 
 			ValidateAccountWithIBAN(fromiban, toiban);
 			CheckUsersIdNotBeSame(fromiban, toiban);
@@ -88,7 +86,7 @@ namespace BankSystem.Services.Implementations
 
 			toiban.Amount += convertedAmount;
 
-			await _transactionRepository.CreateTransactionAsync(transaction);
+			await _unitOfWork.TransactionRepository.CreateTransactionAsync(transaction);
 
 			return toiban.Amount;
 		}
